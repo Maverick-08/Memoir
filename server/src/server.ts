@@ -1,21 +1,19 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import {CorsOptions, PORT} from './config/app-config'
+import HealthCheckPoint from './routes/health-checkpoint'
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-    credentials:true,
-    origin: "http://localhost:5173"
-}))
+app.use(cors(CorsOptions))
 
-app.get("/",(req,res) => {
-    res.json({msg:"Server is healthy"})
-})
+// For checking whether server is running
+app.use("/",HealthCheckPoint)
 
 
-app.listen(3000,()=>{
-    console.log("Server is running")
+app.listen(PORT,()=>{
+    console.log(`Server running on ${PORT}`)
 })
