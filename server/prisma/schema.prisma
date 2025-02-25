@@ -24,6 +24,7 @@ model User {
   linkedIn String?
   xHandle  String?
   createdAt DateTime? @default(now())
+  authCookie String?
   post Post[]
 }
 
