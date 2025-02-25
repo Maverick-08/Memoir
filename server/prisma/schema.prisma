@@ -20,11 +20,10 @@ model User {
   degree   String?
   branch   String?
   yearOfPassingOut Int?
-  isVerified Boolean? @default(false)
+  isVerified Boolean @default(false)
   linkedIn String?
   xHandle  String?
   createdAt DateTime? @default(now())
-  authCookie String?
   post Post[]
 }
 

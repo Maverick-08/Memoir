@@ -1,10 +1,8 @@
-import { Router, Request, Response } from 'express';
+import { Router } from "express";
+import { userAuthenticationHandler } from "../controllers/userAuthentication";
 
 const router = Router();
 
-router.route("/")
-    .get((req:Request, res:Response) => {
-        res.send("Server is healthy")
-    })
+router.route("/").post(userAuthenticationHandler);
 
-export default router
+export default router;
