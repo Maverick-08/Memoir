@@ -2,11 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import {CorsOptions, PORT} from './config/app-config'
-import HealthCheckPoint from './routes/health-checkpoint'
-import Register from './routes/register'
-import Authenticate from './routes/auth'
-import Signout from './routes/logout'
 import { verifyToken } from './middleware/verifyToken';
+import HealthCheckPoint from './routes/health-checkpoint'
+import Register from './routes/register';
+import Authenticate from './routes/auth';
+import Signout from './routes/logout';
+import Updates from './routes/updates'
 
 
 const app = express();
@@ -26,6 +27,9 @@ app.use("/auth",Authenticate)
 
 // Protected routes
 app.use(verifyToken)
+
+// User updates
+app.use("/update",Updates)
 
 
 // User sign out

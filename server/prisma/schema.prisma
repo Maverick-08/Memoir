@@ -28,7 +28,12 @@ model User {
 }
 
 model Post {
-  email String @id
+  id String  @id @default(cuid())
+  email String
+  name String
+  degree String
+  branch String
+  yearOfPassingOut Int 
   title String
   message String?
   createdAt DateTime

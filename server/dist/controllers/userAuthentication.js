@@ -51,8 +51,12 @@ const userAuthenticationHandler = (req, res) => __awaiter(void 0, void 0, void 0
         // }
         // 5. Generate the authentication cookie
         const __authCookie__ = jsonwebtoken_1.default.sign({
-            email: payload.email
-        }, TOKEN_KEY, { 'expiresIn': '30s' });
+            email: payload.email,
+            name: userExist.name,
+            degree: userExist.degree,
+            branch: userExist.branch,
+            yearOfPassingOut: userExist.yearOfPassingOut
+        }, TOKEN_KEY, { 'expiresIn': '1m' });
         // 6. Set the cookie in the response header
         // Production : {httpOnly:true,sameSite:"none",secure:true,maxAge:24*60*60*1000}
         // Development : {httpOnly:true,sameSite:"none",maxAge:24*60*60*1000}

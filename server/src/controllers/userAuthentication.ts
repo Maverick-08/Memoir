@@ -59,10 +59,14 @@ export const userAuthenticationHandler = async (req:Request,res:Response) => {
         // 5. Generate the authentication cookie
         const __authCookie__ = jwt.sign(
             {
-                email:payload.email
+                email:payload.email,
+                name:userExist.name,
+                degree:userExist.degree,
+                branch:userExist.branch,
+                yearOfPassingOut:userExist.yearOfPassingOut
             },
             TOKEN_KEY,
-            {'expiresIn':'30s'}
+            {'expiresIn':'1m'}
         )
 
         // 6. Set the cookie in the response header
