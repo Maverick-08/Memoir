@@ -6,6 +6,8 @@ import HealthCheckPoint from './routes/health-checkpoint'
 import Register from './routes/register'
 import Authenticate from './routes/auth'
 import Signout from './routes/logout'
+import { verifyToken } from './middleware/verifyToken';
+
 
 const app = express();
 
@@ -21,6 +23,10 @@ app.use("/register",Register)
 
 // Authenticate user
 app.use("/auth",Authenticate)
+
+// Protected routes
+app.use(verifyToken)
+
 
 // User sign out
 app.use("/signout",Signout)

@@ -11,6 +11,7 @@ const health_checkpoint_1 = __importDefault(require("./routes/health-checkpoint"
 const register_1 = __importDefault(require("./routes/register"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const logout_1 = __importDefault(require("./routes/logout"));
+const verifyToken_1 = require("./middleware/verifyToken");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
@@ -21,6 +22,8 @@ app.use("/", health_checkpoint_1.default);
 app.use("/register", register_1.default);
 // Authenticate user
 app.use("/auth", auth_1.default);
+// Protected routes
+app.use(verifyToken_1.verifyToken);
 // User sign out
 app.use("/signout", logout_1.default);
 app.listen(app_config_1.PORT, () => {
