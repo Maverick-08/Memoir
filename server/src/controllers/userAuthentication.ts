@@ -66,7 +66,7 @@ export const userAuthenticationHandler = async (req:Request,res:Response) => {
                 yearOfPassingOut:userExist.yearOfPassingOut
             },
             TOKEN_KEY,
-            {'expiresIn':'1m'}
+            {'expiresIn':'1d'}
         )
 
         // 6. Set the cookie in the response header
