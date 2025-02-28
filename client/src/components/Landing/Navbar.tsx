@@ -1,4 +1,4 @@
-import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import { IoMdMenu } from "react-icons/io";
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -100,7 +100,7 @@ const SideDrawer = function TemporaryDrawer() {
         className="md:hidden p-1 bg-gray-100 rounded-md"
         onClick={toggleDrawer(true)}
       >
-        <MenuOutlinedIcon />
+        <IoMdMenu />
       </div>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
