@@ -1,10 +1,11 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Landing from "./components/Landing/Landing";
+import LandingPage from "./components/Landing/LandingPage";
+import MainLayout from "./layouts/MainLayout";
 
 const router = createBrowserRouter([
   {
     path:"/",
-    element:<Landing />
+    element:<LandingPage />
   }
 ])
 
@@ -12,7 +13,9 @@ function App() {
 
 
   return (
-    <RouterProvider router={router}/>
+    <MainLayout>
+      <RouterProvider router={router}/>
+    </MainLayout>
   )
 }
 
