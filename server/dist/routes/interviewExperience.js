@@ -7,5 +7,5 @@ router.route("/")
     .get(userInterviewExperience_1.getAllInterviewExperience)
     .post(userInterviewExperience_1.postInterviewExperience);
 router.route("/personal")
-    .get();
+    .get(userInterviewExperience_1.getUserInterviewExperience);
 exports.default = router;

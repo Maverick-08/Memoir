@@ -56,7 +56,7 @@ const userAuthenticationHandler = (req, res) => __awaiter(void 0, void 0, void 0
             degree: userExist.degree,
             branch: userExist.branch,
             yearOfPassingOut: userExist.yearOfPassingOut
-        }, TOKEN_KEY, { 'expiresIn': '1m' });
+        }, TOKEN_KEY, { 'expiresIn': '1d' });
         // 6. Set the cookie in the response header
         // Production : {httpOnly:true,sameSite:"none",secure:true,maxAge:24*60*60*1000}
         // Development : {httpOnly:true,sameSite:"none",maxAge:24*60*60*1000}

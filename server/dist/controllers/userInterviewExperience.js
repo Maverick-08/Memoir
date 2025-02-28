@@ -20,10 +20,10 @@ const getAllInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0
             include: {
                 roundDetails: {
                     include: {
-                        questions: true
-                    }
-                }
-            }
+                        questions: true,
+                    },
+                },
+            },
         });
         // Transform the data to match the expected response structure
         const transformedData = allInterviewExperiences.map((experience) => ({
@@ -45,17 +45,19 @@ const getAllInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0
                     questions: (_a = round.questions) === null || _a === void 0 ? void 0 : _a.map((question) => ({
                         title: question.title,
                         description: question.description,
-                        link: question.link
-                    }))
+                        link: question.link,
+                    })),
                 });
-            })
+            }),
         }));
         res.status(status_code_1.StatusCode.RequestSuccessfull).json({ data: transformedData });
         return;
     }
     catch (err) {
         console.error("Error @getAllInterviewExperience: ", err);
-        res.status(status_code_1.StatusCode.ServerError).json({ msg: "Failed to fetch interview experiences" });
+        res
+            .status(status_code_1.StatusCode.ServerError)
+            .json({ msg: "Failed to fetch interview experiences" });
         return;
     }
 });
@@ -66,7 +68,9 @@ const getUserInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 
         // Extract the email from the request
         const email = (_a = req.userDetails) === null || _a === void 0 ? void 0 : _a.email;
         if (!email) {
-            res.status(status_code_1.StatusCode.Unauthorized).json({ msg: "User details not found" });
+            res
+                .status(status_code_1.StatusCode.Unauthorized)
+                .json({ msg: "User details not found" });
             return;
         }
         // Fetch all interview experiences for the given email
@@ -75,17 +79,21 @@ const getUserInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 
             include: {
                 roundDetails: {
                     include: {
-                        questions: true
-                    }
-                }
-            }
+                        questions: true,
+                    },
+                },
+            },
         });
-        res.status(status_code_1.StatusCode.RequestSuccessfull).json({ data: userInterviewExperiences });
+        res
+            .status(status_code_1.StatusCode.RequestSuccessfull)
+            .json({ data: userInterviewExperiences });
         return;
     }
     catch (err) {
         console.error("Error @getUserInterviewExperience: ", err);
-        res.status(status_code_1.StatusCode.ServerError).json({ msg: "Failed to fetch user interview experiences" });
+        res
+            .status(status_code_1.StatusCode.ServerError)
+            .json({ msg: "Failed to fetch user interview experiences" });
         return;
     }
 });
@@ -98,8 +106,11 @@ const postInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0, 
         // 2. Validate the data
         // 2.1 Round name & Round type cannot be empty
         for (let i = 0; i < interviewExperience.roundDetails.length; i++) {
-            if (interviewExperience.roundDetails[i].roundName === "" || interviewExperience.roundDetails[i].roundType === "") {
-                res.status(status_code_1.StatusCode.BadRequest).json({ msg: "Round name & Round type cannot be empty" });
+            if (interviewExperience.roundDetails[i].roundName === "" ||
+                interviewExperience.roundDetails[i].roundType === "") {
+                res
+                    .status(status_code_1.StatusCode.BadRequest)
+                    .json({ msg: "Round name & Round type cannot be empty" });
                 return;
             }
         }
@@ -109,7 +120,9 @@ const postInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0, 
             if (round.questions) {
                 for (let j = 0; j < round.questions.length; j++) {
                     if (!round.questions[j].title || !round.questions[j].description) {
-                        res.status(status_code_1.StatusCode.BadRequest).json({ msg: "Question title or description cannot be empty" });
+                        res
+                            .status(status_code_1.StatusCode.BadRequest)
+                            .json({ msg: "Question title or description cannot be empty" });
                         return;
                     }
                 }
@@ -128,8 +141,8 @@ const postInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0, 
                 email: interviewExperience.email,
                 interviewStatus: interviewExperience.interviewStatus,
                 name: interviewExperience.name,
-                experienceType: interviewExperience.experienceType
-            }
+                experienceType: interviewExperience.experienceType,
+            },
         });
         // 5. Create RoundDetails and Questions
         for (const round of interviewExperience.roundDetails) {
@@ -154,12 +167,16 @@ const postInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0, 
                 }
             }
         }
-        res.status(status_code_1.StatusCode.ResourceCreated).json({ msg: "Interview experience record created successfully" });
+        res
+            .status(status_code_1.StatusCode.ResourceCreated)
+            .json({ msg: "Interview experience record created successfully" });
         return;
     }
     catch (err) {
         console.error("Error @postInterviewExperience \n" + err);
-        res.status(status_code_1.StatusCode.ServerError).json({ msg: "Failed to create interview experience" });
+        res
+            .status(status_code_1.StatusCode.ServerError)
+            .json({ msg: "Failed to create interview experience" });
         return;
     }
 });
@@ -175,15 +192,33 @@ Input - post interview experience
     "year": "2025-02-28T04:03:13.163Z",
     "interviewStatus": "Cleared",
     "roundDetails":[
-    {
-        "roundName":"OA",
-        "roundType":"Online Assessment",
-        "note":"Do well",
-        "questions":[
-        {"title":"Introduce yourself","description":"I intoduced myself"}
-        ]
-    }
+        {
+            "roundName":"OA",
+            "roundType":"Online Assessment",
+            "note":"Do well",
+            "questions":[
+                {
+                    "title":"Introduce yourself",
+                    "description":"I intoduced myself"
+                }
+            ]
+        },
+        {
+            "roundName":"Technical 1",
+            "roundType":"Technical Assessment",
+            "note":"Basic DSA questions",
+            "questions":[
+                {
+                    "title":"Explain Binary search",
+                    "description":"Bs method"
+                },
+                {
+                    "title":"Explain Ternary search",
+                    "description":"Ternary method"
+                }
+            ]
+        }
     ]
 }
 
-*/ 
+*/

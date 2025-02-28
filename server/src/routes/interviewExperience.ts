@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllInterviewExperience, postInterviewExperience } from "../controllers/userInterviewExperience";
+import { getAllInterviewExperience, getUserInterviewExperience, postInterviewExperience } from "../controllers/userInterviewExperience";
 
 const router = Router();
 
@@ -8,7 +8,7 @@ router.route("/")
     .post(postInterviewExperience)
 
 router.route("/personal")
-    .get()    
+    .get(getUserInterviewExperience)    
 
     
 export default router
