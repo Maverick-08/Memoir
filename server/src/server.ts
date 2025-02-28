@@ -7,7 +7,8 @@ import HealthCheckPoint from './routes/health-checkpoint'
 import Register from './routes/register';
 import Authenticate from './routes/auth';
 import Signout from './routes/logout';
-import Updates from './routes/updates'
+import Updates from './routes/updates';
+import InterviewExperience from './routes/interviewExperience';
 
 
 const app = express();
@@ -31,6 +32,8 @@ app.use(verifyToken)
 // User updates
 app.use("/update",Updates)
 
+// User interview experience
+app.use("/experience",InterviewExperience)
 
 // User sign out
 app.use("/signout",Signout)

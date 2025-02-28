@@ -23,7 +23,7 @@ model User {
   isVerified Boolean @default(false)
   linkedIn String?
   xHandle  String?
-  createdAt DateTime? @default(now())
+  createdAt DateTime @default(now())
   post Post[]
 }
 
@@ -40,11 +40,35 @@ model Post {
   user User @relation(fields: [email],references: [email])
 }
 
-model InterviewExperience{
-  email String @id
+
+model InterviewExperience {
+  id       String   @id @default(cuid())
+  name     String
+  email    String
   companyName String
-  compensation Int
+  compensation Float
+  experienceType String
+  year     DateTime
   interviewStatus String
-  year DateTime
-  roundDetails Json[]
+  roundDetails RoundDetails[]
+  createdAt DateTime @default(now())
+}
+
+model RoundDetails {
+  id       String   @id @default(cuid())
+  interviewExperienceId String
+  roundName String
+  roundType String
+  note     String?
+  questions Question[]
+  interviewExperience InterviewExperience @relation(fields: [interviewExperienceId], references: [id])
+}
+
+model Question {
+  id       String   @id @default(cuid())
+  title    String
+  description String
+  link     String?
+  roundDetails RoundDetails @relation(fields: [roundDetailsId], references: [id])
+  roundDetailsId String
 }
