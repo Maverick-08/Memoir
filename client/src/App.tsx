@@ -1,11 +1,18 @@
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Landing from "./components/Landing/Landing";
+
+const router = createBrowserRouter([
+  {
+    path:"/",
+    element:<Landing />
+  }
+])
 
 function App() {
 
 
   return (
-    <div>
-      <p className="text-2xl text-red-400">Hello World</p>
-    </div>
+    <RouterProvider router={router}/>
   )
 }
 
