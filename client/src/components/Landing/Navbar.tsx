@@ -11,8 +11,8 @@ import { Link } from "react-scroll";
 
 const Navbar = () => {
   return (
-    <div className="sticky top-0 py-5 md:py-4 backdrop-blur-xl">
-      <div className="w-[90%] mx-auto flex justify-between ">
+    <div className="sticky top-0 py-5 md:py-4 backdrop-blur-xl shadow-2xs">
+      <div className="w-[95%] mx-auto flex justify-between ">
         <div className=" text-3xl md:text-2xl ">Memoir</div>
         <div className="">
           <ul className="hidden md:flex justify-around gap-16 text-xl text-gray-500">

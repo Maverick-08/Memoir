@@ -2,7 +2,7 @@
 
 const Developer = () => {
   return (
-    <div id="Developers" className="h-screen w-screen">
+    <div id="Developers" className="">
       Developer
     </div>
   )

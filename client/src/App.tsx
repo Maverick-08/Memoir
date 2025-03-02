@@ -4,19 +4,17 @@ import MainLayout from "./layouts/MainLayout";
 
 const router = createBrowserRouter([
   {
-    path:"/",
-    element:<LandingPage />
-  }
-])
+    path: "/",
+    element: (
+      <MainLayout>
+        <LandingPage />
+      </MainLayout>
+    ),
+  },
+]);
 
 function App() {
-
-
-  return (
-    <MainLayout>
-      <RouterProvider router={router}/>
-    </MainLayout>
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;
