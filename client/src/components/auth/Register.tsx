@@ -29,7 +29,7 @@ const Register = () => {
           >
             <MdArrowBackIos size={24} />
           </span>
-          <div className="border-gray-200 w-[80%] sm:w-fit shadow-lg">
+          <div className="border-gray-200 w-[90%] sm:w-fit shadow-lg">
             <div className="py-8">
               <p className="text-2xl font-medium text-center">Create an Account</p>
             </div>
@@ -38,7 +38,7 @@ const Register = () => {
               <input
                 type="text"
                 placeholder="10 digits number"
-                className="ml-4 sm:ml-8 mt-4 py-1 px-4 border-2 border-gray-200 bg-gray-50 rounded-md w-56 md:w-96 focus:outline-none focus:bg-sky-50 focus:border-sky-200"
+                className="ml-4 sm:ml-8 mt-4 py-1 px-4 border-2 border-gray-200 bg-gray-50 rounded-md w-64 md:w-96 focus:outline-none focus:bg-sky-50 focus:border-sky-200"
               />
             </div>
             <div className="px-8 mt-6 sm:mt-4 mb-4">
@@ -46,7 +46,7 @@ const Register = () => {
               <input
                 type="email"
                 placeholder="PG26@stu.manit.ac.in"
-                className="ml-4 sm:ml-8 mt-4 py-1 px-4 border-2 border-gray-200 bg-gray-50 rounded-md w-56 md:w-96 focus:outline-none focus:bg-sky-50 focus:border-sky-200"
+                className="ml-4 sm:ml-8 mt-4 py-1 px-4 border-2 border-gray-200 bg-gray-50 rounded-md w-64 md:w-96 focus:outline-none focus:bg-sky-50 focus:border-sky-200"
               />
             </div>
             <div className="mt-8">
