@@ -39,7 +39,7 @@ const SignIn = () => {
           >
             <MdArrowBackIos size={24} />
           </span>
-          <div className="border-gray-200 w-[90%] sm:w-fit shadow-lg">
+          <div className="border-gray-400 w-[90%] sm:w-fit shadow-lg">
             <div className="py-8">
               <p className="text-2xl font-medium text-center">Login to your Account</p>
             </div>
@@ -59,7 +59,7 @@ const SignIn = () => {
                 className="ml-4 sm:ml-8 mt-4 py-1 px-4 border-2 border-gray-200 bg-gray-50 rounded-md w-64 md:w-96 focus:outline-none focus:bg-sky-50 focus:border-sky-200"
               />
             </div>
-            <div className="flex justify-end w-[80%] sm:w-[95%] text-sm cursor-pointer">
+            <div className="flex justify-end w-[90%] text-sm cursor-pointer">
               <span>Forgot Password ?</span>
             </div>
             <div className="mt-8">
