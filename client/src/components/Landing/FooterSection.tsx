@@ -3,7 +3,7 @@ import { BsTwitterX } from "react-icons/bs";
 
 const FooterSection = () => {
   return (
-    <div className="mt-24 px-4">
+    <div className="mt-24 px-2">
       <div className="flex justify-between">
         <div className="flex flex-col">
           <span className="text-xl font-medium">Memoir</span>

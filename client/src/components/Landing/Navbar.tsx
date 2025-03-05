@@ -80,7 +80,7 @@ const SideDrawer = function TemporaryDrawer() {
           ].map((obj) => (
             <div
               key={obj.text}
-              className="flex items-center gap-6 font-semibold p-1 "
+              className="flex items-center gap-6 font-medium p-1 "
             >
               <div>{obj.Icon}</div>
               <div className="">
