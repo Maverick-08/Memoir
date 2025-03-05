@@ -3,7 +3,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import { MdHome } from "react-icons/md";
-import { MdOutlineReviews } from "react-icons/md";
+import { CgNotes } from "react-icons/cg";
 import { GoPeople } from "react-icons/go";
 import { MdOutlineSpeakerNotes } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
@@ -11,9 +11,9 @@ import { Link } from "react-scroll";
 
 const Navbar = () => {
   return (
-    <div className="sticky top-0 py-5 md:py-4 backdrop-blur-xl shadow-2xs">
+    <div className="sticky top-0 py-5 md:py-4 backdrop-blur-xl z-50 rounded-md">
       <div className="w-[95%] mx-auto flex justify-between ">
-        <div className=" text-3xl md:text-2xl ">Memoir</div>
+        <div className=" text-2xl md:text-2xl font-medium">Memoir</div>
         <div className="">
           <ul className="hidden md:flex justify-around gap-16 text-xl text-gray-500">
             <li className="cursor-pointer">
@@ -54,42 +54,53 @@ const SideDrawer = function TemporaryDrawer() {
   };
 
   const DrawerList = (
-    <Box sx={{ width: 216 }} role="presentation" onClick={toggleDrawer(false)}>
-      <div className="pt-8 px-4 flex flex-col gap-12">
-        <span className="ml-34 p-1 bg-gray-100 rounded-md">
+    <Box sx={{ width: 224 }} role="presentation" onClick={toggleDrawer(false)}>
+      <div className="pt-8 px-2 flex flex-col relative">
+        <span className="absolute ml-[72%] p-1 bg-gray-100 rounded-md">
           <RxCross2 size={32} />
         </span>
-        {[
-          {
-            text: "Home",
-            Icon: <MdHome size={32} />,
-          },
-          {
-            text: "Reviews",
-            Icon: <MdOutlineReviews size={32} />,
-          },
-          {
-            text: "Developers",
-            Icon: <GoPeople size={32} />,
-          },
-          {
-            text: "Contact Us",
-            Icon: <MdOutlineSpeakerNotes size={32} />,
-          },
-        ].map((obj) => (
-          <div key={obj.text} className="flex items-center gap-6 font-semibold">
-            <span>{obj.Icon}</span>
-            <Link
-              to={obj.text}
-              smooth={true}
-              duration={1000}
-              className="text-xl"
+        <div className="h-[64vh] mt-16 flex flex-col justify-around ">
+          {[
+            {
+              text: "Home",
+              Icon: <MdHome size={32} />,
+            },
+            {
+              text: "Reviews",
+              Icon: <CgNotes size={32} />,
+            },
+            {
+              text: "Developers",
+              Icon: <GoPeople size={32} />,
+            },
+            {
+              text: "Contact Us",
+              Icon: <MdOutlineSpeakerNotes size={32} />,
+            },
+          ].map((obj) => (
+            <div
+              key={obj.text}
+              className="flex items-center gap-6 font-semibold p-1 "
             >
-              {obj.text}
-            </Link>
-            
+              <div>{obj.Icon}</div>
+              <div className="">
+                <Link
+                  to={obj.text}
+                  smooth={true}
+                  duration={1000}
+                  className="text-2xl"
+                >
+                  {obj.text}
+                </Link>
+              </div>
+            </div>
+          ))}
+          <div className="flex justify-center mt-16 ">
+            <button className="text-xl cursor-pointer bg-[#272E3F] text-white px-6 py-2 rounded-md">
+              Login Now
+            </button>
           </div>
-        ))}
+        </div>
       </div>
     </Box>
   );

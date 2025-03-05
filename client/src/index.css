@@ -1,1 +1,64 @@
 @import "tailwindcss";
+
+@keyframes infiniteCardScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.slider-card-animation {
+  animation: infiniteCardScroll 20s linear infinite;
+}
+
+.slider-card-pause:hover {
+  animation-play-state: paused;
+}
+
+/* Slider for companies section - small screen */
+@keyframes infiniteScrollSmallScreen {
+  0% {
+    transform: translateX(0%);
+  }
+  50% {
+    transform: translateX(-400%);
+  }
+  100% {
+    transform: translateX(-800%);
+  }
+}
+
+@media (width <= 640px) {
+  .slider-animation-smallScreen {
+    animation: infiniteScrollSmallScreen 40s linear infinite;
+  }
+
+  .slider-pause-smallScreen:hover {
+    animation-play-state: paused;
+  }
+}
+
+/* Slider for companies section - large screen */
+@keyframes infiniteScrollLargeScreen {
+  0% {
+    transform: translateX(0%);
+  }
+  50% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@media (width >= 640px) {
+  .slider-animation-largeScreen {
+    animation: infiniteScrollLargeScreen 20s linear infinite;
+  }
+  
+  .slider-pause-largeScreen:hover {
+    animation-play-state: paused;
+  }
+}
