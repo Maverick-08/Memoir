@@ -3,8 +3,8 @@ import { BsTwitterX } from "react-icons/bs";
 
 const FooterSection = () => {
   return (
-    <div className="mt-24">
-      <div className="flex justify-between w-[95%] mx-auto">
+    <div className="mt-24 px-4">
+      <div className="flex justify-between">
         <div className="flex flex-col">
           <span className="text-xl font-medium">Memoir</span>
           <span className="ml-4 text-xl font-medium">Organization</span>

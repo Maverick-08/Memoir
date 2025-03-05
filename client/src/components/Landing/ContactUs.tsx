@@ -54,7 +54,7 @@ const ContactUs = () => {
           Any Suggestions or Queries ?
         </p>
         <div className=" flex justify-center">
-          <div className="shadow-md border border-gray-100 flex flex-col gap-8 px-8 py-4">
+          <div className="shadow-md border border-gray-100 flex flex-col gap-8 px-4 md:px-8 py-4">
             <InputElement
               value={userName}
               setValue={setUserName}

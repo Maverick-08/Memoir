@@ -11,7 +11,7 @@ import { Link } from "react-scroll";
 
 const Navbar = () => {
   return (
-    <div className="sticky top-0 py-5 md:py-4 backdrop-blur-xl z-50 rounded-md">
+    <div className="fixed w-full top-0 py-5 md:py-4 backdrop-blur-xl z-50 rounded-md">
       <div className="w-[95%] mx-auto flex justify-between ">
         <div className=" text-2xl md:text-2xl font-medium">Memoir</div>
         <div className="">
@@ -108,7 +108,7 @@ const SideDrawer = function TemporaryDrawer() {
   return (
     <div>
       <div
-        className="md:hidden p-1 bg-gray-100 rounded-md"
+        className="md:hidden p-1 bg-gray-100 rounded-md mr-2"
         onClick={toggleDrawer(true)}
       >
         <IoMdMenu size={32} />
