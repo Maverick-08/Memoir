@@ -6,6 +6,9 @@ import Register from "./components/auth/Register";
 import { SnackbarProvider } from "notistack";
 import Dashboard from "./components/Dashboard/Dashboard";
 import DashboardLayout from "./layouts/DashboardLayout";
+import AllInterviews from "./components/interview/AllInterviews";
+import PersonalInterviews from "./components/interview/PersonalInterviews";
+import AddExperience from "./components/interview/AddExperience";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +32,30 @@ const router = createBrowserRouter([
     element: (
       <DashboardLayout>
         <Dashboard />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/allInterviews",
+    element: (
+      <DashboardLayout>
+        <AllInterviews />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/personalInterviews",
+    element: (
+      <DashboardLayout>
+        <PersonalInterviews />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/addExperience",
+    element: (
+      <DashboardLayout>
+        <AddExperience />
       </DashboardLayout>
     ),
   },
