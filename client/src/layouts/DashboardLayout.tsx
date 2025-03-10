@@ -5,7 +5,7 @@ import { IoMenu } from "react-icons/io5";
 import { GoPeople } from "react-icons/go";
 import { GoPerson } from "react-icons/go";
 import { IoAddCircleOutline } from "react-icons/io5";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { TbLogout2 } from "react-icons/tb";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
@@ -14,14 +14,17 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const Options = [
     {
       text: "All Interviews",
+      link:"allInterviews",
       icon: <GoPeople size={24} />,
     },
     {
       text: "My Interviews",
+      link:"personalInterviews",
       icon: <GoPerson size={24} />,
     },
     {
       text: "Add Experience",
+      link:"addExperience",
       icon: <IoAddCircleOutline size={24} />,
     },
   ];
@@ -31,26 +34,24 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   const DrawerList = (
-    <Box
-      sx={{ width: 250, height: "100%" }}
-      role="presentation"
-    >
+    <Box sx={{ width: 250, height: "100%" }} role="presentation">
       <div className="relative px-2 flex flex-col justify-between w-full h-full">
         <span className="absolute top-4 right-4 px-3 py-2 hover:bg-slate-100 rounded-md cursor-pointer">
-          <RxCross2 size={28} onClick={toggleDrawer(false)}/>
+          <RxCross2 size={28} onClick={toggleDrawer(false)} />
         </span>
         <div className="w-full h-[60vh] pt-24">
           <p className="text-3xl font-medium pl-4 cursor-pointer">Dashboard</p>
           <div className="pl-3 pr-2 mt-8 flex flex-col gap-12">
             {Options.map((option, index) => {
               return (
-                <div
-                  key={index}
-                  className="pl-4 py-1.5 rounded-md flex items-center gap-4 hover:bg-slate-100 cursor-pointer"
-                >
-                  <span>{option.icon}</span>
-                  <span className="text-lg font-medium">{option.text}</span>
-                </div>
+                <Link to={"/"+option.link} key={index}>
+                  <div
+                    className="pl-4 py-1.5 rounded-md flex items-center gap-4 hover:bg-slate-100 cursor-pointer"
+                  >
+                    <span>{option.icon}</span>
+                    <span className="text-lg font-medium">{option.text}</span>
+                  </div>
+                </Link>
               );
             })}
           </div>
@@ -70,7 +71,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="relative container mx-auto">
       <div className="absolute cursor-pointer top-4 pl-4 hover:pl-6 py-0.5 rounded-md ease-in duration-200 hover:bg-gray-100 w-20">
-        <span onClick={()=>toggleDrawer(true)()}>
+        <span onClick={() => toggleDrawer(true)()}>
           <IoMenu size={36} />
         </span>
       </div>
