@@ -116,7 +116,7 @@ const PersonalInterviews = () => {
   };
 
   return (
-    <div className="relative pt-16 pb-4 flex justify-center">
+    <div className="pt-16 pb-4 flex justify-center">
       {modalState && (
         <JobModal
           closeModal={setModalState}
