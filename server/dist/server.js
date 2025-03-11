@@ -14,6 +14,7 @@ const auth_1 = __importDefault(require("./routes/auth"));
 const logout_1 = __importDefault(require("./routes/logout"));
 const updates_1 = __importDefault(require("./routes/updates"));
 const interviewExperience_1 = __importDefault(require("./routes/interviewExperience"));
+const token_checkpoint_1 = __importDefault(require("./routes/token-checkpoint"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
@@ -26,6 +27,8 @@ app.use("/register", register_1.default);
 app.use("/auth", auth_1.default);
 // Protected routes
 app.use(verifyToken_1.verifyToken);
+// Token Checkpoint
+app.use("/token", token_checkpoint_1.default);
 // User updates
 app.use("/update", updates_1.default);
 // User interview experience

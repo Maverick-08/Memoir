@@ -9,6 +9,7 @@ import Authenticate from './routes/auth';
 import Signout from './routes/logout';
 import Updates from './routes/updates';
 import InterviewExperience from './routes/interviewExperience';
+import TokenCheckPoint from './routes/token-checkpoint';
 
 
 const app = express();
@@ -28,6 +29,9 @@ app.use("/auth",Authenticate)
 
 // Protected routes
 app.use(verifyToken)
+
+// Token Checkpoint
+app.use("/token",TokenCheckPoint)
 
 // User updates
 app.use("/update",Updates)

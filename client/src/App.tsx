@@ -9,6 +9,7 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import AllInterviews from "./components/interview/AllInterviews";
 import PersonalInterviews from "./components/interview/PersonalInterviews";
 import AddExperience from "./components/interview/AddExperience";
+import ProtectedRoute from "./ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -30,9 +31,11 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: (
-      <DashboardLayout>
-        <Dashboard />
-      </DashboardLayout>
+      <ProtectedRoute>
+        <DashboardLayout>
+          <Dashboard />
+        </DashboardLayout>
+      </ProtectedRoute>
     ),
   },
   {
