@@ -3,12 +3,14 @@ import { useMemo, useState } from "react";
 const Dashboard = () => {
   const greeting = useMemo(() => {
     const date = new Date();
-    const ist = new Date(date.getTime() + (5 * 60 + 30) * 60 * 1000);
-    const currentHour = ist.getHours();
-
-    if (currentHour >= 12) return "Good Afternoon,";
-
-    return "Good Morning,";
+    // const ist = new Date(date.getTime() + (5 * 60 + 30) * 60 * 1000);
+    // const currentHour = ist.getHours();
+    const currentHour = date.getHours()
+    console.log(currentHour)
+    if(currentHour < 12) return "Good Morning," 
+    else if (currentHour >= 12 && currentHour < 18) return "Good Afternoon,";
+    else if(currentHour >= 18 && currentHour < 22) return "Good Evening,"
+    return "It's a bit late don't you think ?";
   }, []);
 
   return (
