@@ -41,25 +41,31 @@ const router = createBrowserRouter([
   {
     path: "/allInterviews",
     element: (
-      <DashboardLayout>
-        <AllInterviews />
-      </DashboardLayout>
+      <ProtectedRoute>
+        <DashboardLayout>
+          <AllInterviews />
+        </DashboardLayout>
+      </ProtectedRoute>
     ),
   },
   {
     path: "/personalInterviews",
     element: (
-      <DashboardLayout>
-        <PersonalInterviews />
-      </DashboardLayout>
+      <ProtectedRoute>
+        <DashboardLayout>
+          <PersonalInterviews />
+        </DashboardLayout>
+      </ProtectedRoute>
     ),
   },
   {
     path: "/addExperience",
     element: (
-      <DashboardLayout>
-        <AddExperience />
-      </DashboardLayout>
+      <ProtectedRoute>
+        <DashboardLayout>
+          <AddExperience />
+        </DashboardLayout>
+      </ProtectedRoute>
     ),
   },
 ]);
@@ -69,7 +75,7 @@ function App() {
     <SnackbarProvider
       maxSnack={2}
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      autoHideDuration={3000}
+      autoHideDuration={2000}
     >
       <RouterProvider router={router} />
     </SnackbarProvider>

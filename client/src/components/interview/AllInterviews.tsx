@@ -173,7 +173,7 @@ const InterviewModal = ({
             <div className="mt-8 px-8 ">
               <div className="border px-4 pt-6 pb-4 border-gray-300 rounded-md ">
                 <TextComponent selectedCompany={selectedCompany} />
-                
+
                 {selectedCompany.rounds.map((data, index) => {
                   return <Accordion key={index} roundDetails={data} />;
                 })}

@@ -18,7 +18,29 @@ const token_checkpoint_1 = __importDefault(require("./routes/token-checkpoint"))
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
-app.use((0, cors_1.default)(app_config_1.CorsOptions));
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    // console.log(origin) http://localhost:5173
+    // res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+    res.header("Access-Control-Allow-Credentials", "true");
+    // res.header(
+    //     "Access-Control-Allow-Headers",
+    //     "Origin, X-Requested-With, Content-Type, Accept"
+    // );
+    next();
+});
+app.use((0, cors_1.default)({
+    origin(requestOrigin, callback) {
+        if (["http://localhost:5173", "http://localhost:3000"].includes(requestOrigin)) {
+            // console.log(requestOrigin); http://localhost:5173
+            callback(null, true);
+        }
+        else {
+            callback(new Error("Blocked by cors"));
+        }
+    },
+    credentials: true
+}));
 // For checking whether server is running
 app.use("/", health_checkpoint_1.default);
 // Register new user

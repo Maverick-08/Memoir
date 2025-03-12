@@ -35,6 +35,16 @@ exports.verifyToken = verifyToken;
 }
 
 Decoded
-{ email: 'ojhavivek24@gmail.com', iat: 1740560978, exp: 1740561008 }
+{
+  "email": "ojhavivek24@gmail.com",
+  "name": "Vivek Ojha",
+  "degree": "MCA",
+  "branch": "Not Applicable",
+  "yearOfPassingOut": 2026,
+  "linkedIn": "jhds",
+  "xHandle": "jksdk",
+  "iat": 1741685726,
+  "exp": 1744277726
+}
 
 */ 

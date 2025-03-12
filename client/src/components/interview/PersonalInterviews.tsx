@@ -67,7 +67,7 @@ const PersonalInterviews = () => {
     },
   ] as JobDetails[]);
   const [modalState, setModalState] = useState(false);
-  const [updateJob, setUpdateJob] = useState<JobDetails | null>(null); // track the job being updated
+  const [updateJob, setUpdateJob] = useState<JobDetails | null>(null);
 
   useEffect(() => {
     setFilterJobsList(jobsList);

@@ -3,11 +3,12 @@ import Confetti from "../../assets/Animation - 1740826000488.json";
 import { FaAnglesDown } from "react-icons/fa6";
 import { Link } from "react-scroll";
 import { useNavigate } from "react-router-dom";
-
-
+import { useRecoilValue } from "recoil";
+import { userDetailsAtom } from "../../../store/atoms";
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const userDetails = useRecoilValue(userDetailsAtom);
 
   return (
     <div
@@ -24,13 +25,31 @@ const HeroSection = () => {
       </div>
 
       <div className="z-10 flex flex-col items-center">
-        <p className="text-4xl text-wrap md:text-6xl font-bold text-center text-transparent bg-gradient-to-r from-gray-500 to-gray-800 bg-clip-text">Elevate Your Interview Preparation with Memoir !</p>
-        <p className="text-center text-3xl md:text-2xl mt-8 text-gray-600">Interview Questions & Guidance from Seniors</p>
-        <button onClick={()=> navigate("/auth")} className="text-lg sm:text-md mt-16 cursor-pointer bg-[#272E3F] text-white px-8 py-2 sm:px-6 sm:py-2 rounded-md">Login Now</button>
+        <p className="text-4xl text-wrap md:text-6xl font-bold text-center text-transparent bg-gradient-to-r from-gray-500 to-gray-800 bg-clip-text">
+          Elevate Your Interview Preparation with Memoir !
+        </p>
+        <p className="text-center text-3xl md:text-2xl mt-8 text-gray-600">
+          Interview Questions & Guidance from Seniors
+        </p>
+        <button
+          onClick={() => {
+            if (!userDetails) {
+              navigate("/auth");
+            } else {
+              navigate("/dashboard");
+            }
+          }}
+          className="text-lg sm:text-md mt-16 cursor-pointer bg-[#272E3F] text-white px-8 py-2 sm:px-6 sm:py-2 rounded-md"
+        >
+          {userDetails ? "Check Dashboard" : "Login Now"}
+        </button>
       </div>
 
       <div className="absolute bottom-8 cursor-pointer animate-bounce">
-        <Link to="Companies" smooth={true} duration={1000}><FaAnglesDown size={24}/></Link></div>
+        <Link to="Companies" smooth={true} duration={1000}>
+          <FaAnglesDown size={24} />
+        </Link>
+      </div>
     </div>
   );
 };

@@ -45,19 +45,25 @@ const CreateUpdate = () => {
           placeholder="what's on your mind ?"
           onChange={(e) => setPostUpdate(e.target.value)}
         ></textarea>
-        <div className="pt-8 flex justify-center cursor-pointer"><div className="w-[80%] py-2 rounded-md bg-black text-white text-center text-xl font-medium">Create post</div></div>
+        <div className="pt-8 flex justify-center cursor-pointer">
+          <div className="w-[80%] py-2 rounded-md bg-black text-white text-center text-xl font-medium">
+            Create post
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 const AllUpdates = () => {
-  return <div className="">
-    <p className="text-xl text-center font-medium">All Updates</p>
-    <div className="mt-8 py-4 shadow border border-gray-200">
+  return (
+    <div className="">
+      <p className="text-xl text-center font-medium">All Updates</p>
+      <div className="mt-8 py-4 shadow border border-gray-200">
         <p className="text-gray-600 text-center">No new updates</p>
+      </div>
     </div>
-  </div>;
+  );
 };
 
 export default Dashboard;

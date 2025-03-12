@@ -34,15 +34,26 @@ const userAuthenticationHandler = (req, res) => __awaiter(void 0, void 0, void 0
         const isPayloadValid = validatePayload(payload);
         if (!isPayloadValid.status) {
             res.status(status_code_1.StatusCode.BadRequest).json(isPayloadValid.msg);
+            return;
         }
         // 3. Check if the user exists in our database
         const userExist = yield prisma.user.findFirst({
             where: { email: payload.email },
         });
-        if (!userExist) { // If user does not exist
+        if (!userExist) {
+            // If user does not exist
             res.status(status_code_1.StatusCode.Unauthorized).json({ msg: "User does not exist" });
             return;
         }
+        const responseData = {
+            email: userExist.email,
+            name: userExist.name,
+            degree: userExist.degree,
+            branch: userExist.branch,
+            yearOfPassingOut: userExist.yearOfPassingOut,
+            linkedIn: userExist.linkedIn,
+            xHandle: userExist.xHandle,
+        };
         // IMPORTANT : Uncomment once mail service is setup
         // 4. Check if the user is verified
         // if(!userExist.isVerified){
@@ -50,23 +61,23 @@ const userAuthenticationHandler = (req, res) => __awaiter(void 0, void 0, void 0
         //     return
         // }
         // 5. Generate the authentication cookie
-        const __authCookie__ = jsonwebtoken_1.default.sign({
-            email: payload.email,
-            name: userExist.name,
-            degree: userExist.degree,
-            branch: userExist.branch,
-            yearOfPassingOut: userExist.yearOfPassingOut
-        }, TOKEN_KEY, { 'expiresIn': '1d' });
+        const __authCookie__ = jsonwebtoken_1.default.sign(responseData, TOKEN_KEY, {
+            expiresIn: "30d",
+        });
         // 6. Set the cookie in the response header
         // Production : {httpOnly:true,sameSite:"none",secure:true,maxAge:24*60*60*1000}
-        // Development : {httpOnly:true,sameSite:"none",maxAge:24*60*60*1000}
-        res.cookie("__authCookie__", __authCookie__, { httpOnly: true, sameSite: "none", maxAge: 24 * 60 * 60 * 1000 });
-        res.status(status_code_1.StatusCode.RequestSuccessfull).json({ msg: "Login successful !" });
+        // Development : {httpOnly:true,sameSite:"lax",maxAge:24*60*60*1000}
+        res.cookie("__authCookie__", __authCookie__, {
+            httpOnly: true,
+            sameSite: "lax",
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+        });
+        res.status(status_code_1.StatusCode.RequestSuccessfull).json(responseData);
         return;
     }
     catch (err) {
         console.log("Error @userAuthenticationHandler \n", err);
-        res.status(status_code_1.StatusCode.ServerError).json({ msg: "Server error" });
+        res.status(status_code_1.StatusCode.ServerError).json({ msg: "Internal Server error" });
         return;
     }
 });
@@ -102,4 +113,4 @@ const validatePayload = (payload) => {
 Output : If user does not exist in our database
 null
 
-*/ 
+*/

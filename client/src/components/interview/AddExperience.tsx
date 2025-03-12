@@ -316,29 +316,31 @@ const QuestionAccordian = ({
   setAllRoundsDetails,
 }: {
   questionObject: Questions;
-  allRoundsDetails:Rounds[]
+  allRoundsDetails: Rounds[];
   setQuestionCount: (x: number) => void;
   roundDetails: Rounds;
   setAllRoundsDetails: ([]: Rounds[]) => void;
 }) => {
   const [accordianOpen, setAccordionOpen] = useState(false);
 
-  const deleteQuestion = (selectedQuestion:Questions) => {
-    const filetredQuestionList = roundDetails.questions.filter(obj => obj.questionId!=selectedQuestion.questionId);
+  const deleteQuestion = (selectedQuestion: Questions) => {
+    const filetredQuestionList = roundDetails.questions.filter(
+      (obj) => obj.questionId != selectedQuestion.questionId
+    );
 
-    filetredQuestionList.forEach((obj,index) => obj.questionId=index+1);
-    roundDetails.questions = filetredQuestionList
+    filetredQuestionList.forEach((obj, index) => (obj.questionId = index + 1));
+    roundDetails.questions = filetredQuestionList;
 
     allRoundsDetails.forEach((obj) => {
-      if(obj.roundNumber == roundDetails.roundNumber){
+      if (obj.roundNumber == roundDetails.roundNumber) {
         obj.questions = roundDetails.questions;
         return;
       }
-    })
+    });
 
     setQuestionCount(roundDetails.questions.length);
     setAllRoundsDetails(allRoundsDetails);
-  }
+  };
 
   return (
     <div>
@@ -357,7 +359,16 @@ const QuestionAccordian = ({
                 <FaAngleDown size={16} />
               </span>
             )}
-            {roundDetails.questions.length > 1 ? <span onClick={()=>deleteQuestion(questionObject)} className="text-red-500"><MdDeleteSweep size={16}/></span>:<></>}
+            {roundDetails.questions.length > 1 ? (
+              <span
+                onClick={() => deleteQuestion(questionObject)}
+                className="text-red-500"
+              >
+                <MdDeleteSweep size={16} />
+              </span>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <div>
