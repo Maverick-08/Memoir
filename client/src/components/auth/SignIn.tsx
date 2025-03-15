@@ -1,24 +1,25 @@
 import { MdArrowBackIos } from "react-icons/md";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { VariantType, useSnackbar } from "notistack";
 import axios from "axios";
 import { useState } from "react";
-import { useSetRecoilState } from "recoil";
-import { userDetailsAtom } from "../../../store/atoms";
+import { useRecoilState } from "recoil";
+import { userAuthStateAtom } from "../../../store/atoms";
 
 const SignIn = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const setUserDetails = useSetRecoilState(userDetailsAtom);
+  const [userAuthState, setUserAuthState] = useRecoilState(userAuthStateAtom);
 
 
   const handleClickVariant = (variant: VariantType, msg: string) => () => {
     // variant could be success, error, warning, info, or default
     enqueueSnackbar(msg, { variant });
   };
+
 
   const handleLogin = async () => {
     try {
@@ -35,7 +36,8 @@ const SignIn = () => {
       );
       if (response.status === 200) {
         handleClickVariant("success", "Login Successful")();
-        setUserDetails(response.data);
+        localStorage.setItem("userDetails",JSON.stringify(response.data));
+        setUserAuthState(true);
         navigate("/dashboard")
       }
     } catch (err: any) {
@@ -45,6 +47,7 @@ const SignIn = () => {
 
   return (
     <div>
+      {userAuthState ? <Navigate to={"/dashboard"}/> :<></>}
       <div className="flex">
         <div className="hidden sm:flex relative w-full h-screen bg-blue-600  flex-col items-center justify-center gap-4">
           <span

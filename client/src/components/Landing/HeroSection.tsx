@@ -33,7 +33,7 @@ const HeroSection = () => {
         </p>
         <button
           onClick={() => {
-            if (!userDetails) {
+            if (!userDetails.email) {
               navigate("/auth");
             } else {
               navigate("/dashboard");
@@ -41,7 +41,7 @@ const HeroSection = () => {
           }}
           className="text-lg sm:text-md mt-16 cursor-pointer bg-[#272E3F] text-white px-8 py-2 sm:px-6 sm:py-2 rounded-md"
         >
-          {userDetails ? "Check Dashboard" : "Login Now"}
+          {userDetails.email ? "Check Dashboard" : "Login Now"}
         </button>
       </div>
 

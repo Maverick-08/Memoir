@@ -1,22 +1,18 @@
 import { atom } from "recoil";
 
+interface UserDetails{
+  name:string,
+  email:string,
+  password:string,
+  registrationNumber:number,
+  degree:string,
+  branch:string,
+  yearOfPassingOut:number
+}
+
 export const userDetailsAtom = atom({
   key: "userAtom",
-  default: null,
-  effects: [
-    ({ setSelf, onSet }) => {
-      const userDetails = localStorage.getItem("userDetails");
-
-      if (userDetails) {
-        setSelf(JSON.parse(userDetails));
-      }
-
-      onSet((newValue) => {
-        setSelf(newValue);
-        localStorage.setItem("userDetails", JSON.stringify(newValue));
-      });
-    },
-  ],
+  default: {} as UserDetails,
 });
 
 export const userAuthStateAtom = atom({

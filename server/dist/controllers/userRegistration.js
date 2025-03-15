@@ -22,6 +22,7 @@ const userRegistrationHandler = (req, res) => __awaiter(void 0, void 0, void 0, 
         const isPayloadValid = validatePayload(payload);
         if (!isPayloadValid.status) {
             res.status(status_code_1.StatusCode.BadRequest).json(isPayloadValid.msg);
+            return;
         }
         // 3. Check if the user does not already exist in the database
         const userExist = yield prisma.user.findFirst({
@@ -29,6 +30,7 @@ const userRegistrationHandler = (req, res) => __awaiter(void 0, void 0, void 0, 
         });
         if (userExist) {
             res.status(status_code_1.StatusCode.Conflict).json({ msg: "User already exist" });
+            return;
         }
         // 4. If user does not exist then create the record
         // Hash the password
@@ -36,13 +38,17 @@ const userRegistrationHandler = (req, res) => __awaiter(void 0, void 0, void 0, 
         const record = Object.assign(Object.assign({}, payload), { password: hashedPassword });
         // 5. Enter the record into the database
         yield prisma.user.create({
-            data: record
+            data: record,
         });
-        res.status(status_code_1.StatusCode.ResourceCreated).json({ msg: "Account has been created, please check your email for verification link!" });
+        res
+            .status(status_code_1.StatusCode.ResourceCreated)
+            .json({ msg: "Your account has been created !" });
+        return;
     }
     catch (err) {
         console.log("Error @userRegistrationHandler \n", err);
         res.status(status_code_1.StatusCode.ServerError).json({ msg: "Server error" });
+        return;
     }
 });
 exports.userRegistrationHandler = userRegistrationHandler;
@@ -51,6 +57,10 @@ const validatePayload = (payload) => {
         return { status: false, msg: "Name field is missing" };
     else if (!payload.email)
         return { status: false, msg: "Email field is missing" };
+    else if (!payload.registrationNumber)
+        return { status: false, msg: "Registration Number is missing" };
+    else if (!payload.degree || !payload.branch || !payload.yearOfPassingOut)
+        return { status: false, msg: "Course Details is missing" };
     else if (!payload.password)
         return { status: false, msg: "Password field is missing" };
     return { status: true, msg: "" };
@@ -68,4 +78,4 @@ const validatePayload = (payload) => {
     "xHandle":"jksdk"
 }
 
-*/ 
+*/

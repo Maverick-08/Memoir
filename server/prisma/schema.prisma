@@ -15,16 +15,22 @@ datasource db {
 
 model User {
   email    String   @id @unique
+  registrationNumber BigInt @unique
   password String
   name     String
-  degree   String?
-  branch   String?
-  yearOfPassingOut Int?
-  isVerified Boolean @default(false)
+  degree   String
+  branch   String
+  yearOfPassingOut Int
   linkedIn String?
   xHandle  String?
   createdAt DateTime @default(now())
   post Post[]
+}
+
+model OTP {
+  email String @id @unique
+  isVerified Boolean @default(false)
+  otp Int[]
 }
 
 model Post {

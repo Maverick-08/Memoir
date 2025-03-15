@@ -31,12 +31,12 @@ app.use((req, res, next) => {
 });
 app.use((0, cors_1.default)({
     origin(requestOrigin, callback) {
-        if (["http://localhost:5173", "http://localhost:3000"].includes(requestOrigin)) {
+        if (["http://localhost:5173", "http://localhost:3000", "https://memoir-ochre.vercel.app"].includes(requestOrigin) || !requestOrigin) {
             // console.log(requestOrigin); http://localhost:5173
             callback(null, true);
         }
         else {
-            callback(new Error("Blocked by cors"));
+            console.log("Blocked by CORS : " + requestOrigin);
         }
     },
     credentials: true
