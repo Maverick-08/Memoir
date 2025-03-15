@@ -38,6 +38,17 @@ const sendOTP = async (req: Request, res: Response, receiverEmail: string) => {
 
     const otp = Math.floor(Math.random() * 9000) + 1000;
 
+    const userExist = await prisma.user.findFirst({
+      where:{
+        email:receiverEmail
+      }
+    })
+
+    if(userExist) {
+      res.status(StatusCode.BadRequest).json({msg:"User is already registered !"})
+      return;
+    }
+
     const userData = await prisma.oTP.findFirst({
       where: {
         email: receiverEmail,
