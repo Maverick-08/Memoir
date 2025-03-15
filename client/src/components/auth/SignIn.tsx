@@ -1,10 +1,10 @@
 import { MdArrowBackIos } from "react-icons/md";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { VariantType, useSnackbar } from "notistack";
 import axios from "axios";
 import { useState } from "react";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { userAuthStateAtom } from "../../../store/atoms";
 
 const SignIn = () => {
@@ -12,7 +12,7 @@ const SignIn = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userAuthState, setUserAuthState] = useRecoilState(userAuthStateAtom);
+  const setUserAuthState = useSetRecoilState(userAuthStateAtom);
 
 
   const handleClickVariant = (variant: VariantType, msg: string) => () => {
@@ -47,7 +47,6 @@ const SignIn = () => {
 
   return (
     <div>
-      {userAuthState ? <Navigate to={"/dashboard"}/> :<></>}
       <div className="flex">
         <div className="hidden sm:flex relative w-full h-screen bg-blue-600  flex-col items-center justify-center gap-4">
           <span
