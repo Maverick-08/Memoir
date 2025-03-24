@@ -49,6 +49,15 @@ const sendOTP = (req, res, receiverEmail) => __awaiter(void 0, void 0, void 0, f
             },
         });
         const otp = Math.floor(Math.random() * 9000) + 1000;
+        const userExist = yield prisma.user.findFirst({
+            where: {
+                email: receiverEmail
+            }
+        });
+        if (userExist) {
+            res.status(status_code_1.StatusCode.BadRequest).json({ msg: "User is already registered !" });
+            return;
+        }
         const userData = yield prisma.oTP.findFirst({
             where: {
                 email: receiverEmail,

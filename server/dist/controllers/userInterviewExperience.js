@@ -33,7 +33,6 @@ const getAllInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0
             companyName: experience.companyName,
             compensation: experience.compensation,
             experienceType: experience.experienceType,
-            year: experience.year,
             interviewStatus: experience.interviewStatus,
             createdAt: experience.createdAt,
             roundDetails: experience.roundDetails.map((round) => {
@@ -137,7 +136,6 @@ const postInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0, 
             data: {
                 companyName: interviewExperience.companyName,
                 compensation: interviewExperience.compensation,
-                year: interviewExperience.year,
                 email: interviewExperience.email,
                 interviewStatus: interviewExperience.interviewStatus,
                 name: interviewExperience.name,

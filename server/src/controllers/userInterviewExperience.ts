@@ -10,7 +10,7 @@ interface InterviewExperience {
   companyName: string;
   compensation: number;
   experienceType: string;
-  year: Date;
+  // year: Date;
   interviewStatus: string;
   roundDetails: RoundDetails[];
 }
@@ -73,7 +73,6 @@ export const getAllInterviewExperience = async (
       companyName: experience.companyName,
       compensation: experience.compensation,
       experienceType: experience.experienceType,
-      year: experience.year,
       interviewStatus: experience.interviewStatus,
       createdAt: experience.createdAt,
       roundDetails: experience.roundDetails.map((round) => ({
@@ -190,7 +189,6 @@ export const postInterviewExperience = async (req: Request, res: Response) => {
       data: {
         companyName: interviewExperience.companyName,
         compensation: interviewExperience.compensation,
-        year: interviewExperience.year,
         email: interviewExperience.email,
         interviewStatus: interviewExperience.interviewStatus,
         name: interviewExperience.name,

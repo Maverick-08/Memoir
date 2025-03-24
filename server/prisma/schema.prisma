@@ -54,7 +54,6 @@ model InterviewExperience {
   companyName String
   compensation Float
   experienceType String
-  year     DateTime
   interviewStatus String
   roundDetails RoundDetails[]
   createdAt DateTime @default(now())
