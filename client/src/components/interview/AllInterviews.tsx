@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Experiences } from "./tempData";
 import { RxCross2 } from "react-icons/rx";
 import { FiBriefcase } from "react-icons/fi";
 import { MdCurrencyRupee } from "react-icons/md";
@@ -12,9 +11,9 @@ interface InterviewData {
   companyName: string;
   name: string;
   registrationNumber: number;
-  status: string;
+  interviewStatus: string;
   compensation?: number;
-  rounds: Rounds[];
+  roundDetails: Rounds[];
 }
 
 interface Rounds {
@@ -26,12 +25,12 @@ interface Rounds {
 
 interface Questions {
   title: string;
-  answer: string;
+  description: string;
   link?: string;
 }
 
 const AllInterviews = () => {
-  const [companies, setCompanies] = useState([...Experiences]);
+  const [companies, setCompanies] = useState<InterviewData[]>([]);
   const [searchCompany, setSearchCompany] = useState("");
   const [selectedCompany, setSelectedCompany] = useState({} as InterviewData);
   const [modalState, setModalState] = useState(false);
@@ -40,7 +39,8 @@ const AllInterviews = () => {
     const fetch = async () => {
       const response = await axios.get("http://localhost:3000/experience",{withCredentials:true})
 
-     console.log(response.data.data)
+     console.log(response.data)
+     setCompanies(response.data.data)
     }
 
     fetch();
@@ -51,9 +51,9 @@ const AllInterviews = () => {
     setSearchCompany(searchText);
 
     if (searchText.length === 0) {
-      setCompanies(Experiences);
+      setCompanies(companies);
     } else {
-      const filteredCompanies = Experiences.filter((data) =>
+      const filteredCompanies = companies.filter((data) =>
         data.companyName.toLowerCase().includes(searchText.toLowerCase())
       );
       setCompanies(filteredCompanies);
@@ -112,7 +112,7 @@ const AllInterviews = () => {
                   <p>{data.companyName}</p>
                 </div>
                 <div className="my-auto">
-                  <p>{data.status}</p>
+                  <p>{data.interviewStatus.toUpperCase()}</p>
                 </div>
                 <div
                   className="cursor-pointer my-auto"
@@ -146,15 +146,15 @@ const InterviewModal = ({
     companyName: string;
     name: string;
     registrationNumber: number;
-    status: string;
+    interviewStatus: string;
     compensation?: number;
-    rounds: {
+    roundDetails: {
       roundName: string;
       roundType: string;
       note?: string;
       questions: {
         title: string;
-        answer: string;
+        description: string;
         link?: string;
       }[];
     }[];
@@ -171,9 +171,9 @@ const InterviewModal = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-lg w-[60%] h-[55%] p-4 overflow-auto"
+        className="bg-white rounded-lg w-[60%] h-[60%] p-4 overflow-auto"
       >
-        <div className="w-full h-full ">
+        <div className="w-full h-full">
           <div className=" w-full">
             <div className="flex justify-between">
               <p className="text-xl font-medium">Interview Details</p>
@@ -181,11 +181,11 @@ const InterviewModal = ({
                 <RxCross2 size={24} />
               </span>
             </div>
-            <div className="mt-8 px-8 ">
-              <div className="border px-4 pt-6 pb-4 border-gray-300 rounded-md ">
+            <div className="mt-8 px-8 pb-8 ">
+              <div className="border  px-4 pt-6 pb-4 border-gray-300 rounded-md ">
                 <TextComponent selectedCompany={selectedCompany} />
 
-                {selectedCompany.rounds.map((data, index) => {
+                {selectedCompany.roundDetails.map((data, index) => {
                   return <Accordion key={index} roundDetails={data} />;
                 })}
               </div>
@@ -204,7 +204,7 @@ const TextComponent = ({
     companyName: string;
     name: string;
     registrationNumber: number;
-    status: string;
+    interviewStatus: string;
     compensation?: number;
   };
 }) => {
@@ -231,11 +231,11 @@ const TextComponent = ({
             <span className="text-lg font-semibold">Placement Status : </span>
           </div>
           <div>
-            {selectedCompany.status === "placed" ? (
+            {selectedCompany.interviewStatus === "selected" ? (
               <span className="bg-emerald-400 px-6 py-1 rounded-md text-md">
                 Placed
               </span>
-            ) : selectedCompany.status === "pending" ? (
+            ) : selectedCompany.interviewStatus === "pending" ? (
               <span className="bg-sky-400 px-6 py-2 rounded-md text-lg">
                 Pending
               </span>
@@ -270,14 +270,14 @@ const Accordion = ({
     note?: string;
     questions: {
       title: string;
-      answer: string;
+      description: string;
       link?: string;
     }[];
   };
 }) => {
   const [accordianOpen, setAccordionOpen] = useState(false);
   return (
-    <div className="mt-6 border-b border-gray-400 py-3">
+    <div className="mt-6 border-b border-gray-400 py-3 ">
       <div
         className="flex justify-between cursor-pointer"
         onClick={() => setAccordionOpen((prev) => !prev)}
@@ -312,7 +312,7 @@ const Accordion = ({
               <p className="text-md text-black font-medium mb-6">
                 {data.title}
               </p>
-              <p className="mb-4">{data.answer}</p>
+              <p className="mb-4">{data.description}</p>
               {data.link && (
                 <span className="flex gap-2 items-center text-[#2563EB]">
                   <span>

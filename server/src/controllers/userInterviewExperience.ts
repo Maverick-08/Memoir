@@ -88,7 +88,7 @@ export const getAllInterviewExperience = async (
       })),
     }));
 
-    res.status(StatusCode.RequestSuccessfull).json({ transformedData });
+    res.status(StatusCode.RequestSuccessfull).json({ data:transformedData });
     return;
   } catch (err: any) {
     console.error("Error @getAllInterviewExperience: ", err);

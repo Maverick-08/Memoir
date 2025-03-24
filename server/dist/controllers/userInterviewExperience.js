@@ -49,7 +49,7 @@ const getAllInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0
                 });
             }),
         }));
-        res.status(status_code_1.StatusCode.RequestSuccessfull).json({ transformedData });
+        res.status(status_code_1.StatusCode.RequestSuccessfull).json({ data: transformedData });
         return;
     }
     catch (err) {

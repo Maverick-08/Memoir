@@ -8,11 +8,21 @@ interface UserDetails{
   degree:string,
   branch:string,
   yearOfPassingOut:number
+  linkedIn:string,
+  xHandle:string
 }
 
 export const userDetailsAtom = atom({
   key: "userAtom",
   default: {} as UserDetails,
+  effects:[
+    ({setSelf})=>{
+      const userData = JSON.parse(localStorage.getItem("userDetails") || "{}")
+      if(userData){
+        setSelf(userData)
+      }
+    }
+  ]
 });
 
 export const userAuthStateAtom = atom({
