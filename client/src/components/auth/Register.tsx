@@ -151,6 +151,8 @@ const RegisterComponent = ({
         registrationNumber,
         yearOfPassingOut,
         password: "",
+        linkedIn:"",
+        xHandle:""
       });
     }
     console.log({
