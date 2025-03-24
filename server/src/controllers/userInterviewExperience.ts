@@ -6,7 +6,8 @@ const prisma = new PrismaClient();
 
 interface InterviewExperience {
   name: string;
-  email: string;
+  email:string;
+  registrationNumber: string;
   companyName: string;
   compensation: number;
   experienceType: string;
@@ -67,7 +68,7 @@ export const getAllInterviewExperience = async (
 
     // Transform the data to match the expected response structure
     const transformedData = allInterviewExperiences.map((experience) => ({
-      email: experience.email,
+      registrationNumber:experience.registrationNumber,
       name: experience.name,
       id: experience.id,
       companyName: experience.companyName,
@@ -87,7 +88,7 @@ export const getAllInterviewExperience = async (
       })),
     }));
 
-    res.status(StatusCode.RequestSuccessfull).json({ data: transformedData });
+    res.status(StatusCode.RequestSuccessfull).json({ transformedData });
     return;
   } catch (err: any) {
     console.error("Error @getAllInterviewExperience: ", err);
@@ -190,6 +191,7 @@ export const postInterviewExperience = async (req: Request, res: Response) => {
         companyName: interviewExperience.companyName,
         compensation: interviewExperience.compensation,
         email: interviewExperience.email,
+        registrationNumber: interviewExperience.registrationNumber,
         interviewStatus: interviewExperience.interviewStatus,
         name: interviewExperience.name,
         experienceType: interviewExperience.experienceType,

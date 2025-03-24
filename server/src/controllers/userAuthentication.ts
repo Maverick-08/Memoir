@@ -56,6 +56,7 @@ export const userAuthenticationHandler = async (
     const responseData = {
       email: userExist.email,
       name: userExist.name,
+      registrationNumber:userExist.registrationNumber,
       degree: userExist.degree,
       branch: userExist.branch,
       yearOfPassingOut: userExist.yearOfPassingOut,
@@ -84,7 +85,7 @@ export const userAuthenticationHandler = async (
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(StatusCode.RequestSuccessfull).json(responseData);
+    res.status(StatusCode.RequestSuccessfull).json({...responseData});
     return;
   } catch (err) {
     console.log("Error @userAuthenticationHandler \n", err);

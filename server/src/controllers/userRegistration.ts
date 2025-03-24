@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 interface Record {
   email: string;
-  registrationNumber: number;
+  registrationNumber: string;
   password: string;
   name: string;
   degree: string;
