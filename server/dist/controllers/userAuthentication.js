@@ -48,6 +48,7 @@ const userAuthenticationHandler = (req, res) => __awaiter(void 0, void 0, void 0
         const responseData = {
             email: userExist.email,
             name: userExist.name,
+            registrationNumber: userExist.registrationNumber,
             degree: userExist.degree,
             branch: userExist.branch,
             yearOfPassingOut: userExist.yearOfPassingOut,
@@ -72,7 +73,7 @@ const userAuthenticationHandler = (req, res) => __awaiter(void 0, void 0, void 0
             sameSite: "lax",
             maxAge: 30 * 24 * 60 * 60 * 1000,
         });
-        res.status(status_code_1.StatusCode.RequestSuccessfull).json(responseData);
+        res.status(status_code_1.StatusCode.RequestSuccessfull).json(Object.assign({}, responseData));
         return;
     }
     catch (err) {

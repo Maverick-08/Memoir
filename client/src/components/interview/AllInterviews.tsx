@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Experiences } from "./tempData";
 import { RxCross2 } from "react-icons/rx";
 import { FiBriefcase } from "react-icons/fi";
@@ -6,6 +6,7 @@ import { MdCurrencyRupee } from "react-icons/md";
 import { FiPlus } from "react-icons/fi";
 import { FiMinus } from "react-icons/fi";
 import { LuExternalLink } from "react-icons/lu";
+import axios from "axios";
 
 interface InterviewData {
   companyName: string;
@@ -34,6 +35,16 @@ const AllInterviews = () => {
   const [searchCompany, setSearchCompany] = useState("");
   const [selectedCompany, setSelectedCompany] = useState({} as InterviewData);
   const [modalState, setModalState] = useState(false);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await axios.get("http://localhost:3000/experience",{withCredentials:true})
+
+     console.log(response.data.data)
+    }
+
+    fetch();
+  },[])
 
   const filterCompanies = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchText = e.target.value;

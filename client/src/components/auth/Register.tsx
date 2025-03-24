@@ -110,9 +110,7 @@ const RegisterComponent = ({
   const [degree, setDegree] = useState("MCA");
   const [branch, setBranch] = useState("NA");
   const [yearOfPassingOut, setYearOfPassingOut] = useState<null | number>();
-  const [registrationNumber, setRegistrationNumber] = useState<null | number>(
-    null
-  );
+  const [registrationNumber, setRegistrationNumber] = useState<string>("");
   const [email, setEmail] = useState("");
   const setUserDetails = useSetRecoilState(userDetailsAtom);
 
@@ -246,7 +244,7 @@ const RegisterComponent = ({
         <input
           type="text"
           onChange={(e) =>
-            setRegistrationNumber(Number(e.target.value) || null)
+            setRegistrationNumber(e.target.value)
           }
           placeholder="Enter reg number"
           className="mt-4 py-1.5 px-4 border-2 border-gray-200 bg-gray-50 rounded-md w-64 md:w-[90%] focus:outline-none focus:bg-sky-50 focus:border-sky-200"

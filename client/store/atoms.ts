@@ -4,7 +4,7 @@ interface UserDetails{
   name:string,
   email:string,
   password:string,
-  registrationNumber:number,
+  registrationNumber:string,
   degree:string,
   branch:string,
   yearOfPassingOut:number

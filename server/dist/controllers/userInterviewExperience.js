@@ -27,7 +27,7 @@ const getAllInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0
         });
         // Transform the data to match the expected response structure
         const transformedData = allInterviewExperiences.map((experience) => ({
-            email: experience.email,
+            registrationNumber: experience.registrationNumber,
             name: experience.name,
             id: experience.id,
             companyName: experience.companyName,
@@ -49,7 +49,7 @@ const getAllInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0
                 });
             }),
         }));
-        res.status(status_code_1.StatusCode.RequestSuccessfull).json({ data: transformedData });
+        res.status(status_code_1.StatusCode.RequestSuccessfull).json({ transformedData });
         return;
     }
     catch (err) {
@@ -137,6 +137,7 @@ const postInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0, 
                 companyName: interviewExperience.companyName,
                 compensation: interviewExperience.compensation,
                 email: interviewExperience.email,
+                registrationNumber: interviewExperience.registrationNumber,
                 interviewStatus: interviewExperience.interviewStatus,
                 name: interviewExperience.name,
                 experienceType: interviewExperience.experienceType,

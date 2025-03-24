@@ -15,7 +15,7 @@ datasource db {
 
 model User {
   email    String   @id @unique
-  registrationNumber BigInt @unique
+  registrationNumber String @unique
   password String
   name     String
   degree   String
@@ -50,7 +50,8 @@ model Post {
 model InterviewExperience {
   id       String   @id @default(cuid())
   name     String
-  email    String
+  email String
+  registrationNumber String
   companyName String
   compensation Float
   experienceType String

@@ -5,7 +5,7 @@ import { VariantType, useSnackbar } from "notistack";
 import axios from "axios";
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
-import { userAuthStateAtom } from "../../../store/atoms";
+import { userAuthStateAtom, userDetailsAtom } from "../../../store/atoms";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -13,6 +13,7 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const setUserAuthState = useSetRecoilState(userAuthStateAtom);
+  const setUserDetails = useSetRecoilState(userDetailsAtom);
 
 
   const handleClickVariant = (variant: VariantType, msg: string) => () => {
@@ -37,6 +38,7 @@ const SignIn = () => {
       if (response.status === 200) {
         handleClickVariant("success", "Login Successful")();
         localStorage.setItem("userDetails",JSON.stringify(response.data));
+        setUserDetails(response.data)
         setUserAuthState(true);
         navigate("/dashboard")
       }

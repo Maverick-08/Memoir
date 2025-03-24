@@ -161,13 +161,14 @@ const RoundDetails = () => {
         const payload = {
           name: userDetails.name,
           email: userDetails.email,
+          registrationNumber:userDetails.registrationNumber,
           companyName: companyDetails.companyName,
           compensation: Number(companyDetails.compensation),
           experienceType: companyDetails.experienceType,
           interviewStatus: companyDetails.interviewStatus,
           roundDetails: allRoundsDetails,
         };
-
+        console.log(payload)
         await axios.post("http://localhost:3000/experience", payload, {
           withCredentials: true,
         });
