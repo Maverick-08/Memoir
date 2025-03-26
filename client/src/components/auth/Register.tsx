@@ -310,7 +310,7 @@ const OTPComponent = ({
     try {
       handleClickVariant("info", "Verifying OTP")();
       await axios.get(
-        `http://localhost:3000/register?email=${userDetails.email}&otp=${otpValue}`,
+        `http://localhost:3000/register?email=${userDetails?.email}&otp=${otpValue}`,
         { withCredentials: true }
       );
 
