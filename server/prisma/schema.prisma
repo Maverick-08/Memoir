@@ -78,3 +78,20 @@ model Question {
   roundDetails RoundDetails @relation(fields: [roundDetailsId], references: [id])
   roundDetailsId String
 }
+
+model PersonalInterviews {
+  id String @id @default(cuid())
+  createdAt DateTime @default(now())
+  email String 
+  companyName String
+  experienceType String
+  interviewStatus String
+  interviewExperienceId String?
+}
+
+model Reviews{
+  id String  @id @default(cuid())
+  email String
+  name String
+  message String
+}

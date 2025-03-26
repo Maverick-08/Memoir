@@ -38,8 +38,7 @@ const AllInterviews = () => {
   useEffect(() => {
     const fetch = async () => {
       const response = await axios.get("http://localhost:3000/experience",{withCredentials:true})
-
-     console.log(response.data)
+      
      setCompanies(response.data.data)
     }
 

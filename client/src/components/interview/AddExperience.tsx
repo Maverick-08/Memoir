@@ -7,6 +7,7 @@ import { VariantType, useSnackbar } from "notistack";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   interviewRoundsAtomFamily,
+  isInterviewExperienceForUpdationAtom,
   roundIdsAtom,
   roundQuestionsAtomFamily,
   userDetailsAtom,
@@ -32,18 +33,23 @@ const CompanyDetails = ({
   const [companyName, setCompanyName] = useState("");
   const [experienceType, setExperienceType] = useState("2M Intern");
   const [compensation, setCompensation] = useState("");
-  const [interviewStatus, setInterviewStatus] = useState("pending");
+  const [interviewStatus, setInterviewStatus] = useState(
+    "In Progress" as "In Progress" | "Selected" | "Rejected"
+  );
+  const [interviewExperienceForUpdation, setInterviewExperienceForUpdation] =
+    useRecoilState(isInterviewExperienceForUpdationAtom);
 
   useEffect(() => {
-    const experienceDetails = JSON.parse(
-      localStorage.getItem("experienceDetails")!
-    );
-
-    if (experienceDetails) {
-      setCompanyName(experienceDetails.companyName);
-      setExperienceType(experienceDetails.experienceType);
-      setInterviewStatus(experienceDetails.interviewStatus);
-      setCompensation(experienceDetails.compensation);
+    if (interviewExperienceForUpdation?.update) {
+      setCompanyName(interviewExperienceForUpdation.companyName);
+      setExperienceType(interviewExperienceForUpdation.experienceType);
+      setInterviewStatus(
+        interviewExperienceForUpdation.interviewStatus as
+          | "In Progress"
+          | "Selected"
+          | "Rejected"
+      );
+      setCompensation(String(interviewExperienceForUpdation.compensation));
     }
   }, []);
 
@@ -55,10 +61,31 @@ const CompanyDetails = ({
       compensation,
     };
 
-    localStorage.setItem(
-      "experienceDetails",
-      JSON.stringify(experienceDetails)
-    );
+    if (interviewExperienceForUpdation?.update) {
+      localStorage.setItem(
+        "experienceDetails",
+        JSON.stringify({
+          ...interviewExperienceForUpdation,
+          companyName,
+          experienceType,
+          interviewStatus,
+          compensation: Number(compensation),
+        })
+      );
+
+      setInterviewExperienceForUpdation({
+        ...interviewExperienceForUpdation,
+        companyName,
+        experienceType,
+        interviewStatus,
+        compensation: Number(compensation),
+      });
+    } else {
+      localStorage.setItem(
+        "experienceDetails",
+        JSON.stringify({ ...experienceDetails, update: false })
+      );
+    }
   };
 
   return (
@@ -81,12 +108,13 @@ const CompanyDetails = ({
               onChange={(e) => setExperienceType(e.target.value)}
               className="ml-4 focus:outline-none w-[90%] px-2 py-1 bg-slate-100/70 rounded-md border border-slate-200"
             >
+              <option value="Intern">Intern</option>
               <option value="2M Intern">2M Intern</option>
               <option value="6M Intern">6M Intern</option>
-              <option value="Intern">Intern</option>
-              <option value="Research Intern">Research Intern</option>
-              <option value="Open Source">Open Source</option>
               <option value="FTE">FTE</option>
+              <option value="2M + FTE">2M + FTE</option>
+              <option value="6M + FTE">6M + FTE</option>
+              <option value="Open Source">Open Source</option>
             </select>
           </div>
           <div className="flex flex-col gap-4 mb-8">
@@ -94,7 +122,9 @@ const CompanyDetails = ({
             <input
               type="number"
               value={compensation}
-              onChange={(e) => setCompensation(e.target.value)}
+              onChange={(e) => {
+                setCompensation(e.target.value);
+              }}
               className="ml-4 focus:outline-none w-[90%] px-2 py-1 bg-slate-100/70 rounded-md border border-slate-200 focus:border-sky-500 focus:bg-sky-100"
             />
           </div>
@@ -102,12 +132,16 @@ const CompanyDetails = ({
             <p className="font-medium">Employment Status</p>
             <select
               value={interviewStatus}
-              onChange={(e) => setInterviewStatus(e.target.value)}
+              onChange={(e) =>
+                setInterviewStatus(
+                  e.target.value as "In Progress" | "Selected" | "Rejected"
+                )
+              }
               className="ml-4 focus:outline-none w-[90%] px-2 py-1 bg-slate-100/70 rounded-md border border-slate-200"
             >
-              <option value="selected">Selected</option>
-              <option value="pending">Pending</option>
-              <option value="rejected">Rejected</option>
+              <option value="Selected">Selected</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Rejected">Rejected</option>
             </select>
           </div>
           <div
@@ -130,8 +164,23 @@ const CompanyDetails = ({
 const RoundDetails = () => {
   const [roundIds, setRoundIds] = useRecoilState(roundIdsAtom);
   const allRoundsDetails = useRecoilValue(allInterviewRoundsDetails);
+  const interviewExperienceForUpdation = useRecoilValue(
+    isInterviewExperienceForUpdationAtom
+  );
   const userDetails = useRecoilValue(userDetailsAtom);
   const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    if (interviewExperienceForUpdation?.update) {
+      let roundIds: string[] = [];
+      interviewExperienceForUpdation.roundDetails.map(
+        (round: { id: string }) => {
+          roundIds.push(round.id);
+        }
+      );
+      setRoundIds(roundIds);
+    }
+  }, []);
 
   const handleClickVariant = (variant: VariantType, msg: string) => () => {
     // variant could be success, error, warning, info, or default
@@ -152,28 +201,57 @@ const RoundDetails = () => {
   const handleSubmit = async () => {
     try {
       handleClickVariant("info", "Submitting Details")();
-      const companyDetails = JSON.parse(
-        localStorage.getItem("experienceDetails") || "{}"
-      );
 
-      if (!companyDetails) console.log("No company data");
+      if (!interviewExperienceForUpdation) console.log("No company data");
       else {
         const payload = {
           name: userDetails.name,
           email: userDetails.email,
-          registrationNumber:userDetails.registrationNumber,
-          companyName: companyDetails.companyName,
-          compensation: Number(companyDetails.compensation),
-          experienceType: companyDetails.experienceType,
-          interviewStatus: companyDetails.interviewStatus,
+          registrationNumber: userDetails.registrationNumber,
+          companyName: interviewExperienceForUpdation.companyName,
+          compensation: Number(interviewExperienceForUpdation.compensation),
+          experienceType: interviewExperienceForUpdation.experienceType,
+          interviewStatus: interviewExperienceForUpdation.interviewStatus,
           roundDetails: allRoundsDetails,
         };
-        console.log(payload)
+
         await axios.post("http://localhost:3000/experience", payload, {
           withCredentials: true,
         });
 
         handleClickVariant("success", "Experience Submitted Successfully !")();
+      }
+    } catch (err: any) {
+      handleClickVariant("error", err.response.data.msg)();
+    }
+  };
+
+  const handleUpdate = async () => {
+    try {
+      handleClickVariant("info", "Submitting Details")();
+
+      if (!interviewExperienceForUpdation) console.log("No company data");
+      else {
+        const payload = {
+          name: userDetails.name,
+          email: userDetails.email,
+          registrationNumber: userDetails.registrationNumber,
+          id: interviewExperienceForUpdation.id,
+          companyName: interviewExperienceForUpdation.companyName,
+          compensation: Number(interviewExperienceForUpdation.compensation),
+          experienceType: interviewExperienceForUpdation.experienceType,
+          interviewStatus: interviewExperienceForUpdation.interviewStatus,
+          roundDetails: allRoundsDetails,
+        };
+        console.log(payload);
+
+        await axios.post("http://localhost:3000/experience/update", payload, {
+          withCredentials: true,
+        });
+
+        handleClickVariant("success", "Experience Updated Successfully !")();
+
+        localStorage.setItem("experienceDetails", JSON.stringify("{}"));
       }
     } catch (err: any) {
       handleClickVariant("error", err.response.data.msg)();
@@ -219,10 +297,14 @@ const RoundDetails = () => {
 
           <div className="flex justify-center mb-4">
             <div
-              onClick={handleSubmit}
+              onClick={() => {
+                interviewExperienceForUpdation?.update
+                  ? handleUpdate()
+                  : handleSubmit();
+              }}
               className="w-[50%] text-center bg-black text-gray-300 hover:text-white text-xl py-2 rounded-md cursor-pointer"
             >
-              Submit
+              {interviewExperienceForUpdation?.update ? "Update" : "Submit"}
             </div>
           </div>
         </div>
@@ -246,6 +328,9 @@ const RoundAccordian = ({
   const [roundDetails, setRoundDetails] = useRecoilState(
     interviewRoundsAtomFamily(roundId)
   );
+  const interviewExperienceForUpdation = useRecoilValue(
+    isInterviewExperienceForUpdationAtom
+  );
 
   useEffect(() => {
     setRoundDetails({
@@ -256,6 +341,27 @@ const RoundAccordian = ({
       questionIds: [],
     });
   }, [roundNumber]);
+
+  useEffect(() => {
+    if (interviewExperienceForUpdation?.update) {
+      interviewExperienceForUpdation.roundDetails.map((round) => {
+        if (round.id === roundId) {
+          let givenQuestionIds: string[] = [];
+          round.questions.map((question: { id: string }) => {
+            givenQuestionIds.push(question.id);
+          });
+
+          setRoundDetails({
+            roundId,
+            roundName: `Round ${round.roundName}`,
+            roundType: round.roundType,
+            note: round.note ? round.note : "",
+            questionIds: givenQuestionIds,
+          });
+        }
+      });
+    }
+  }, []);
 
   const addQuestion = () => {
     const questionId =
@@ -359,6 +465,7 @@ const RoundAccordian = ({
                   <QuestionAccordian
                     key={Id}
                     questionId={Id}
+                    roundId={roundId}
                     questionNumber={index + 1}
                     deleteQuestion={deleteQuestion}
                     totalQuestions={roundDetails.questionIds.length}
@@ -387,11 +494,13 @@ const RoundAccordian = ({
 const QuestionAccordian = ({
   questionNumber,
   questionId,
+  roundId,
   totalQuestions,
   deleteQuestion,
 }: {
   questionNumber: number;
   questionId: string;
+  roundId: string;
   totalQuestions: number;
   deleteQuestion: (x: string) => void;
 }) => {
@@ -399,6 +508,28 @@ const QuestionAccordian = ({
   const [questionDetails, setQuestionDetails] = useRecoilState(
     roundQuestionsAtomFamily(questionId)
   );
+  const interviewExperienceForUpdation = useRecoilValue(
+    isInterviewExperienceForUpdationAtom
+  );
+
+  useEffect(() => {
+    if (interviewExperienceForUpdation?.update) {
+      interviewExperienceForUpdation.roundDetails.map((round) => {
+        if (round.id === roundId) {
+          round.questions.map((question) => {
+            if (question.id === questionId) {
+              setQuestionDetails({
+                questionId,
+                title: question.title,
+                description: question.description,
+                link: question.link ?? "",
+              });
+            }
+          });
+        }
+      });
+    }
+  }, []);
 
   return (
     <div>

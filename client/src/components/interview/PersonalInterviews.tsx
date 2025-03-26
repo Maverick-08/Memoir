@@ -1,81 +1,54 @@
 import { useEffect, useState } from "react";
+import { VariantType, useSnackbar } from "notistack";
+import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { userDetailsAtom } from "../../../store/atoms";
+import { useNavigate } from "react-router-dom";
 
-interface JobDetails {
-  id: string; // Added an id for each job
-  date: Date;
-  company: string;
-  jobStatus: string;
-  offerType: string;
-  verificationStatus: "Not Required" | "Not Verified" | "Verified";
+interface InterviewDetails {
+  id: string; 
+  createdAt: Date;
+  email:String;
+  companyName: string;
+  experienceType: string;
+  interviewStatus: string;
+  interviewExperienceId?: string
 }
 
-// Helper function to generate unique IDs
-const generateId = () => {
-  return Math.random().toString(36).substring(2, 15);
-};
 
 const PersonalInterviews = () => {
-  const [filteredJobsList, setFilterJobsList] = useState([] as JobDetails[]);
-  const [jobsList, setJobsList] = useState([
-    {
-      id: generateId(),
-      date: new Date(),
-      company: "Texsas Instruments",
-      jobStatus: "Applied",
-      offerType: "2M Intern",
-      verificationStatus: "Not Verified",
-    },
-    {
-      id: generateId(),
-      date: new Date(),
-      company: "Browser Stack",
-      jobStatus: "In Progress",
-      offerType: "6M Intern",
-      verificationStatus: "Verified",
-    },
-    {
-      id: generateId(),
-      date: new Date(),
-      company: "A",
-      jobStatus: "Selected",
-      offerType: "FTE",
-      verificationStatus: "Not Verified",
-    },
-    {
-      id: generateId(),
-      date: new Date(),
-      company: "B",
-      jobStatus: "In Progress",
-      offerType: "FTE",
-      verificationStatus: "Not Required",
-    },
-    {
-      id: generateId(),
-      date: new Date(),
-      company: "C",
-      jobStatus: "Rejected",
-      offerType: "FTE",
-      verificationStatus: "Not Required",
-    },
-    {
-      id: generateId(),
-      date: new Date(),
-      company: "D",
-      jobStatus: "Applied",
-      offerType: "FTE",
-      verificationStatus: "Not Required",
-    },
-  ] as JobDetails[]);
+  const { enqueueSnackbar } = useSnackbar();
+  const userDetails = useRecoilValue(userDetailsAtom);
+  const navigate = useNavigate();
+  const [filteredJobsList, setFilterJobsList] = useState<InterviewDetails[]>([]);
+  const [jobsList, setJobsList] = useState<InterviewDetails[]>([]);
   const [modalState, setModalState] = useState(false);
-  const [updateJob, setUpdateJob] = useState<JobDetails | null>(null);
+  const [selectedJob, setSelectedJob] = useState<InterviewDetails|null>(null);
 
-  useEffect(() => {
-    setFilterJobsList(jobsList);
-  }, [jobsList]);
+
+  useEffect(()=>{
+    const fetchData = async () =>{
+      try{
+        const response = await axios.get("http://localhost:3000/experience/personal",{withCredentials:true})
+
+        setJobsList(response.data.data)
+        setFilterJobsList(response.data.data);
+      }
+      catch(err){
+       handleClickVariant("error","Error Occurred")
+      }
+    }
+    fetchData();
+  },[])
+
+  const handleClickVariant = (variant: VariantType, msg: string) => () => {
+    // variant could be success, error, warning, info, or default
+    enqueueSnackbar(msg, { variant });
+  };
 
   const filterByCompanyName = (selectedCompany: string) => {
     const filteredList = jobsList.filter((obj) =>
-      obj.company.toLowerCase().includes(selectedCompany.toLowerCase())
+      obj.companyName.toLowerCase().includes(selectedCompany.toLowerCase())
     );
 
     setFilterJobsList(filteredList);
@@ -87,44 +60,87 @@ const PersonalInterviews = () => {
       setFilterJobsList(jobsList);
     } else if (selectedTag === "Intern" || selectedTag === "FTE") {
       filteredList = jobsList.filter((obj) =>
-        obj.offerType.toLowerCase().includes(selectedTag.toLowerCase())
+        obj.experienceType.toLowerCase().includes(selectedTag.toLowerCase())
       );
       setFilterJobsList(filteredList);
     } else {
       filteredList = jobsList.filter((obj) =>
-        obj.jobStatus.toLowerCase().includes(selectedTag.toLowerCase())
+        obj.interviewStatus.toLowerCase().includes(selectedTag.toLowerCase())
       );
       setFilterJobsList(filteredList);
     }
   };
 
-  const handleUpdateJob = (updatedJob: JobDetails) => {
-    const updatedJobs = jobsList.map((job) => {
-      if (job.id === updatedJob.id) {
-        return { ...updatedJob };
-      }
-      return job;
-    });
-    setJobsList(updatedJobs);
-    setFilterJobsList(updatedJobs);
+  const handleUpdateJob = async (updatedJob: InterviewDetails) => {
+    try{
+       if(updatedJob.interviewExperienceId){
+          const response = await axios.get(`http://localhost:3000/experience/update?interviewExperienceId=${updatedJob.interviewExperienceId}`,{withCredentials:true})
+
+          localStorage.setItem("experienceDetails",JSON.stringify({...response.data.response,update:true}));
+          navigate("/addExperience")
+       }
+       else{
+          await axios.post("http://localhost:3000/experience/personal/update",updatedJob,{withCredentials:true});
+
+          const updatedJobs = jobsList.map((job) => {
+            if (job.id === updatedJob.id) {
+              return { ...updatedJob };
+            }
+            return job;
+          });
+          setJobsList(updatedJobs);
+          setFilterJobsList(updatedJobs);
+
+          handleClickVariant("success","Interview updated successfully")()
+       }
+    }
+    catch(err){
+      console.log(err);
+      handleClickVariant("error","Request Failed")()
+    }
+    
   };
 
-  const handleDeleteJob = (jobToDelete: JobDetails) => {
-    const updatedJobs = jobsList.filter((job) => job.id !== jobToDelete.id);
-    setJobsList(updatedJobs);
-    setFilterJobsList(updatedJobs);
+  const handleDeleteJob = async (jobToDelete: InterviewDetails) => {
+    try{
+      await axios.delete(`http://localhost:3000/experience/personal?interviewId=${jobToDelete.id}`,{withCredentials:true});
+      const updatedJobs = jobsList.filter((job) => job.id !== jobToDelete.id);
+      setJobsList(updatedJobs);
+      setFilterJobsList(updatedJobs);
+      handleClickVariant("success","Interview Deleted Successfully")()
+    }
+    catch(err){
+      handleClickVariant("error","Request Declined")()
+    }
+    
   };
+
+  const addInterview = async (payload:{companyName:string,experienceType:string,interviewStatus:string,interviewExperienceId:undefined}) => {
+    try{
+  
+     const response = await axios.post("http://localhost:3000/experience/personal",{...payload,email:userDetails.email},{withCredentials:true});
+
+      const updatedJobsList = [response.data.response,...jobsList]
+      setJobsList(updatedJobsList)
+      setFilterJobsList(updatedJobsList)
+
+      handleClickVariant("success","Experience added successfully")()
+    }
+    catch(err){
+        console.log(err)
+        handleClickVariant("error","Request Declined")()
+    }
+  }
 
   return (
     <div className="pt-16 pb-4 flex justify-center">
       {modalState && (
         <JobModal
           closeModal={setModalState}
-          jobsList={jobsList}
-          setJobsList={setJobsList}
-          updateJob={updateJob}
-          setUpdateJob={setUpdateJob}
-          onUpdate={handleUpdateJob}
+          selectedJob={selectedJob}
+          setSelectedJob={setSelectedJob}
+          handleUpdateJob={handleUpdateJob}
+          addInterview={addInterview}
         />
       )}
       <div className="shadow border border-gray-300 rounded-lg px-8 pt-8 w-[80%]">
@@ -155,60 +171,46 @@ const PersonalInterviews = () => {
               </select>
             </div>
 
-            <div className="mt-12 grid grid-cols-6 ">
-              <div className="font-medium">Date</div>
+            <div className="mt-12 grid grid-cols-5 ">
+              <div className="font-medium">Sr.No</div>
               <div className="font-medium">Company</div>
               <div className="font-medium">Job Status</div>
               <div className="font-medium">Offer Type</div>
-              <div className="font-medium">Verification Status</div>
               <div className="font-medium text-center">Actions</div>
             </div>
-            {filteredJobsList.map((job) => {
-              const date =
-                job.date.getDate() +
-                "/" +
-                (job.date.getMonth() + 1) +
-                "/" +
-                job.date.getFullYear();
+            {filteredJobsList.map((job,index) => {
               return (
                 <div
                   key={job.id}
-                  className="mt-4 p-2 border-b border-slate-200 grid grid-cols-6 "
+                  className="mt-4 p-2 border-b border-slate-200 grid grid-cols-5 "
                 >
-                  <p className="tracking-wider">{date}</p>
-                  <p>{job.company}</p>
+                  <p className="tracking-wider">{index+1}</p>
+                  <p>{job.companyName}</p>
                   <p
                     className={`font-semibold ${
-                      job.jobStatus === "Applied"
+                      job.interviewStatus === "Applied"
                         ? "text-slate-500"
-                        : job.jobStatus === "In Progress"
-                        ? "text-blue-500"
-                        : job.jobStatus === "Selected"
+                        : job.interviewStatus === "In Progress"
+                        ? "text-sky-500"
+                        : job.interviewStatus === "Selected"
                         ? "text-green-500"
                         : "text-red-500"
                     }`}
                   >
-                    {job.jobStatus}
+                    {job.interviewStatus}
                   </p>
-                  <p className="font-medium">{job.offerType}</p>
-                  <div>
-                    <span
-                      className={` px-2 py-1 rounded-md ${
-                        job.verificationStatus === "Not Required"
-                          ? "bg-slate-300"
-                          : job.verificationStatus === "Not Verified"
-                          ? "bg-red-400"
-                          : "bg-green-400"
-                      }`}
-                    >
-                      {job.verificationStatus}
-                    </span>
-                  </div>
+                  <p className="font-medium">{job.experienceType}</p>
                   <div className="flex justify-center gap-4">
                     <span
                       onClick={() => {
-                        setUpdateJob(job);
-                        setModalState(true);
+                        if(job.interviewExperienceId){
+                          handleUpdateJob(job);
+                        }
+                        else{
+                          setSelectedJob(job);
+                          setModalState(true);
+                        }
+                        
                       }}
                       className="cursor-pointer px-2 py-1 text-gray-500 hover:border-green-500 hover:text-green-600 border border-gray-200 rounded-md"
                     >
@@ -227,7 +229,7 @@ const PersonalInterviews = () => {
 
             <div
               onClick={() => {
-                setUpdateJob(null);
+                setSelectedJob(null);
                 setModalState(true);
               }}
               className="mt-24 mb-4 flex justify-center"
@@ -245,69 +247,28 @@ const PersonalInterviews = () => {
 
 const JobModal = ({
   closeModal,
-  jobsList,
-  setJobsList,
-  updateJob,
-  setUpdateJob,
-  onUpdate,
+  selectedJob,
+  setSelectedJob,
+  handleUpdateJob,
+  addInterview
 }: {
   closeModal: (x: boolean) => void;
-  jobsList: JobDetails[];
-  setJobsList: (updatedJobs: JobDetails[]) => void; // Changed type here
-  updateJob: JobDetails | null;
-  setUpdateJob: (job: JobDetails | null) => void;
-  onUpdate: (updatedJob: JobDetails) => void;
+  selectedJob: InterviewDetails | null;
+  setSelectedJob: (job: InterviewDetails | null) => void;
+  handleUpdateJob: (updatedJob: InterviewDetails) => void;
+  addInterview: (updatedJob:{companyName:string,experienceType:string,interviewStatus:string,interviewExperienceId:undefined} ) => void;
 }) => {
-  const [company, setCompanyName] = useState(updateJob?.company || "");
-  const [offerType, setOfferType] = useState(updateJob?.offerType || "");
-  const [jobStatus, setJobStatus] = useState(updateJob?.jobStatus || "");
+  const [companyName, setCompanyName] = useState(selectedJob?.companyName ?? "");
+  const [experienceType, setExperienceType] = useState(selectedJob?.experienceType ?? "2M Intern");
+  const [interviewStatus, setInterviewStatus] = useState(selectedJob?.interviewStatus ?? "Applied");
 
-  useEffect(() => {
-    if (updateJob) {
-      setCompanyName(updateJob.company);
-      setOfferType(updateJob.offerType);
-      setJobStatus(updateJob.jobStatus);
-    } else {
-      setCompanyName("");
-      setOfferType("");
-      setJobStatus("");
-    }
-  }, [updateJob]);
 
-  const addJob = () => {
-    const jobDetails = {
-      id: generateId(),
-      date: new Date(),
-      company,
-      offerType,
-      jobStatus,
-      verificationStatus: "Not Required",
-    } as JobDetails;
-
-    const updatedJobsList = [...jobsList, jobDetails];
-    setJobsList(updatedJobsList);
-    closeModal(false);
-  };
-
-  const handleUpdate = () => {
-    if (updateJob) {
-      const updatedJobDetails: JobDetails = {
-        ...updateJob,
-        company: company,
-        offerType: offerType,
-        jobStatus: jobStatus,
-      };
-      onUpdate(updatedJobDetails);
-      closeModal(false);
-      setUpdateJob(null);
-    }
-  };
 
   return (
     <div
       onClick={() => {
         closeModal(false);
-        setUpdateJob(null);
+        setSelectedJob(null);
       }}
       className="fixed top-0 w-screen h-screen bg-black/40 flex justify-center items-center"
     >
@@ -317,7 +278,7 @@ const JobModal = ({
       >
         <div className="px-8 pt-8 pb-4 ">
           <p className="font-medium text-xl">
-            {updateJob ? "Update Job Details" : "Enter Job Details"}
+            {selectedJob ? "Update Job Details" : "Enter Job Details"}
           </p>
 
           <div className="mt-6 flex flex-col gap-6">
@@ -327,23 +288,20 @@ const JobModal = ({
                 onChange={(e) => setCompanyName(e.target.value)}
                 type="text"
                 className="w-[90%] bg-slate-50 px-2 py-1 rounded-sm border border-gray-100 focus:outline-none focus:border-gray-300"
-                value={company}
+                value={companyName}
               />
             </div>
 
             <div className="flex flex-col gap-4">
-              <p className="font-medium">Offer Type</p>
+              <p className="font-medium">Experience Type</p>
               <select
-                onChange={(e) => setOfferType(e.target.value)}
+                onChange={(e) => setExperienceType(e.target.value)}
                 className="w-[90%] bg-slate-50 px-2 py-1.5 rounded-sm border border-gray-100 focus:outline-none focus:border-gray-300"
-                value={offerType}
+                value={experienceType}
               >
-                <option disabled selected hidden>
-                  Select Type
-                </option>
+                <option value="Intern">Intern</option>
                 <option value="2M Intern">2M Intern</option>
                 <option value="6M Intern">6M Intern</option>
-                <option value="Intern">Intern</option>
                 <option value="FTE">FTE</option>
                 <option value="2M + FTE">2M + FTE</option>
                 <option value="6M + FTE">6M + FTE</option>
@@ -352,15 +310,12 @@ const JobModal = ({
             </div>
 
             <div className="flex flex-col gap-4">
-              <p className="font-medium">Offer Status</p>
+              <p className="font-medium">Interview Status</p>
               <select
-                onChange={(e) => setJobStatus(e.target.value)}
+                onChange={(e) => setInterviewStatus(e.target.value)}
                 className="w-[90%] bg-slate-50 px-2 py-1.5 rounded-sm border border-gray-100 focus:outline-none focus:border-gray-300"
-                value={jobStatus}
+                value={interviewStatus}
               >
-                <option disabled selected hidden>
-                  Select Status
-                </option>
                 <option value="Applied">Applied</option>
                 <option value="Selected">Selected</option>
                 <option value="In Progress">In Progress</option>
@@ -371,11 +326,12 @@ const JobModal = ({
             <div className="mt-4 flex justify-center">
               <div
                 onClick={() => {
-                  updateJob ? handleUpdate() : addJob();
+                  selectedJob ? handleUpdateJob({...selectedJob,companyName,experienceType,interviewStatus}):addInterview({companyName,experienceType,interviewStatus,interviewExperienceId:undefined});
+                  closeModal(false)
                 }}
                 className="cursor-pointer bg-black text-gray-200 hover:text-white px-24 py-1.5 rounded-md text-xl"
               >
-                {updateJob ? "Update" : "Submit"}
+                {selectedJob ? "Update" : "Submit"}
               </div>
             </div>
           </div>
