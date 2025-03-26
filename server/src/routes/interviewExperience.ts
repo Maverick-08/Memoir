@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { deleteUserInterviewExperience, getAllInterviewExperience, getInterviewExperienceUpdateDetails, getUserInterviewExperience, postInterviewExperience, postUserInterviewExperience, updateInterviewExperience, updateUserPersonalInterviewExperience } from "../controllers/userInterviewExperience";
+import { deleteInterviewExperience, deleteUserInterviewExperience, getAllInterviewExperience, getInterviewExperienceUpdateDetails, getUserInterviewExperience, postInterviewExperience, postUserInterviewExperience, updateInterviewExperience, updateUserPersonalInterviewExperience } from "../controllers/userInterviewExperience";
 
 const router = Router();
 
 router.route("/")
     .get(getAllInterviewExperience)
     .post(postInterviewExperience)
+    .delete(deleteInterviewExperience)
 
 router.route("/update")
     .get(getInterviewExperienceUpdateDetails)

@@ -105,7 +105,14 @@ const PersonalInterviews = () => {
 
   const handleDeleteJob = async (jobToDelete: InterviewDetails) => {
     try{
-      await axios.delete(`http://localhost:3000/experience/personal?interviewId=${jobToDelete.id}`,{withCredentials:true});
+      if(jobToDelete.interviewExperienceId){
+        const response = confirm("This Interview Experience will also get deleted from All Interviews section. Do you wish to proceed?");
+        if(!response) return;
+        await axios.delete(`http://localhost:3000/experience?interviewId=${jobToDelete.interviewExperienceId}`,{withCredentials:true});
+      }
+      else{
+        await axios.delete(`http://localhost:3000/experience/personal?interviewId=${jobToDelete.id}`,{withCredentials:true});
+      }
       const updatedJobs = jobsList.filter((job) => job.id !== jobToDelete.id);
       setJobsList(updatedJobs);
       setFilterJobsList(updatedJobs);

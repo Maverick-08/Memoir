@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserPersonalInterviewExperience = exports.deleteUserInterviewExperience = exports.postUserInterviewExperience = exports.getUserInterviewExperience = exports.updateInterviewExperience = exports.getInterviewExperienceUpdateDetails = exports.postInterviewExperience = exports.getAllInterviewExperience = void 0;
+exports.updateUserPersonalInterviewExperience = exports.deleteUserInterviewExperience = exports.postUserInterviewExperience = exports.getUserInterviewExperience = exports.updateInterviewExperience = exports.getInterviewExperienceUpdateDetails = exports.deleteInterviewExperience = exports.postInterviewExperience = exports.getAllInterviewExperience = void 0;
 const client_1 = require("@prisma/client");
 const status_code_1 = require("../config/status-code");
 const prisma = new client_1.PrismaClient();
@@ -107,15 +107,15 @@ const postInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0, 
                 experienceType: interviewExperience.experienceType,
             },
         });
-        yield prisma.personalInterviews.create(({
+        yield prisma.personalInterviews.create({
             data: {
                 email: interviewExperience.email,
                 companyName: interviewExperience.companyName,
                 experienceType: interviewExperience.experienceType,
                 interviewStatus: interviewExperience.interviewStatus,
-                interviewExperienceId: createdInterviewExperience.id
-            }
-        }));
+                interviewExperienceId: createdInterviewExperience.id,
+            },
+        });
         // 5. Create RoundDetails and Questions
         for (const round of interviewExperience.roundDetails) {
             const createdRound = yield prisma.roundDetails.create({
@@ -153,17 +153,23 @@ const postInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0, 
     }
 });
 exports.postInterviewExperience = postInterviewExperience;
-const getInterviewExperienceUpdateDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        const interviewExperienceId = (_a = req.query) === null || _a === void 0 ? void 0 : _a.interviewExperienceId;
-        if (!interviewExperienceId) {
-            res.status(status_code_1.StatusCode.BadRequest).json({ msg: "Interview Id is missing" });
+        const InterviewExperienceId = (_a = req.query) === null || _a === void 0 ? void 0 : _a.interviewId;
+        // 1. Check if payload has Interview Experience Id
+        if (!InterviewExperienceId) {
+            res
+                .status(status_code_1.StatusCode.BadRequest)
+                .json({ msg: "Interview Experience Id is missing" });
             return;
         }
+        // console.log("-------------- STEP 1 ------------------")
+        // console.log(payload);
+        // 2. Find all the details associated with 
         const response = yield prisma.interviewExperience.findFirst({
             where: {
-                id: interviewExperienceId
+                id: InterviewExperienceId,
             },
             include: {
                 roundDetails: {
@@ -171,7 +177,83 @@ const getInterviewExperienceUpdateDetails = (req, res) => __awaiter(void 0, void
                         questions: true,
                     },
                 },
-            }
+            },
+        });
+        // console.log("-------------- STEP 2 ------------------")
+        // console.log(response);
+        // 3. Extract Ids for deletion
+        const interviewExperienceId = response === null || response === void 0 ? void 0 : response.id;
+        const roundIds = response === null || response === void 0 ? void 0 : response.roundDetails.map((round) => round.id);
+        // console.log("-------------- STEP 3 ------------------")
+        // console.log(interviewExperienceId);
+        // console.log(roundIds);
+        // console.log("-------------- STEP 4 ------------------")
+        // 4. Delete all the questions associated with the each Round Id
+        for (let roundId of roundIds) {
+            // console.log(roundId)
+            yield prisma.question.deleteMany({
+                where: {
+                    roundDetailsId: roundId,
+                },
+            });
+        }
+        // console.log("-------------- STEP 5 ------------------")
+        // 5. Delete all the Rounds associated with Interview Experience Id
+        yield prisma.roundDetails.deleteMany({
+            where: {
+                interviewExperienceId,
+            },
+        });
+        // console.log("-------------- STEP 6 ------------------")
+        // 6. Delete the record associated with Interview Experience
+        yield prisma.interviewExperience.delete({
+            where: {
+                id: interviewExperienceId,
+            },
+        });
+        // console.log("-------------- STEP 7 ------------------")
+        // 7. Delete the record in Personal Interview
+        const result = yield prisma.personalInterviews.findFirst({
+            where: {
+                interviewExperienceId,
+            },
+        });
+        yield prisma.personalInterviews.delete({
+            where: {
+                id: result === null || result === void 0 ? void 0 : result.id,
+            },
+        });
+        res.status(status_code_1.StatusCode.RequestSuccessfull).json({ msg: "Interview Experience Deleted" });
+        return;
+    }
+    catch (err) {
+        console.log("Error @deleteInterviewExperience : \n" + err);
+        res.status(status_code_1.StatusCode.ServerError).json(err.response.data);
+        return;
+    }
+});
+exports.deleteInterviewExperience = deleteInterviewExperience;
+const getInterviewExperienceUpdateDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const interviewExperienceId = (_a = req.query) === null || _a === void 0 ? void 0 : _a.interviewExperienceId;
+        if (!interviewExperienceId) {
+            res
+                .status(status_code_1.StatusCode.BadRequest)
+                .json({ msg: "Interview Id is missing" });
+            return;
+        }
+        const response = yield prisma.interviewExperience.findFirst({
+            where: {
+                id: interviewExperienceId,
+            },
+            include: {
+                roundDetails: {
+                    include: {
+                        questions: true,
+                    },
+                },
+            },
         });
         res.status(status_code_1.StatusCode.RequestSuccessfull).json({ response });
         return;
@@ -186,71 +268,73 @@ exports.getInterviewExperienceUpdateDetails = getInterviewExperienceUpdateDetail
 const updateInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const payload = req.body;
-        // 1. Check if payload has Interview Experience Id 
+        // 1. Check if payload has Interview Experience Id
         if (!payload.id) {
-            res.status(status_code_1.StatusCode.BadRequest).json({ msg: "Interview Experience Id is missing" });
+            res
+                .status(status_code_1.StatusCode.BadRequest)
+                .json({ msg: "Interview Experience Id is missing" });
             return;
         }
-        console.log("-------------- STEP 1 ------------------");
-        console.log(payload);
-        // 2. Find all the details associated with Interview Experience Id 
+        // console.log("-------------- STEP 1 ------------------")
+        // console.log(payload);
+        // 2. Find all the details associated with Interview Experience Id
         const response = yield prisma.interviewExperience.findFirst({
             where: {
-                id: payload.id
+                id: payload.id,
             },
             include: {
                 roundDetails: {
                     include: {
-                        questions: true
-                    }
-                }
-            }
+                        questions: true,
+                    },
+                },
+            },
         });
-        console.log("-------------- STEP 2 ------------------");
-        console.log(response);
+        // console.log("-------------- STEP 2 ------------------")
+        // console.log(response);
         // 3. Extract Ids for deletion
         const interviewExperienceId = response === null || response === void 0 ? void 0 : response.id;
         const roundIds = response === null || response === void 0 ? void 0 : response.roundDetails.map((round) => round.id);
-        console.log("-------------- STEP 3 ------------------");
-        console.log(interviewExperienceId);
-        console.log(roundIds);
-        console.log("-------------- STEP 4 ------------------");
+        // console.log("-------------- STEP 3 ------------------")
+        // console.log(interviewExperienceId);
+        // console.log(roundIds);
+        // console.log("-------------- STEP 4 ------------------")
         // 4. Delete all the questions associated with the each Round Id
         for (let roundId of roundIds) {
-            console.log(roundId);
+            // console.log(roundId)
             yield prisma.question.deleteMany({
                 where: {
-                    roundDetailsId: roundId
-                }
+                    roundDetailsId: roundId,
+                },
             });
         }
-        console.log("-------------- STEP 5 ------------------");
+        // console.log("-------------- STEP 5 ------------------")
         // 5. Delete all the Rounds associated with Interview Experience Id
         yield prisma.roundDetails.deleteMany({
             where: {
-                interviewExperienceId
-            }
+                interviewExperienceId,
+            },
         });
-        console.log("-------------- STEP 6 ------------------");
+        // console.log("-------------- STEP 6 ------------------")
         // 6. Delete the record associated with Interview Experience
         yield prisma.interviewExperience.delete({
             where: {
-                id: interviewExperienceId
-            }
+                id: interviewExperienceId,
+            },
         });
-        console.log("-------------- STEP 7 ------------------");
+        // console.log("-------------- STEP 7 ------------------")
         // 7. Delete the record in Personal Interview
         const result = yield prisma.personalInterviews.findFirst({
             where: {
-                interviewExperienceId
-            }
+                interviewExperienceId,
+            },
         });
         yield prisma.personalInterviews.delete({
             where: {
-                id: result === null || result === void 0 ? void 0 : result.id
-            }
+                id: result === null || result === void 0 ? void 0 : result.id,
+            },
         });
-        console.log("-------------- STEP 8 ------------------");
+        // console.log("-------------- STEP 8 ------------------")
         // 8. Create fresh record
         (0, exports.postInterviewExperience)(req, res);
     }
@@ -276,8 +360,8 @@ const getUserInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 
         const userInterviewExperiences = yield prisma.personalInterviews.findMany({
             where: { email },
             orderBy: {
-                createdAt: 'desc', // or 'asc' for ascending order
-            }
+                createdAt: "desc", // or 'asc' for ascending order
+            },
         });
         res
             .status(status_code_1.StatusCode.RequestSuccessfull)
@@ -296,14 +380,12 @@ exports.getUserInterviewExperience = getUserInterviewExperience;
 const postUserInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const payload = req.body;
-        if (!payload.email ||
-            !payload.companyName ||
-            !payload.experienceType) {
+        if (!payload.email || !payload.companyName || !payload.experienceType) {
             res.status(status_code_1.StatusCode.BadRequest).json({ msg: "Invalid payload" });
             return;
         }
         const response = yield prisma.personalInterviews.create({
-            data: payload
+            data: payload,
         });
         res.status(status_code_1.StatusCode.ResourceCreated).json({ response });
         return;
@@ -319,13 +401,17 @@ const deleteUserInterviewExperience = (req, res) => __awaiter(void 0, void 0, vo
     try {
         const interviewId = (_a = req.query) === null || _a === void 0 ? void 0 : _a.interviewId;
         if (!interviewId) {
-            res.status(status_code_1.StatusCode.BadRequest).json({ msg: "Interview Id is missing" });
+            res
+                .status(status_code_1.StatusCode.BadRequest)
+                .json({ msg: "Interview Id is missing" });
             return;
         }
         yield prisma.personalInterviews.delete({
-            where: { id: interviewId }
+            where: { id: interviewId },
         });
-        res.status(status_code_1.StatusCode.RequestSuccessfull).json({ msg: "Interview Deleted Successfully !" });
+        res
+            .status(status_code_1.StatusCode.RequestSuccessfull)
+            .json({ msg: "Interview Deleted Successfully !" });
         return;
     }
     catch (err) {
@@ -338,7 +424,11 @@ exports.deleteUserInterviewExperience = deleteUserInterviewExperience;
 const updateUserPersonalInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const payload = req.body;
-        if (!payload.id || !payload.email || !payload.companyName || !payload.experienceType || !payload.interviewStatus) {
+        if (!payload.id ||
+            !payload.email ||
+            !payload.companyName ||
+            !payload.experienceType ||
+            !payload.interviewStatus) {
             res.status(status_code_1.StatusCode.BadRequest).json({ msg: "Invalid payload" });
             return;
         }
@@ -347,10 +437,12 @@ const updateUserPersonalInterviewExperience = (req, res) => __awaiter(void 0, vo
             data: {
                 companyName: payload.companyName,
                 experienceType: payload.experienceType,
-                interviewStatus: payload.interviewStatus
-            }
+                interviewStatus: payload.interviewStatus,
+            },
         });
-        res.status(status_code_1.StatusCode.RequestSuccessfull).json({ msg: "Interview updated successfully" });
+        res
+            .status(status_code_1.StatusCode.RequestSuccessfull)
+            .json({ msg: "Interview updated successfully" });
         return;
     }
     catch (err) {

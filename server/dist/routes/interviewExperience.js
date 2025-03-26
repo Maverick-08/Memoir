@@ -5,7 +5,8 @@ const userInterviewExperience_1 = require("../controllers/userInterviewExperienc
 const router = (0, express_1.Router)();
 router.route("/")
     .get(userInterviewExperience_1.getAllInterviewExperience)
-    .post(userInterviewExperience_1.postInterviewExperience);
+    .post(userInterviewExperience_1.postInterviewExperience)
+    .delete(userInterviewExperience_1.deleteInterviewExperience);
 router.route("/update")
     .get(userInterviewExperience_1.getInterviewExperienceUpdateDetails)
     .post(userInterviewExperience_1.updateInterviewExperience);
