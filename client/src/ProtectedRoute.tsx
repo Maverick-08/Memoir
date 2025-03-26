@@ -1,12 +1,13 @@
 import React, { useEffect } from "react"
-import { useRecoilState } from "recoil"
-import { userAuthStateAtom } from "../store/atoms"
+import { useRecoilState, useSetRecoilState } from "recoil"
+import { userAuthStateAtom, userDetailsAtom } from "../store/atoms"
 import axios from "axios"
 import { Navigate } from "react-router-dom"
 
 
 const ProtectedRoute = ({children}:{children:React.ReactNode}) => {
-    const [userAuthState,setUserAuthState] = useRecoilState(userAuthStateAtom)
+    const [userAuthState,setUserAuthState] = useRecoilState(userAuthStateAtom);
+    const setUserDetailsAtom = useSetRecoilState(userDetailsAtom)
 
     
     useEffect(()=>{
@@ -15,8 +16,9 @@ const ProtectedRoute = ({children}:{children:React.ReactNode}) => {
                 await axios.get("http://localhost:3000/token",{withCredentials:true})
             }
             catch(err){
-                setUserAuthState(false);
                 localStorage.setItem("userDetails",JSON.stringify({}));
+                setUserDetailsAtom(null);
+                setUserAuthState(false);
             }
             
         }

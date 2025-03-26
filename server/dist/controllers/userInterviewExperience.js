@@ -191,6 +191,8 @@ const updateInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0
             res.status(status_code_1.StatusCode.BadRequest).json({ msg: "Interview Experience Id is missing" });
             return;
         }
+        console.log("-------------- STEP 1 ------------------");
+        console.log(payload);
         // 2. Find all the details associated with Interview Experience Id 
         const response = yield prisma.interviewExperience.findFirst({
             where: {
@@ -204,29 +206,39 @@ const updateInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0
                 }
             }
         });
+        console.log("-------------- STEP 2 ------------------");
+        console.log(response);
         // 3. Extract Ids for deletion
         const interviewExperienceId = response === null || response === void 0 ? void 0 : response.id;
         const roundIds = response === null || response === void 0 ? void 0 : response.roundDetails.map((round) => round.id);
+        console.log("-------------- STEP 3 ------------------");
+        console.log(interviewExperienceId);
+        console.log(roundIds);
+        console.log("-------------- STEP 4 ------------------");
         // 4. Delete all the questions associated with the each Round Id
         for (let roundId of roundIds) {
+            console.log(roundId);
             yield prisma.question.deleteMany({
                 where: {
                     roundDetailsId: roundId
                 }
             });
         }
+        console.log("-------------- STEP 5 ------------------");
         // 5. Delete all the Rounds associated with Interview Experience Id
         yield prisma.roundDetails.deleteMany({
             where: {
                 interviewExperienceId
             }
         });
+        console.log("-------------- STEP 6 ------------------");
         // 6. Delete the record associated with Interview Experience
         yield prisma.interviewExperience.delete({
             where: {
                 id: interviewExperienceId
             }
         });
+        console.log("-------------- STEP 7 ------------------");
         // 7. Delete the record in Personal Interview
         const result = yield prisma.personalInterviews.findFirst({
             where: {
@@ -238,6 +250,7 @@ const updateInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0
                 id: result === null || result === void 0 ? void 0 : result.id
             }
         });
+        console.log("-------------- STEP 8 ------------------");
         // 8. Create fresh record
         (0, exports.postInterviewExperience)(req, res);
     }

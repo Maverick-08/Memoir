@@ -102,14 +102,14 @@ const SideDrawer = function TemporaryDrawer() {
           ))}
           <div className="flex justify-center mt-16 ">
             <button onClick={()=>{
-              if(!userDetails.email){
+              if(!userDetails?.email){
                 navigate("/auth")
               }
               else{
                 navigate("/dashboard")
               }
             }} className="text-xl cursor-pointer bg-[#272E3F] text-white px-6 py-2 rounded-md">
-              {userDetails.email ? "Check Dashboard" : "Login Now"}
+              {userDetails?.email ? "Check Dashboard" : "Login Now"}
             </button>
           </div>
         </div>

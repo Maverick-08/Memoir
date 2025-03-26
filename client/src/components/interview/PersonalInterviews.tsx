@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { VariantType, useSnackbar } from "notistack";
 import axios from "axios";
-import { useRecoilValue } from "recoil";
-import { userDetailsAtom } from "../../../store/atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isInterviewExperienceForUpdationAtom, userDetailsAtom } from "../../../store/atoms";
 import { useNavigate } from "react-router-dom";
 
 interface InterviewDetails {
@@ -20,6 +20,7 @@ const PersonalInterviews = () => {
   const { enqueueSnackbar } = useSnackbar();
   const userDetails = useRecoilValue(userDetailsAtom);
   const navigate = useNavigate();
+  const setInterviewExperienceForUpdation = useSetRecoilState(isInterviewExperienceForUpdationAtom)
   const [filteredJobsList, setFilterJobsList] = useState<InterviewDetails[]>([]);
   const [jobsList, setJobsList] = useState<InterviewDetails[]>([]);
   const [modalState, setModalState] = useState(false);
@@ -77,6 +78,7 @@ const PersonalInterviews = () => {
           const response = await axios.get(`http://localhost:3000/experience/update?interviewExperienceId=${updatedJob.interviewExperienceId}`,{withCredentials:true})
 
           localStorage.setItem("experienceDetails",JSON.stringify({...response.data.response,update:true}));
+          setInterviewExperienceForUpdation({...response.data.response,update:true})
           navigate("/addExperience")
        }
        else{
@@ -118,7 +120,7 @@ const PersonalInterviews = () => {
   const addInterview = async (payload:{companyName:string,experienceType:string,interviewStatus:string,interviewExperienceId:undefined}) => {
     try{
   
-     const response = await axios.post("http://localhost:3000/experience/personal",{...payload,email:userDetails.email},{withCredentials:true});
+     const response = await axios.post("http://localhost:3000/experience/personal",{...payload,email:userDetails?.email},{withCredentials:true});
 
       const updatedJobsList = [response.data.response,...jobsList]
       setJobsList(updatedJobsList)

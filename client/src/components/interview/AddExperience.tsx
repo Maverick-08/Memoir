@@ -14,6 +14,7 @@ import {
 } from "../../../store/atoms";
 import { allInterviewRoundsDetails } from "../../../store/selector";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AddExperience = () => {
   const [nextStateActivated, setNextStateActivated] = useState(false);
@@ -164,10 +165,11 @@ const CompanyDetails = ({
 const RoundDetails = () => {
   const [roundIds, setRoundIds] = useRecoilState(roundIdsAtom);
   const allRoundsDetails = useRecoilValue(allInterviewRoundsDetails);
-  const interviewExperienceForUpdation = useRecoilValue(
+  const [interviewExperienceForUpdation,setInterviewExperienceForUpdation] = useRecoilState(
     isInterviewExperienceForUpdationAtom
   );
   const userDetails = useRecoilValue(userDetailsAtom);
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -200,18 +202,26 @@ const RoundDetails = () => {
 
   const handleSubmit = async () => {
     try {
+      if(roundIds.length == 0){
+        handleClickVariant("info","Please add an Round")()
+        return;
+      }
+      if(roundIds.length == 1){
+        if(!allRoundsDetails[0].note){
+          handleClickVariant("info","Please add a Note")();
+          return;
+        }
+      }
       handleClickVariant("info", "Submitting Details")();
-
-      if (!interviewExperienceForUpdation) console.log("No company data");
-      else {
+        const companyDetails = JSON.parse(localStorage.getItem("experienceDetails")!)
         const payload = {
-          name: userDetails.name,
-          email: userDetails.email,
-          registrationNumber: userDetails.registrationNumber,
-          companyName: interviewExperienceForUpdation.companyName,
-          compensation: Number(interviewExperienceForUpdation.compensation),
-          experienceType: interviewExperienceForUpdation.experienceType,
-          interviewStatus: interviewExperienceForUpdation.interviewStatus,
+          name: userDetails?.name,
+          email: userDetails?.email,
+          registrationNumber: userDetails?.registrationNumber,
+          companyName: companyDetails.companyName,
+          compensation: Number(companyDetails.compensation),
+          experienceType: companyDetails.experienceType,
+          interviewStatus: companyDetails.interviewStatus,
           roundDetails: allRoundsDetails,
         };
 
@@ -219,8 +229,11 @@ const RoundDetails = () => {
           withCredentials: true,
         });
 
+        localStorage.removeItem("experienceDetails");
+
         handleClickVariant("success", "Experience Submitted Successfully !")();
-      }
+        navigate("/allInterviews");
+      
     } catch (err: any) {
       handleClickVariant("error", err.response.data.msg)();
     }
@@ -230,12 +243,15 @@ const RoundDetails = () => {
     try {
       handleClickVariant("info", "Submitting Details")();
 
-      if (!interviewExperienceForUpdation) console.log("No company data");
+      if (!interviewExperienceForUpdation){
+        handleClickVariant("error","Interview Details Missing")();
+        navigate("/personalInterviews")
+      }
       else {
         const payload = {
-          name: userDetails.name,
-          email: userDetails.email,
-          registrationNumber: userDetails.registrationNumber,
+          name: userDetails?.name,
+          email: userDetails?.email,
+          registrationNumber: userDetails?.registrationNumber,
           id: interviewExperienceForUpdation.id,
           companyName: interviewExperienceForUpdation.companyName,
           compensation: Number(interviewExperienceForUpdation.compensation),
@@ -243,7 +259,7 @@ const RoundDetails = () => {
           interviewStatus: interviewExperienceForUpdation.interviewStatus,
           roundDetails: allRoundsDetails,
         };
-        console.log(payload);
+        
 
         await axios.post("http://localhost:3000/experience/update", payload, {
           withCredentials: true,
@@ -251,7 +267,9 @@ const RoundDetails = () => {
 
         handleClickVariant("success", "Experience Updated Successfully !")();
 
-        localStorage.setItem("experienceDetails", JSON.stringify("{}"));
+        localStorage.removeItem("experienceDetails");
+        setInterviewExperienceForUpdation(null);
+        navigate("/allInterviews")
       }
     } catch (err: any) {
       handleClickVariant("error", err.response.data.msg)();
@@ -546,7 +564,7 @@ const QuestionAccordian = ({
                 <FaAngleDown size={16} />
               </span>
             )}
-            {totalQuestions > 1 ? (
+            {totalQuestions > 0 ? (
               <span
                 onClick={() => deleteQuestion(questionId)}
                 className="text-red-500"

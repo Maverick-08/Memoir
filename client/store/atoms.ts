@@ -12,14 +12,18 @@ interface UserDetails {
   xHandle: string;
 }
 
-export const userDetailsAtom = atom({
+export const userDetailsAtom = atom<UserDetails | null>({
   key: "userAtom",
-  default: {} as UserDetails,
+  default: null,
   effects: [
     ({ setSelf }) => {
-      const userData = JSON.parse(localStorage.getItem("userDetails") || "{}");
-      if (userData) {
-        setSelf(userData);
+      try {
+        const userData = JSON.parse(localStorage.getItem("userDetails")!);
+        if (userData && userData.email) {
+          setSelf(userData as UserDetails);
+        }
+      } catch (err) {
+        setSelf(null);
       }
     },
   ],
@@ -100,19 +104,18 @@ interface InterviewDetailsForUpdation {
   }[];
 }
 
-export const isInterviewExperienceForUpdationAtom = atom<
-  InterviewDetailsForUpdation | null
->({
-  key: "isInterviewExperienceForUpdation",
-  default: selector({
-    key: "isInterviewExperienceForUpdationSelector",
-    get: () => {
-      try {
-        return JSON.parse(localStorage.getItem("experienceDetails")!);
-      } catch (err) {
-        console.log("Missing Interview Details");
-        return null;
-      }
-    },
-  }),
-});
+export const isInterviewExperienceForUpdationAtom =
+  atom<InterviewDetailsForUpdation | null>({
+    key: "isInterviewExperienceForUpdation",
+    default: selector({
+      key: "isInterviewExperienceForUpdationSelector",
+      get: () => {
+        try {
+          return JSON.parse(localStorage.getItem("experienceDetails")!);
+        } catch (err) {
+          console.log("Missing Interview Details");
+          return null;
+        }
+      },
+    }),
+  });
