@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useSnackbar, VariantType } from "notistack";
 
 const Dashboard = () => {
   const greeting = useMemo(() => {
@@ -34,6 +35,11 @@ const Dashboard = () => {
 
 const CreateUpdate = () => {
   const [postUpdate, setPostUpdate] = useState("");
+  const {enqueueSnackbar} = useSnackbar();
+
+  const handleVariant = (variant:VariantType,msg:string) => () => {
+      enqueueSnackbar(msg,{variant});
+  }
 
   return (
     <div className="shadow-lg border border-gray-200 px-4 py-6">
@@ -47,7 +53,7 @@ const CreateUpdate = () => {
           onChange={(e) => setPostUpdate(e.target.value)}
         ></textarea>
         <div className="pt-8 flex justify-center cursor-pointer">
-          <div className="w-[80%] py-2 rounded-md bg-black text-white text-center text-xl font-medium">
+          <div onClick={()=>handleVariant("info","Section under review, kindly explore other features !")()} className="w-[80%] py-2 rounded-md bg-black text-white text-center text-xl font-medium">
             Create post
           </div>
         </div>
