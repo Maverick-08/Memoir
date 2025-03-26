@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSnackbar, VariantType } from "notistack";
+import axios from "axios";
 
 type InputProps = {
   value: string;
@@ -19,11 +21,12 @@ const InputElement = ({
     return (
       <div>
         <p className="font-medium">{label}</p>
-        <textarea 
-        value={value}
-        placeholder={placeHolder}
-        className="ml-4 mt-4 w-80 h-32 px-4 py-2 border-2 border-gray-200 bg-gray-50 rounded-md focus:outline-none focus:bg-sky-50 focus:border-sky-200" 
-        onChange={(e) => setValue(e.target.value)} />
+        <textarea
+          value={value}
+          placeholder={placeHolder}
+          className="ml-4 mt-4 w-80 h-32 px-4 py-2 border-2 border-gray-200 bg-gray-50 rounded-md focus:outline-none focus:bg-sky-50 focus:border-sky-200"
+          onChange={(e) => setValue(e.target.value)}
+        />
       </div>
     );
   }
@@ -46,6 +49,27 @@ const ContactUs = () => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleClickVariant = (variant: VariantType, msg: string) => () => {
+    // variant could be success, error, warning, info, or default
+    enqueueSnackbar(msg, { variant });
+  };
+
+  const handleSubmit = async () => {
+    try{
+      const payload = {name:userName,email,message}
+      console.log(payload);
+      await axios.post("http://localhost:3000/reviews",payload,{withCredentials:true});
+      setEmail("")
+      setUserName("")
+      setMessage("")
+      handleClickVariant("success","Review sent successfully")()
+    }
+    catch(err){
+      handleClickVariant("error","Failed to sent review")();
+    }
+  }
 
   return (
     <div className="mt-16">
@@ -61,7 +85,12 @@ const ContactUs = () => {
               label="Name"
               placeHolder="Your Name"
             />
-            <InputElement value={email} setValue={setEmail} label="Email" placeHolder="Your Email"/>
+            <InputElement
+              value={email}
+              setValue={setEmail}
+              label="Email"
+              placeHolder="Your Email"
+            />
             <InputElement
               value={message}
               setValue={setMessage}
@@ -69,6 +98,9 @@ const ContactUs = () => {
               type="textarea"
               placeHolder="Your Message"
             />
+            <div className="flex justify-center items-center">
+              <span onClick={handleSubmit} className="bg-black text-white text-center text-xl px-24 py-1 rounded-md cursor-pointer">Submit</span>
+            </div>
           </div>
         </div>
       </div>

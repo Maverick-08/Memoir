@@ -10,6 +10,7 @@ import Signout from "./routes/logout";
 import Updates from "./routes/updates";
 import InterviewExperience from "./routes/interviewExperience";
 import TokenCheckPoint from "./routes/token-checkpoint";
+import Reviews from "./routes/review";
 
 const app = express();
 
@@ -60,6 +61,9 @@ app.use("/update", Updates);
 
 // User interview experience
 app.use("/experience", InterviewExperience);
+
+// User Reviews
+app.use("/reviews",Reviews);
 
 // User sign out
 app.use("/signout", Signout);
