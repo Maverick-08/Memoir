@@ -225,7 +225,7 @@ const RoundDetails = () => {
           roundDetails: allRoundsDetails,
         };
 
-        await axios.post("http://13.201.102.249:3000/experience", payload, {
+        await axios.post("https://memoir-pck6.vercel.app/experience", payload, {
           withCredentials: true,
         });
 
@@ -261,7 +261,7 @@ const RoundDetails = () => {
         };
         
 
-        await axios.post("http://13.201.102.249:3000/experience/update", payload, {
+        await axios.post("https://memoir-pck6.vercel.app/experience/update", payload, {
           withCredentials: true,
         });
 

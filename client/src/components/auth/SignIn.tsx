@@ -26,7 +26,7 @@ const SignIn = () => {
     try {
       await new Promise(r => setTimeout(r,1000))
       const response = await axios.post(
-        "http://13.201.102.249:3000/auth",
+        "https://memoir-pck6.vercel.app/auth",
         {
           email,
           password,

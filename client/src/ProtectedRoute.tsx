@@ -13,7 +13,7 @@ const ProtectedRoute = ({children}:{children:React.ReactNode}) => {
     useEffect(()=>{
         const checkAuthState = async () => {
             try{
-                await axios.get("http://13.201.102.249:3000/token",{withCredentials:true})
+                await axios.get("https://memoir-pck6.vercel.app/token",{withCredentials:true})
             }
             catch(err){
                 localStorage.setItem("userDetails",JSON.stringify({}));
