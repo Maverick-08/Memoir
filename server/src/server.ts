@@ -63,20 +63,3 @@ app.use("/signout", Signout);
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 });
-
-// {
-//     "version": 2,
-//     "builds": [
-//       {
-//         "src": "dist/server.js",
-//         "use": "@vercel/node",
-//         "config": { "includeFiles": ["dist/**"] }
-//       }
-//     ],
-//     "routes": [
-//       {
-//         "src": "/(.*)",
-//         "dest": "dist/server.js"
-//       }
-//     ]
-//   }
