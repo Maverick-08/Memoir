@@ -20,24 +20,16 @@ app.use((req, res, next) => {
     const origin = req.headers.origin;
     // console.log(origin) http://localhost:5173
     
-    // res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+    res.header("Access-Control-Allow-Origin", "https://memoir-ochre.vercel.app");
     res.header("Access-Control-Allow-Credentials", "true");
-    // res.header(
-    //     "Access-Control-Allow-Headers",
-    //     "Origin, X-Requested-With, Content-Type, Accept"
-    // );
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept"
+    );
     next();
 });
 app.use(cors({
-    origin(requestOrigin, callback) {
-        if(["http://localhost:5173","https://memoir-ochre.vercel.app"].includes(requestOrigin as string)){
-            console.log(requestOrigin); 
-            callback(null,true);
-        }
-        else{
-            console.log("Blocked by CORS : "+requestOrigin)
-        }
-    },
+    origin: ["http://localhost:5173","https://memoir-ochre.vercel.app"],
     credentials:true
 }));
 
