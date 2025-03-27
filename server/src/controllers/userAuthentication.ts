@@ -77,11 +77,18 @@ export const userAuthenticationHandler = async (
     });
 
     // 6. Set the cookie in the response header
-    // Production : {httpOnly:true,sameSite:"none",secure:true,maxAge:24*60*60*1000}
+    
     // Development : {httpOnly:true,sameSite:"lax",maxAge:24*60*60*1000}
+    // res.cookie("__authCookie__", __authCookie__, {
+    //   httpOnly: true,
+    //   sameSite: "lax",
+    //   maxAge: 30 * 24 * 60 * 60 * 1000,
+    // });
+    // Production : {httpOnly:true,sameSite:"none",secure:true,maxAge:24*60*60*1000}
     res.cookie("__authCookie__", __authCookie__, {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
+      secure: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
