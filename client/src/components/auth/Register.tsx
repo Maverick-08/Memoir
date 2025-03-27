@@ -18,13 +18,15 @@ const Register = () => {
   };
 
   const getLastActiveSection = () => {
-    const data = localStorage.getItem("lastVisited");
+    try {
+      const data = localStorage.getItem("lastVisited");
 
-    if (data) {
-      return JSON.parse(data).section;
+      if (data) {
+        return JSON.parse(data).section;
+      }
+    } catch (err) {
+      return undefined;
     }
-
-    return undefined;
   };
 
   const setLastActiveSection = (section: string) => {
@@ -44,11 +46,7 @@ const Register = () => {
 
   return (
     <div>
-      {getLastActiveSection() === "Auth" ? (
-        <Navigate to={"/auth"} />
-      ) : (
-        <></>
-      )}
+      {getLastActiveSection() === "Auth" ? <Navigate to={"/auth"} /> : <></>}
       <div className="flex">
         <div className="hidden relative w-full h-screen bg-blue-600 sm:flex flex-col items-center justify-center gap-4">
           <span
@@ -151,8 +149,8 @@ const RegisterComponent = ({
         registrationNumber,
         yearOfPassingOut,
         password: "",
-        linkedIn:"",
-        xHandle:""
+        linkedIn: "",
+        xHandle: "",
       });
     }
     console.log({
@@ -165,7 +163,7 @@ const RegisterComponent = ({
     });
 
     try {
-      await axios.get(`http://localhost:3000/register?email=${email}`, {
+      await axios.get(`http://13.201.102.249:3000/register?email=${email}`, {
         withCredentials: true,
       });
 
@@ -245,9 +243,7 @@ const RegisterComponent = ({
         <p className="text-lg sm:font-medium">Registration Number</p>
         <input
           type="text"
-          onChange={(e) =>
-            setRegistrationNumber(e.target.value)
-          }
+          onChange={(e) => setRegistrationNumber(e.target.value)}
           placeholder="Enter reg number"
           className="mt-4 py-1.5 px-4 border-2 border-gray-200 bg-gray-50 rounded-md w-64 md:w-[90%] focus:outline-none focus:bg-sky-50 focus:border-sky-200"
         />
@@ -310,7 +306,7 @@ const OTPComponent = ({
     try {
       handleClickVariant("info", "Verifying OTP")();
       await axios.get(
-        `http://localhost:3000/register?email=${userDetails?.email}&otp=${otpValue}`,
+        `http://13.201.102.249:3000/register?email=${userDetails?.email}&otp=${otpValue}`,
         { withCredentials: true }
       );
 
@@ -436,29 +432,28 @@ const PasswordComponent = ({
   };
 
   const submitPassword = async () => {
-
     if (!checkPassword()) {
       return;
-    }
-    else{
+    } else {
       try {
         await axios.post(
-          "http://localhost:3000/register",
+          "http://13.201.102.249:3000/register",
           { ...userDetails, password: confirmPassword },
           { withCredentials: true }
         );
-  
+
         handleClickVariant("success", "Account Created")();
         setLastActiveSection("Auth");
         setTimeout(() => {
           navigate("/auth");
         }, 2000);
       } catch (err: any) {
-        
-        handleClickVariant("error", err.response.data.msg ?? "Internal Server Error")();
+        handleClickVariant(
+          "error",
+          err.response.data.msg ?? "Internal Server Error"
+        )();
       }
     }
-
   };
 
   return (
