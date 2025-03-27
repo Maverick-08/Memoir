@@ -4,9 +4,17 @@
   "main": "dist/server.js",
   "scripts": {
     "start": "node dist/server.js",
-    "build": "prisma generate && tsc",
+    "build": "rimraf dist && tsc",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "prisma generate"
   },
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+  ],
   "keywords": [],
   "author": "Vivek Ojha",
   "license": "ISC",
@@ -20,7 +28,9 @@
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.10.0",
-    "prisma": "^6.4.1"
+    "pre-commit": "^1.2.2",
+    "prisma": "^6.4.1",
+    "rimraf": "^6.0.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
