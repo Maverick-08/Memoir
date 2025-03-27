@@ -3,18 +3,10 @@
   "version": "1.0.0",
   "main": "dist/server.js",
   "scripts": {
-    "start": "tsc && node dist/server.js",
-    "build": "prisma generate && rimraf dist && tsc",
-    "postinstall": "prisma generate",
-    "ts.check": "tsc --project tsconfig.json",
-    "add-build": "git add dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/server.js",
+    "build": "prisma generate && tsc",
+    "postinstall": "prisma generate"
   },
-  "pre-commit": [
-      "ts.check",
-      "build",
-      "add-build"
-  ],
   "keywords": [],
   "author": "Vivek Ojha",
   "license": "ISC",
@@ -39,8 +31,6 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.13.5",
     "@types/nodemailer": "^6.4.17",
-    "pre-commit": "^1.2.2",
-    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   }

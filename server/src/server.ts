@@ -20,12 +20,12 @@ app.use((req, res, next) => {
     const origin = req.headers.origin;
     // console.log(origin) http://localhost:5173
     
-    res.header("Access-Control-Allow-Origin", "https://memoir-ochre.vercel.app");
+    // res.header("Access-Control-Allow-Origin", "https://memoir-ochre.vercel.app");
     res.header("Access-Control-Allow-Credentials", "true");
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept"
-    );
+    // res.header(
+    //     "Access-Control-Allow-Headers",
+    //     "Origin, X-Requested-With, Content-Type, Accept"
+    // );
     next();
 });
 app.use(cors({
@@ -63,3 +63,20 @@ app.use("/signout", Signout);
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 });
+
+// {
+//     "version": 2,
+//     "builds": [
+//       {
+//         "src": "dist/server.js",
+//         "use": "@vercel/node",
+//         "config": { "includeFiles": ["dist/**"] }
+//       }
+//     ],
+//     "routes": [
+//       {
+//         "src": "/(.*)",
+//         "dest": "dist/server.js"
+//       }
+//     ]
+//   }
