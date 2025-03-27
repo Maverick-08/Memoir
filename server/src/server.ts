@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 });
 app.use(cors({
     origin(requestOrigin, callback) {
-        if(["http://localhost:5173","http://localhost:3000","https://memoir-ochre.vercel.app"].includes(requestOrigin as string) || !requestOrigin){
+        if(["http://localhost:5173","http://localhost:3000","https://memoir-ochre.vercel.app","http://13.201.102.249"].includes(requestOrigin as string) || !requestOrigin){
             // console.log(requestOrigin); http://localhost:5173
             callback(null,true);
         }
