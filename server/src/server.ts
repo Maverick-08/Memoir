@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 app.use(cors({
     origin(requestOrigin, callback) {
         if(["http://localhost:5173","https://memoir-ochre.vercel.app"].includes(requestOrigin as string)){
-            // console.log(requestOrigin); http://localhost:5173
+            console.log(requestOrigin); 
             callback(null,true);
         }
         else{
