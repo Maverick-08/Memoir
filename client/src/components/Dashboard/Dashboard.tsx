@@ -1,12 +1,15 @@
 import { useMemo, useState } from "react";
 import { useSnackbar, VariantType } from "notistack";
+import { useRecoilValue } from "recoil";
+import { userDetailsAtom } from "../../../store/atoms";
 
 const Dashboard = () => {
+  const userDetails = useRecoilValue(userDetailsAtom);
   const greeting = useMemo(() => {
     const date = new Date();
-    // const ist = new Date(date.getTime() + (5 * 60 + 30) * 60 * 1000);
-    // const currentHour = ist.getHours();
-    const currentHour = date.getHours()
+    const ist = new Date(date.getTime() + (5 * 60 + 30) * 60 * 1000);
+    const currentHour = ist.getHours();
+    // const currentHour = date.getHours();
     if(currentHour < 12) return "Good Morning," 
     else if (currentHour >= 12 && currentHour < 18) return "Good Afternoon,";
     else if(currentHour >= 18 && currentHour < 22) return "Good Evening,"
@@ -19,7 +22,7 @@ const Dashboard = () => {
         <div className="flex flex-col gap-6">
           <p className="text-center text-5xl font-medium">Dashboard</p>
           <p className="text-center text-xl">
-            {greeting} <span className="font-medium">Vivek Ojha</span>
+            {greeting} <span className="font-medium">{userDetails?.name}</span>
           </p>
         </div>
       </div>
