@@ -42,6 +42,9 @@ app.use("/register", Register);
 // Authenticate user
 app.use("/auth", Authenticate);
 
+// User Reviews
+app.use("/reviews",Reviews);
+
 // Protected routes
 app.use(verifyToken);
 
@@ -54,8 +57,6 @@ app.use("/update", Updates);
 // User interview experience
 app.use("/experience", InterviewExperience);
 
-// User Reviews
-app.use("/reviews",Reviews);
 
 // User sign out
 app.use("/signout", Signout);
