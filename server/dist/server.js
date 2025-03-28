@@ -22,7 +22,7 @@ app.use((0, cookie_parser_1.default)());
 app.use((req, res, next) => {
     const origin = req.headers.origin;
     // console.log(origin) http://localhost:5173
-    // res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+    // res.header("Access-Control-Allow-Origin", "https://memoir-ochre.vercel.app");
     res.header("Access-Control-Allow-Credentials", "true");
     // res.header(
     //     "Access-Control-Allow-Headers",
@@ -31,15 +31,7 @@ app.use((req, res, next) => {
     next();
 });
 app.use((0, cors_1.default)({
-    origin(requestOrigin, callback) {
-        if (["http://localhost:5173", "http://localhost:3000", "https://memoir-ochre.vercel.app"].includes(requestOrigin) || !requestOrigin) {
-            // console.log(requestOrigin); http://localhost:5173
-            callback(null, true);
-        }
-        else {
-            console.log("Blocked by CORS : " + requestOrigin);
-        }
-    },
+    origin: ["http://localhost:5173", "https://memoir-ochre.vercel.app"],
     credentials: true
 }));
 // For checking whether server is running
@@ -48,6 +40,8 @@ app.use("/", health_checkpoint_1.default);
 app.use("/register", register_1.default);
 // Authenticate user
 app.use("/auth", auth_1.default);
+// User Reviews
+app.use("/reviews", review_1.default);
 // Protected routes
 app.use(verifyToken_1.verifyToken);
 // Token Checkpoint
@@ -56,8 +50,6 @@ app.use("/token", token_checkpoint_1.default);
 app.use("/update", updates_1.default);
 // User interview experience
 app.use("/experience", interviewExperience_1.default);
-// User Reviews
-app.use("/reviews", review_1.default);
 // User sign out
 app.use("/signout", logout_1.default);
 app.listen(app_config_1.PORT, () => {
