@@ -19,19 +19,31 @@ const review_1 = __importDefault(require("./routes/review"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
-app.use((req, res, next) => {
-    const origin = req.headers.origin;
-    // console.log(origin) http://localhost:5173
-    // res.header("Access-Control-Allow-Origin", "https://memoir-ochre.vercel.app");
-    res.header("Access-Control-Allow-Credentials", "true");
-    // res.header(
-    //     "Access-Control-Allow-Headers",
-    //     "Origin, X-Requested-With, Content-Type, Accept"
-    // );
-    next();
-});
+// app.use((req, res, next) => {
+//     const origin = req.headers.origin;
+//     // console.log(origin) http://localhost:5173
+//     res.header("Access-Control-Allow-Origin", "http://13.233.104.37:80");
+//     res.header("Access-Control-Allow-Credentials", "true");
+//     res.header(
+//         "Access-Control-Allow-Headers",
+//         "Origin, X-Requested-With, Content-Type, Accept"
+//     );
+//     next();
+// });
 app.use((0, cors_1.default)({
-    origin: ["http://localhost:5173", "https://memoir-ochre.vercel.app"],
+    origin: (origin, callback) => {
+        const allowedOrigins = [
+            "http://localhost:5173",
+            "https://memoir-ochre.vercel.app",
+            "http://13.233.104.37"
+        ];
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true); // Allow the requested origin
+        }
+        else {
+            callback(new Error('Not allowed by CORS')); // Reject the request
+        }
+    },
     credentials: true
 }));
 // For checking whether server is running

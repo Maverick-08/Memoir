@@ -60,7 +60,7 @@ const ContactUs = () => {
     try{
       const payload = {name:userName,email,message}
       console.log(payload);
-      await axios.post("http://backend:3000/reviews",payload,{withCredentials:true});
+      await axios.post("http://13.233.104.37:3000/reviews",payload,{withCredentials:true});
       setEmail("")
       setUserName("")
       setMessage("")

@@ -67,18 +67,18 @@ const userAuthenticationHandler = (req, res) => __awaiter(void 0, void 0, void 0
         });
         // 6. Set the cookie in the response header
         // Development : {httpOnly:true,sameSite:"lax",maxAge:24*60*60*1000}
-        // res.cookie("__authCookie__", __authCookie__, {
-        //   httpOnly: true,
-        //   sameSite: "lax",
-        //   maxAge: 30 * 24 * 60 * 60 * 1000,
-        // });
-        // Production : {httpOnly:true,sameSite:"none",secure:true,maxAge:24*60*60*1000}
         res.cookie("__authCookie__", __authCookie__, {
             httpOnly: true,
-            secure: true,
-            sameSite: "none",
+            sameSite: "lax",
             maxAge: 30 * 24 * 60 * 60 * 1000,
         });
+        // Production : {httpOnly:true,sameSite:"none",secure:true,maxAge:24*60*60*1000}
+        // res.cookie("__authCookie__", __authCookie__, {
+        //   httpOnly: true,
+        //   secure: true,
+        //   sameSite: "none",
+        //   maxAge: 30 * 24 * 60 * 60 * 1000,
+        // });
         res.status(status_code_1.StatusCode.RequestSuccessfull).json(Object.assign({}, responseData));
         return;
     }
