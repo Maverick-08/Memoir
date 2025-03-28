@@ -163,7 +163,7 @@ const RegisterComponent = ({
     });
 
     try {
-      await axios.get(`https://memoir-pck6.vercel.app/register?email=${email}`, {
+      await axios.get(`http://localhost:3000/register?email=${email}`, {
         withCredentials: true,
       });
 
@@ -306,7 +306,7 @@ const OTPComponent = ({
     try {
       handleClickVariant("info", "Verifying OTP")();
       await axios.get(
-        `https://memoir-pck6.vercel.app/register?email=${userDetails?.email}&otp=${otpValue}`,
+        `http://localhost:3000/register?email=${userDetails?.email}&otp=${otpValue}`,
         { withCredentials: true }
       );
 
@@ -437,7 +437,7 @@ const PasswordComponent = ({
     } else {
       try {
         await axios.post(
-          "https://memoir-pck6.vercel.app/register",
+          "http://localhost:3000/register",
           { ...userDetails, password: confirmPassword },
           { withCredentials: true }
         );

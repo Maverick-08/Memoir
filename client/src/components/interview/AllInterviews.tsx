@@ -37,7 +37,7 @@ const AllInterviews = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios.get("https://memoir-pck6.vercel.app/experience",{withCredentials:true})
+      const response = await axios.get("http://localhost:3000/experience",{withCredentials:true})
       
      setCompanies(response.data.data)
     }

@@ -60,7 +60,7 @@ const ContactUs = () => {
     try{
       const payload = {name:userName,email,message}
       console.log(payload);
-      await axios.post("https://memoir-pck6.vercel.app/reviews",payload,{withCredentials:true});
+      await axios.post("http://localhost:3000/reviews",payload,{withCredentials:true});
       setEmail("")
       setUserName("")
       setMessage("")
