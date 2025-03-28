@@ -7,12 +7,15 @@ const Dashboard = () => {
   const userDetails = useRecoilValue(userDetailsAtom);
   const greeting = useMemo(() => {
     const date = new Date();
-    const ist = new Date(date.getTime() + (5 * 60 + 30) * 60 * 1000);
-    const currentHour = ist.getHours();
-    // const currentHour = date.getHours();
-    if(currentHour < 12) return "Good Morning," 
-    else if (currentHour >= 12 && currentHour < 18) return "Good Afternoon,";
-    else if(currentHour >= 18 && currentHour < 22) return "Good Evening,"
+    const utcHour = date.getUTCHours(); // Get the hour in UTC
+    const utcMinute = date.getUTCMinutes(); // Get the minute in UTC
+
+    // Add 5 hours and 30 minutes for IST
+    const currentHour = (utcHour + 5 + Math.floor((utcMinute + 30) / 60)) % 24;
+
+    if (currentHour < 12) return "Good Morning,";
+    else if (currentHour >= 12 && currentHour < 17) return "Good Afternoon,";
+    else if (currentHour >= 17 && currentHour < 22) return "Good Evening,";
     return "It's a bit late don't you think ?";
   }, []);
 
@@ -38,11 +41,11 @@ const Dashboard = () => {
 
 const CreateUpdate = () => {
   const [postUpdate, setPostUpdate] = useState("");
-  const {enqueueSnackbar} = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const handleVariant = (variant:VariantType,msg:string) => () => {
-      enqueueSnackbar(msg,{variant});
-  }
+  const handleVariant = (variant: VariantType, msg: string) => () => {
+    enqueueSnackbar(msg, { variant });
+  };
 
   return (
     <div className="shadow-lg border border-gray-200 px-4 py-6">
@@ -56,7 +59,15 @@ const CreateUpdate = () => {
           onChange={(e) => setPostUpdate(e.target.value)}
         ></textarea>
         <div className="pt-8 flex justify-center cursor-pointer">
-          <div onClick={()=>handleVariant("info","Section under review, kindly explore other features !")()} className="w-[80%] py-2 rounded-md bg-black text-white text-center text-xl font-medium">
+          <div
+            onClick={() =>
+              handleVariant(
+                "info",
+                "Section under review, kindly explore other features !"
+              )()
+            }
+            className="w-[80%] py-2 rounded-md bg-black text-white text-center text-xl font-medium"
+          >
             Create post
           </div>
         </div>
