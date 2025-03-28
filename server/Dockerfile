@@ -1,6 +1,6 @@
 FROM node:22-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY package.json package-lock.json ./
 COPY prisma ./prisma
@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD [ "npm","run","start" ]
+CMD [ "npm", "run", "build", "&&", "npm", "run", "start" ]

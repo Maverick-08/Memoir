@@ -29,7 +29,7 @@ app.use((req, res, next) => {
     next();
 });
 app.use(cors({
-    origin: ["http://localhost:5173","https://memoir-ochre.vercel.app"],
+    origin: ["http://localhost:5173","https://memoir-ochre.vercel.app","http://frontend:5173"],
     credentials:true
 }));
 

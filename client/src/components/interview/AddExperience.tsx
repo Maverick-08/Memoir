@@ -225,7 +225,7 @@ const RoundDetails = () => {
           roundDetails: allRoundsDetails,
         };
 
-        await axios.post("http://localhost:3000/experience", payload, {
+        await axios.post("http://backend:3000/experience", payload, {
           withCredentials: true,
         });
 
@@ -261,7 +261,7 @@ const RoundDetails = () => {
         };
         
 
-        await axios.post("http://localhost:3000/experience/update", payload, {
+        await axios.post("http://backend:3000/experience/update", payload, {
           withCredentials: true,
         });
 
