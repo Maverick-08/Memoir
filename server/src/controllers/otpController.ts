@@ -55,9 +55,8 @@ const sendOTP = async (req: Request, res: Response, receiverEmail: string) => {
       },
     });
     
-    let response;
-    if (userData) {
-      response = await prisma.oTP.update({
+    if (userData?.email && userData.otp.length > 1) {
+      await prisma.oTP.update({
         where:{
           email:userData.email
         },
@@ -65,8 +64,8 @@ const sendOTP = async (req: Request, res: Response, receiverEmail: string) => {
           otp:[...userData.otp,otp]
         }
       });
-    } else {
-      response = await prisma.oTP.create({
+    } else if(receiverEmail) {
+      await prisma.oTP.create({
         data: {
           email: receiverEmail,
           otp: [otp],
@@ -74,7 +73,7 @@ const sendOTP = async (req: Request, res: Response, receiverEmail: string) => {
       });
     }
 
-    if (response) {
+    if (receiverEmail) {
       const mailOptions = {
         from: "organizationmemoir@gmail.com",
         to: receiverEmail,
@@ -86,11 +85,11 @@ const sendOTP = async (req: Request, res: Response, receiverEmail: string) => {
               `,
       };
 
-      transporter.sendMail(mailOptions);
+      await transporter.sendMail(mailOptions);
 
       res.sendStatus(StatusCode.RequestSuccessfull);
     } else {
-      throw new Error("Failed to sent otp");
+      res.sendStatus(StatusCode.Unauthorized);
     }
 
     return;
