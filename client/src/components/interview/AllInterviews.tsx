@@ -37,7 +37,7 @@ const AllInterviews = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios.get("http://13.233.104.37:3000/experience",{withCredentials:true})
+      const response = await axios.get("http://memoir.dev-projects.site/api/experience",{withCredentials:true})
       
      setCompanies(response.data.data)
     }

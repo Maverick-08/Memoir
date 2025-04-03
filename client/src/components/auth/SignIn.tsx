@@ -26,7 +26,7 @@ const SignIn = () => {
     try {
       await new Promise(r => setTimeout(r,1000))
       const response = await axios.post(
-        "http://13.233.104.37:3000/auth",
+        "http://memoir.dev-projects.site/api/auth",
         {
           email,
           password,

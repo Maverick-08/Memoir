@@ -29,18 +29,7 @@ app.use(cookieParser());
 //     next();
 // });
 app.use(cors({
-  origin: (origin, callback) => {
-      const allowedOrigins = [
-          "http://localhost:5173",
-          "https://memoir-ochre.vercel.app",
-          "http://13.233.104.37"
-      ];
-      if (allowedOrigins.indexOf(origin as string) !== -1 || !origin) {
-          callback(null, true); // Allow the requested origin
-      } else {
-          callback(new Error('Not allowed by CORS')); // Reject the request
-      }
-  },
+  origin:["http://localhost:5173","http://memoir.dev-projects.site"],
   credentials: true
 }));
 
