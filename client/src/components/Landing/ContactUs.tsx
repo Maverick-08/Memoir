@@ -60,7 +60,7 @@ const ContactUs = () => {
     try{
       const payload = {name:userName,email,message}
       console.log(payload);
-      await axios.post("http://memoir.dev-projects.site/api/reviews",payload,{withCredentials:true});
+      await axios.post("https://memoir.dev-projects.site/api/reviews",payload,{withCredentials:true});
       setEmail("")
       setUserName("")
       setMessage("")

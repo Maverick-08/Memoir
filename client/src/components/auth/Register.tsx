@@ -163,7 +163,7 @@ const RegisterComponent = ({
     });
 
     try {
-      await axios.get(`http://memoir.dev-projects.site/api/register?email=${email}`, {
+      await axios.get(`https://memoir.dev-projects.site/api/register?email=${email}`, {
         withCredentials: true,
       });
 
@@ -306,7 +306,7 @@ const OTPComponent = ({
     try {
       handleClickVariant("info", "Verifying OTP")();
       await axios.get(
-        `http://memoir.dev-projects.site/api/register?email=${userDetails?.email}&otp=${otpValue}`,
+        `https://memoir.dev-projects.site/api/register?email=${userDetails?.email}&otp=${otpValue}`,
         { withCredentials: true }
       );
 
@@ -437,7 +437,7 @@ const PasswordComponent = ({
     } else {
       try {
         await axios.post(
-          "http://memoir.dev-projects.site/api/register",
+          "https://memoir.dev-projects.site/api/register",
           { ...userDetails, password: confirmPassword },
           { withCredentials: true }
         );

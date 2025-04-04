@@ -13,7 +13,7 @@ const ProtectedRoute = ({children}:{children:React.ReactNode}) => {
     useEffect(()=>{
         const checkAuthState = async () => {
             try{
-                await axios.get("http://memoir.dev-projects.site/api/token",{withCredentials:true})
+                await axios.get("https://memoir.dev-projects.site/api/token",{withCredentials:true})
             }
             catch(err){
                 localStorage.setItem("userDetails",JSON.stringify({}));

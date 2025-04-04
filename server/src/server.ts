@@ -29,7 +29,7 @@ app.use(cookieParser());
 //     next();
 // });
 app.use(cors({
-  origin:["http://localhost:5173","http://memoir.dev-projects.site"],
+  origin:["http://localhost:5173","https://memoir.dev-projects.site"],
   credentials: true
 }));
 

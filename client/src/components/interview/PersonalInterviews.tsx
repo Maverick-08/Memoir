@@ -30,7 +30,7 @@ const PersonalInterviews = () => {
   useEffect(()=>{
     const fetchData = async () =>{
       try{
-        const response = await axios.get("http://memoir.dev-projects.site/api/experience/personal",{withCredentials:true})
+        const response = await axios.get("https://memoir.dev-projects.site/api/experience/personal",{withCredentials:true})
 
         setJobsList(response.data.data)
         setFilterJobsList(response.data.data);
@@ -75,14 +75,14 @@ const PersonalInterviews = () => {
   const handleUpdateJob = async (updatedJob: InterviewDetails) => {
     try{
        if(updatedJob.interviewExperienceId){
-          const response = await axios.get(`http://memoir.dev-projects.site/api/experience/update?interviewExperienceId=${updatedJob.interviewExperienceId}`,{withCredentials:true})
+          const response = await axios.get(`https://memoir.dev-projects.site/api/experience/update?interviewExperienceId=${updatedJob.interviewExperienceId}`,{withCredentials:true})
 
           localStorage.setItem("experienceDetails",JSON.stringify({...response.data.response,update:true}));
           setInterviewExperienceForUpdation({...response.data.response,update:true})
           navigate("/addExperience")
        }
        else{
-          await axios.post("http://memoir.dev-projects.site/api/experience/personal/update",updatedJob,{withCredentials:true});
+          await axios.post("https://memoir.dev-projects.site/api/experience/personal/update",updatedJob,{withCredentials:true});
 
           const updatedJobs = jobsList.map((job) => {
             if (job.id === updatedJob.id) {
@@ -108,10 +108,10 @@ const PersonalInterviews = () => {
       if(jobToDelete.interviewExperienceId){
         const response = confirm("This Interview Experience will also get deleted from All Interviews section. Do you wish to proceed?");
         if(!response) return;
-        await axios.delete(`http://memoir.dev-projects.site/api/experience?interviewId=${jobToDelete.interviewExperienceId}`,{withCredentials:true});
+        await axios.delete(`https://memoir.dev-projects.site/api/experience?interviewId=${jobToDelete.interviewExperienceId}`,{withCredentials:true});
       }
       else{
-        await axios.delete(`http://memoir.dev-projects.site/api/experience/personal?interviewId=${jobToDelete.id}`,{withCredentials:true});
+        await axios.delete(`https://memoir.dev-projects.site/api/experience/personal?interviewId=${jobToDelete.id}`,{withCredentials:true});
       }
       const updatedJobs = jobsList.filter((job) => job.id !== jobToDelete.id);
       setJobsList(updatedJobs);
@@ -127,7 +127,7 @@ const PersonalInterviews = () => {
   const addInterview = async (payload:{companyName:string,experienceType:string,interviewStatus:string,interviewExperienceId:undefined}) => {
     try{
   
-     const response = await axios.post("http://memoir.dev-projects.site/api/experience/personal",{...payload,email:userDetails?.email},{withCredentials:true});
+     const response = await axios.post("https://memoir.dev-projects.site/api/experience/personal",{...payload,email:userDetails?.email},{withCredentials:true});
 
       const updatedJobsList = [response.data.response,...jobsList]
       setJobsList(updatedJobsList)
