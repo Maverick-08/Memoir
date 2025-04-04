@@ -5,11 +5,29 @@ import { IoMenu } from "react-icons/io5";
 import { GoPeople } from "react-icons/go";
 import { GoPerson } from "react-icons/go";
 import { IoAddCircleOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TbLogout2 } from "react-icons/tb";
+import { useSetRecoilState } from "recoil";
+import { userAuthStateAtom, userDetailsAtom } from "../../store/atoms";
+import axios from "axios";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = React.useState(false);
+  const setUserDetails = useSetRecoilState(userDetailsAtom);
+  const setUserAuthState = useSetRecoilState(userAuthStateAtom);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try{
+        await axios.get("https://memoir.dev-projects.site/api/signout",{withCredentials:true});
+        setUserAuthState(false);
+        setUserDetails(null);
+        navigate("/")
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
 
   const Options = [
     {
@@ -57,7 +75,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
         </div>
         <div className="w-full pl-2 pb-8">
-          <div className="flex items-center gap-4 py-1.5 pl-3 rounded-md cursor-pointer hover:bg-slate-100">
+          <div onClick={handleLogout} className="flex items-center gap-4 py-1.5 pl-3 rounded-md cursor-pointer hover:bg-slate-100">
             <span>
               <TbLogout2 size={24} />
             </span>

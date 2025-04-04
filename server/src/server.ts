@@ -34,32 +34,32 @@ app.use(cors({
 }));
 
 // For checking whether server is running
-app.use("/", HealthCheckPoint);
+app.use("/api", HealthCheckPoint);
 
 // Register new user
-app.use("/register", Register);
+app.use("/api/register", Register);
 
 // Authenticate user
-app.use("/auth", Authenticate);
+app.use("/api/auth", Authenticate);
 
 // User Reviews
-app.use("/reviews",Reviews);
+app.use("/api/reviews",Reviews);
 
 // Protected routes
 app.use(verifyToken);
 
 // Token Checkpoint
-app.use("/token", TokenCheckPoint);
+app.use("/api/token", TokenCheckPoint);
 
 // User updates
-app.use("/update", Updates);
+app.use("/api/update", Updates);
 
 // User interview experience
-app.use("/experience", InterviewExperience);
+app.use("/api/experience", InterviewExperience);
 
 
 // User sign out
-app.use("/signout", Signout);
+app.use("/api/signout", Signout);
 
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
