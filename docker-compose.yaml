@@ -1,15 +1,14 @@
-version: '3.8'
 services:
   frontend:
-    image: "maverick008/frontend:latest"
+    image: maverick008/frontend:latest
     container_name: frontend
     depends_on:
       - backend
   
   backend:
-    image: "maverick008/backend:latest"
+    image: maverick008/backend:latest
     container_name: backend
     environment:
       - PORT=3000
-      - DATABASE_URL="postgresql://memoirdb_owner:npg_m3LkC4uOGbBv@ep-orange-poetry-a1wlhhx9-pooler.ap-southeast-1.aws.neon.tech/memoirdb?sslmode=require"
+      - DATABASE_URL=postgresql://memoirdb_owner:npg_m3LkC4uOGbBv@ep-orange-poetry-a1wlhhx9-pooler.ap-southeast-1.aws.neon.tech/memoirdb?sslmode=require
       - TOKEN_KEY=G4jR8dLpM2aS5eK9cT7yB1nH6gF3xV4wE8rQ6tY5uI4oP3nM2lK1jH7gF9eD8cR5tA4sQ3wE2rT1yU6iO5pN4mL3kJ2hG9fE8dC7
