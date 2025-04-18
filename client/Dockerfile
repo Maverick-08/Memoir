@@ -1,9 +1,9 @@
 # Stage 1: Build the React app
-FROM node:20-alpine AS build
+FROM node:slim AS build
 
 WORKDIR /app
 
-# Copy package.json and package-lock.json for dependency installation
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
 # Install dependencies
@@ -15,17 +15,18 @@ COPY . .
 # Build the React app for production
 RUN npm run build
 
-# Stage 2: Serve the React app with NGINX
-FROM nginx:stable-alpine AS production
+# Stage 2: Serve the React app with 'serve'
+FROM node:slim
 
-# Copy the built files from Stage 1 to NGINX's default HTML directory
-COPY --from=build /app/dist /usr/share/nginx/html
+WORKDIR /app
 
-# Copy custom NGINX configuration file if needed (see Step 3)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Install 'serve' globally
+RUN npm install -g serve
 
-# Expose port 80 for external access
+# Copy the build output from the previous stage
+COPY --from=build /app/dist ./build
+
 EXPOSE 80
 
-# Start NGINX server
-CMD ["nginx", "-g", "daemon off;"]
+# Start the app using 'serve'
+CMD ["serve", "-s", "build", "-l", "80"]
