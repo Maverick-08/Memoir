@@ -5,11 +5,14 @@ import SignIn from "./components/auth/SignIn";
 import Register from "./components/auth/Register";
 import { SnackbarProvider } from "notistack";
 import Dashboard from "./components/Dashboard/Dashboard";
-import DashboardLayout from "./layouts/DashboardLayout";
 import AllInterviews from "./components/interview/AllInterviews";
 import PersonalInterviews from "./components/interview/PersonalInterviews";
 import AddExperience from "./components/interview/AddExperience";
 import ProtectedRoute from "./ProtectedRoute";
+import DashboardLayout from "./layouts/DashboardLayout";
+import UserMessages from "./messages/UserMessage";
+import Notifications from "./Notifications/Notifications";
+import Profile from "./profile/Profile";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +67,46 @@ const router = createBrowserRouter([
       <ProtectedRoute>
         <DashboardLayout>
           <AddExperience />
+        </DashboardLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/addExperience",
+    element: (
+      <ProtectedRoute>
+        <DashboardLayout>
+          <AddExperience />
+        </DashboardLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/messages",
+    element: (
+      <ProtectedRoute>
+        <DashboardLayout>
+          <UserMessages />
+        </DashboardLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/notifications",
+    element: (
+      <ProtectedRoute>
+        <DashboardLayout>
+          <Notifications />
+        </DashboardLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/profile",
+    element: (
+      <ProtectedRoute>
+        <DashboardLayout>
+          <Profile />
         </DashboardLayout>
       </ProtectedRoute>
     ),

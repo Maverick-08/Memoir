@@ -1,101 +1,88 @@
 import React from "react";
-import { Box, Drawer } from "@mui/material";
-import { RxCross2 } from "react-icons/rx";
-import { IoMenu } from "react-icons/io5";
-import { GoPeople } from "react-icons/go";
-import { GoPerson } from "react-icons/go";
-import { IoAddCircleOutline } from "react-icons/io5";
-import { Link, useNavigate } from "react-router-dom";
-import { TbLogout2 } from "react-icons/tb";
-import { useSetRecoilState } from "recoil";
-import { userAuthStateAtom, userDetailsAtom } from "../../store/atoms";
-import axios from "axios";
+import { IoHome } from "react-icons/io5";
+import { IoPeople } from "react-icons/io5";
+import { LuNotebookPen } from "react-icons/lu";
+import { LuMessageSquareText } from "react-icons/lu";
+import { GoBellFill } from "react-icons/go";
+import { IoPerson } from "react-icons/io5";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-  const [open, setOpen] = React.useState(false);
-  const setUserDetails = useSetRecoilState(userDetailsAtom);
-  const setUserAuthState = useSetRecoilState(userAuthStateAtom);
+  const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    try{
-        await axios.get("https://memoir.dev-projects.site/api/signout",{withCredentials:true});
-        setUserAuthState(false);
-        setUserDetails(null);
-        navigate("/")
-    }
-    catch(err){
-      console.log(err);
-    }
-  }
-
-  const Options = [
-    {
-      text: "All Interviews",
-      link:"allInterviews",
-      icon: <GoPeople size={24} />,
-    },
-    {
-      text: "My Interviews",
-      link:"personalInterviews",
-      icon: <GoPerson size={24} />,
-    },
-    {
-      text: "Add Experience",
-      link:"addExperience",
-      icon: <IoAddCircleOutline size={24} />,
-    },
-  ];
-
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
-
-  const DrawerList = (
-    <Box sx={{ width: 250, height: "100%" }} role="presentation">
-      <div className="relative px-2 flex flex-col justify-between w-full h-full">
-        <span className="absolute top-4 right-4 px-3 py-2 hover:bg-slate-100 rounded-md cursor-pointer">
-          <RxCross2 size={28} onClick={toggleDrawer(false)} />
-        </span>
-        <div className="w-full h-[60vh] pt-24">
-          <p className="text-3xl font-medium pl-4 cursor-pointer">Dashboard</p>
-          <div className="pl-3 pr-2 mt-8 flex flex-col gap-12">
-            {Options.map((option, index) => {
-              return (
-                <Link to={"/"+option.link} key={index}>
-                  <div
-                    className="pl-4 py-1.5 rounded-md flex items-center gap-4 hover:bg-slate-100 cursor-pointer"
-                  >
-                    <span>{option.icon}</span>
-                    <span className="text-lg font-medium">{option.text}</span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-        <div className="w-full pl-2 pb-8">
-          <div onClick={handleLogout} className="flex items-center gap-4 py-1.5 pl-3 rounded-md cursor-pointer hover:bg-slate-100">
-            <span>
-              <TbLogout2 size={24} />
-            </span>
-            <span className="text-lg font-medium">Logout</span>
-          </div>
-        </div>
-      </div>
-    </Box>
-  );
-
+  console.log(location.pathname);
   return (
-    <div className="relative container mx-auto">
-      <div className="absolute cursor-pointer top-4 pl-4 hover:pl-6 py-0.5 rounded-md ease-in duration-200 hover:bg-gray-100 w-20">
-        <span onClick={() => toggleDrawer(true)()}>
-          <IoMenu size={36} />
-        </span>
-      </div>
-      <Drawer open={open} onClose={toggleDrawer(false)}>
-        {DrawerList}
-      </Drawer>
+    <div>
+      <nav className="top-0 left-0 font-inter">
+        <div className="container mx-auto py-1">
+          <div className="flex justify-between items-center px-16 shadow">
+            <div className="text-4xl font-medium">Memoir</div>
+            <div className="flex space-x-12 text-sm cursor-pointer">
+
+                {/* Home  */}
+              <div
+              onClick={()=>{navigate("/dashboard")}}
+                className={`${
+                  location.pathname == "/dashboard" ? "border-b-2 text-black" : "text-gray-400"
+                } px-4 py-1 flex flex-col items-center gap-1`}
+              >
+                <IoHome size={20} /> Home
+              </div>
+
+              {/* All Interview */}
+              <div
+              onClick={()=>{navigate("/allInterviews")}}
+                className={`${
+                  location.pathname == "/allInterviews"? "border-b-2 text-black" : "text-gray-400"
+                } px-4 py-1 flex flex-col items-center gap-1`}
+              >
+                <IoPeople size={20} /> Interviews
+              </div>
+
+              {/* Share Interviews */}
+              <div
+              onClick={()=>{navigate("/personalInterviews")}}
+                className={`${
+                  location.pathname == "/personalInterviews" ? "border-b-2 text-black" : "text-gray-400"
+                } px-4 py-1 flex flex-col items-center gap-1`}
+              >
+                <LuNotebookPen size={20} /> Share Experience
+              </div>
+
+              {/* Messages */}
+              <div
+              onClick={()=>{navigate("/messages")}}
+                className={`${
+                  location.pathname == "/messages"? "border-b-2 text-black" : "text-gray-400"
+                } px-4 py-1 flex flex-col items-center gap-1`}
+              >
+                <LuMessageSquareText size={20} /> Mesasges
+              </div>
+
+              {/* Notifications */}
+              <div
+              onClick={()=>{navigate("/notifications")}}
+                className={`${
+                  location.pathname == "/notifications" ? "border-b-2 text-black" : "text-gray-400"
+                } px-4 py-1 flex flex-col items-center gap-1`}
+              >
+                <GoBellFill size={20} /> Notifications
+              </div>
+
+              {/* Profile */}
+              <div
+              onClick={()=>{navigate("/profile")}}
+                className={`${
+                  location.pathname == "/profile" ? "border-b-2 text-black" : "text-gray-400"
+                } px-4 py-1 flex flex-col items-center gap-1`}
+              >
+                <IoPerson size={20} /> Profile
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
       {children}
     </div>
   );
