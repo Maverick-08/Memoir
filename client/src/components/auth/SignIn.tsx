@@ -6,6 +6,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { userAuthStateAtom, userDetailsAtom } from "../../../store/atoms";
+import { BASE_URL } from "../../config";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const SignIn = () => {
     try {
       await new Promise(r => setTimeout(r,1000))
       const response = await axios.post(
-        "https://memoir.dev-projects.site/api/auth",
+        `${BASE_URL}/auth`,
         {
           email,
           password,
@@ -42,8 +43,13 @@ const SignIn = () => {
         setUserAuthState(true);
         navigate("/dashboard")
       }
-    } catch (err: any) {
-      handleClickVariant("error", err.response.data)();
+    } catch (err) {
+      if(axios.isAxiosError(err) && err.response){
+        handleClickVariant("error", err.response.data)();
+      }
+      else{
+        handleClickVariant("error", 'something went wrong')();
+      }
     }
   };
 

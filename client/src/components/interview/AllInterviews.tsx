@@ -6,6 +6,7 @@ import { FiPlus } from "react-icons/fi";
 import { FiMinus } from "react-icons/fi";
 import { LuExternalLink } from "react-icons/lu";
 import axios from "axios";
+import { BASE_URL } from "../../config";
 
 interface InterviewData {
   companyName: string;
@@ -37,7 +38,7 @@ const AllInterviews = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios.get("https://memoir.dev-projects.site/api/experience",{withCredentials:true})
+      const response = await axios.get(`${BASE_URL}/experience`,{withCredentials:true})
       
      setCompanies(response.data.data)
     }

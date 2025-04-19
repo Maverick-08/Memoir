@@ -6,6 +6,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userDetailsAtom } from "../../../store/atoms";
 import { VariantType, useSnackbar } from "notistack";
 import axios from "axios";
+import {BASE_URL} from "../../config";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -25,7 +26,9 @@ const Register = () => {
         return JSON.parse(data).section;
       }
     } catch (err) {
-      return undefined;
+      if(!axios.isAxiosError(err)){
+        return undefined;
+      }
     }
   };
 
@@ -163,15 +166,20 @@ const RegisterComponent = ({
     });
 
     try {
-      await axios.get(`https://memoir.dev-projects.site/api/register?email=${email}`, {
+      await axios.get(`${BASE_URL}/register?email=${email}`, {
         withCredentials: true,
       });
 
       handleClickVariant("success", "OTP sent successfully")();
       setLastActiveSection("OTP");
       setComponentActive("OTP");
-    } catch (err: any) {
-      handleClickVariant("error", err?.response.data.msg)();
+    } catch (err) {
+      if(axios.isAxiosError(err) && err.response){
+        handleClickVariant("error", err?.response.data.msg)();
+      }
+      else{
+        handleClickVariant("error", "something went wrong")();
+      }
     }
   };
 
@@ -306,14 +314,19 @@ const OTPComponent = ({
     try {
       handleClickVariant("info", "Verifying OTP")();
       await axios.get(
-        `https://memoir.dev-projects.site/api/register?email=${userDetails?.email}&otp=${otpValue}`,
+        `${BASE_URL}/register?email=${userDetails?.email}&otp=${otpValue}`,
         { withCredentials: true }
       );
 
       setLastActiveSection("Password");
       setComponentActive("Password");
-    } catch (err: any) {
-      handleClickVariant("error", err.response.data.msg)();
+    } catch (err) {
+      if(axios.isAxiosError(err) && err.response){
+        handleClickVariant("error", err?.response.data.msg)();
+      }
+      else{
+        handleClickVariant("error", "something went wrong")();
+      }
     }
   };
 
@@ -437,7 +450,7 @@ const PasswordComponent = ({
     } else {
       try {
         await axios.post(
-          "https://memoir.dev-projects.site/api/register",
+          `${BASE_URL}/register`,
           { ...userDetails, password: confirmPassword },
           { withCredentials: true }
         );
@@ -447,11 +460,13 @@ const PasswordComponent = ({
         setTimeout(() => {
           navigate("/auth");
         }, 2000);
-      } catch (err: any) {
-        handleClickVariant(
-          "error",
-          err.response.data.msg ?? "Internal Server Error"
-        )();
+      } catch (err) {
+        if(axios.isAxiosError(err) && err.response){
+          handleClickVariant(
+            "error",
+            err.response.data.msg ?? "Internal Server Error"
+          )();
+        }
       }
     }
   };

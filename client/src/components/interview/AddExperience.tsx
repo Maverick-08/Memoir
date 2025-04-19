@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { FaAngleDown } from "react-icons/fa6";
 import { FaAngleUp } from "react-icons/fa6";
@@ -15,6 +16,7 @@ import {
 import { allInterviewRoundsDetails } from "../../../store/selector";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../config";
 
 const AddExperience = () => {
   const [nextStateActivated, setNextStateActivated] = useState(false);
@@ -174,7 +176,7 @@ const RoundDetails = () => {
 
   useEffect(() => {
     if (interviewExperienceForUpdation?.update) {
-      let roundIds: string[] = [];
+      const roundIds: string[] = [];
       interviewExperienceForUpdation.roundDetails.map(
         (round: { id: string }) => {
           roundIds.push(round.id);
@@ -225,7 +227,7 @@ const RoundDetails = () => {
           roundDetails: allRoundsDetails,
         };
 
-        await axios.post("https://memoir.dev-projects.site/api/experience", payload, {
+        await axios.post(`${BASE_URL}/experience`, payload, {
           withCredentials: true,
         });
 
@@ -234,8 +236,12 @@ const RoundDetails = () => {
         handleClickVariant("success", "Experience Submitted Successfully !")();
         navigate("/allInterviews");
       
-    } catch (err: any) {
-      handleClickVariant("error", err.response.data.msg)();
+    } catch (err) {
+      if(axios.isAxiosError(err) && err.response){
+        handleClickVariant("error", err.response.data.msg)();
+      }else{
+        handleClickVariant("error", 'something went wrong')();
+      }
     }
   };
 
@@ -261,7 +267,7 @@ const RoundDetails = () => {
         };
         
 
-        await axios.post("https://memoir.dev-projects.site/api/experience/update", payload, {
+        await axios.post(`${BASE_URL}/experience/update`, payload, {
           withCredentials: true,
         });
 
@@ -271,8 +277,13 @@ const RoundDetails = () => {
         setInterviewExperienceForUpdation(null);
         navigate("/allInterviews")
       }
-    } catch (err: any) {
-      handleClickVariant("error", err.response.data.msg)();
+    } catch (err) {
+      if(axios.isAxiosError(err) && err.response){
+        handleClickVariant("error", err.response.data.msg)();
+      }
+      else{
+        handleClickVariant("error", 'something went wrong')();
+      }
     }
   };
 
@@ -316,6 +327,7 @@ const RoundDetails = () => {
           <div className="flex justify-center mb-4">
             <div
               onClick={() => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                 interviewExperienceForUpdation?.update
                   ? handleUpdate()
                   : handleSubmit();
@@ -364,7 +376,7 @@ const RoundAccordian = ({
     if (interviewExperienceForUpdation?.update) {
       interviewExperienceForUpdation.roundDetails.map((round) => {
         if (round.id === roundId) {
-          let givenQuestionIds: string[] = [];
+          const givenQuestionIds: string[] = [];
           round.questions.map((question: { id: string }) => {
             givenQuestionIds.push(question.id);
           });

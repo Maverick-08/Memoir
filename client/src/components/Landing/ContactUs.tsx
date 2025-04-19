@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSnackbar, VariantType } from "notistack";
 import axios from "axios";
+import {BASE_URL} from "../../config";
 
 type InputProps = {
   value: string;
@@ -60,13 +61,14 @@ const ContactUs = () => {
     try{
       const payload = {name:userName,email,message}
       console.log(payload);
-      await axios.post("https://memoir.dev-projects.site/api/reviews",payload,{withCredentials:true});
+      await axios.post(`${BASE_URL}/reviews`,payload,{withCredentials:true});
       setEmail("")
       setUserName("")
       setMessage("")
       handleClickVariant("success","Review sent successfully")()
     }
     catch(err){
+      console.log(err);
       handleClickVariant("error","Failed to sent review")();
     }
   }

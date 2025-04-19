@@ -1,14 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { VariantType, useSnackbar } from "notistack";
 import axios from "axios";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { isInterviewExperienceForUpdationAtom, userDetailsAtom } from "../../../store/atoms";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../config";
 
 interface InterviewDetails {
   id: string; 
   createdAt: Date;
-  email:String;
+  email:string;
   companyName: string;
   experienceType: string;
   interviewStatus: string;
@@ -30,13 +32,16 @@ const PersonalInterviews = () => {
   useEffect(()=>{
     const fetchData = async () =>{
       try{
-        const response = await axios.get("https://memoir.dev-projects.site/api/experience/personal",{withCredentials:true})
+        const response = await axios.get(`${BASE_URL}/experience/personal`,{withCredentials:true})
 
         setJobsList(response.data.data)
         setFilterJobsList(response.data.data);
       }
       catch(err){
-       handleClickVariant("error","Error Occurred")
+        if(axios.isAxiosError(err) && err.response){
+          console.log(err);
+          handleClickVariant("error","Error Occurred")();
+        }
       }
     }
     fetchData();
@@ -75,14 +80,14 @@ const PersonalInterviews = () => {
   const handleUpdateJob = async (updatedJob: InterviewDetails) => {
     try{
        if(updatedJob.interviewExperienceId){
-          const response = await axios.get(`https://memoir.dev-projects.site/api/experience/update?interviewExperienceId=${updatedJob.interviewExperienceId}`,{withCredentials:true})
+          const response = await axios.get(`${BASE_URL}/experience/update?interviewExperienceId=${updatedJob.interviewExperienceId}`,{withCredentials:true})
 
           localStorage.setItem("experienceDetails",JSON.stringify({...response.data.response,update:true}));
           setInterviewExperienceForUpdation({...response.data.response,update:true})
           navigate("/addExperience")
        }
        else{
-          await axios.post("https://memoir.dev-projects.site/api/experience/personal/update",updatedJob,{withCredentials:true});
+          await axios.post(`${BASE_URL}/experience/personal/update`,updatedJob,{withCredentials:true});
 
           const updatedJobs = jobsList.map((job) => {
             if (job.id === updatedJob.id) {
@@ -108,10 +113,10 @@ const PersonalInterviews = () => {
       if(jobToDelete.interviewExperienceId){
         const response = confirm("This Interview Experience will also get deleted from All Interviews section. Do you wish to proceed?");
         if(!response) return;
-        await axios.delete(`https://memoir.dev-projects.site/api/experience?interviewId=${jobToDelete.interviewExperienceId}`,{withCredentials:true});
+        await axios.delete(`${BASE_URL}/experience?interviewId=${jobToDelete.interviewExperienceId}`,{withCredentials:true});
       }
       else{
-        await axios.delete(`https://memoir.dev-projects.site/api/experience/personal?interviewId=${jobToDelete.id}`,{withCredentials:true});
+        await axios.delete(`${BASE_URL}/experience/personal?interviewId=${jobToDelete.id}`,{withCredentials:true});
       }
       const updatedJobs = jobsList.filter((job) => job.id !== jobToDelete.id);
       setJobsList(updatedJobs);
@@ -119,6 +124,7 @@ const PersonalInterviews = () => {
       handleClickVariant("success","Interview Deleted Successfully")()
     }
     catch(err){
+      console.log(err);
       handleClickVariant("error","Request Declined")()
     }
     
@@ -127,7 +133,7 @@ const PersonalInterviews = () => {
   const addInterview = async (payload:{companyName:string,experienceType:string,interviewStatus:string,interviewExperienceId:undefined}) => {
     try{
   
-     const response = await axios.post("https://memoir.dev-projects.site/api/experience/personal",{...payload,email:userDetails?.email},{withCredentials:true});
+     const response = await axios.post(`${BASE_URL}/experience/personal`,{...payload,email:userDetails?.email},{withCredentials:true});
 
       const updatedJobsList = [response.data.response,...jobsList]
       setJobsList(updatedJobsList)
@@ -335,7 +341,11 @@ const JobModal = ({
             <div className="mt-4 flex justify-center">
               <div
                 onClick={() => {
-                  selectedJob ? handleUpdateJob({...selectedJob,companyName,experienceType,interviewStatus}):addInterview({companyName,experienceType,interviewStatus,interviewExperienceId:undefined});
+                  
+                  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                  selectedJob ? 
+                  handleUpdateJob({...selectedJob,companyName,experienceType,interviewStatus}) :
+                  addInterview({companyName,experienceType,interviewStatus,interviewExperienceId:undefined});
                   closeModal(false)
                 }}
                 className="cursor-pointer bg-black text-gray-200 hover:text-white px-24 py-1.5 rounded-md text-xl"
