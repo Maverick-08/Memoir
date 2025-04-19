@@ -19,22 +19,33 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           <div className="flex justify-between items-center px-16 shadow">
             <div className="text-4xl font-medium">Memoir</div>
             <div className="flex space-x-12 text-sm cursor-pointer">
-
-                {/* Home  */}
+              {/* Home  */}
               <div
-              onClick={()=>{navigate("/dashboard")}}
+                onClick={() => {
+                  navigate("/dashboard");
+                }}
                 className={`${
-                  location.pathname == "/dashboard" ? "border-b-2 text-black" : "text-gray-400"
+                  location.pathname == "/dashboard"
+                    ? "border-b-2 text-black"
+                    : "text-gray-500"
                 } px-4 py-1 flex flex-col items-center gap-1`}
               >
-                <IoHome size={20} /> Home
+                <div className="relative">
+                  {/* <div className="absolute top-0 left-5 bg-red-600 rounded-full h-2 w-2"></div> */}
+                  <IoHome size={20} />
+                </div>
+                <p>Home</p>
               </div>
 
               {/* All Interview */}
               <div
-              onClick={()=>{navigate("/allInterviews")}}
+                onClick={() => {
+                  navigate("/allInterviews");
+                }}
                 className={`${
-                  location.pathname == "/allInterviews"? "border-b-2 text-black" : "text-gray-400"
+                  location.pathname == "/allInterviews"
+                    ? "border-b-2 text-black"
+                    : "text-gray-500"
                 } px-4 py-1 flex flex-col items-center gap-1`}
               >
                 <IoPeople size={20} /> Interviews
@@ -42,9 +53,13 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
               {/* Share Interviews */}
               <div
-              onClick={()=>{navigate("/personalInterviews")}}
+                onClick={() => {
+                  navigate("/personalInterviews");
+                }}
                 className={`${
-                  location.pathname == "/personalInterviews" ? "border-b-2 text-black" : "text-gray-400"
+                  location.pathname == "/personalInterviews"
+                    ? "border-b-2 text-black"
+                    : "text-gray-500"
                 } px-4 py-1 flex flex-col items-center gap-1`}
               >
                 <LuNotebookPen size={20} /> Share Experience
@@ -52,9 +67,13 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
               {/* Messages */}
               <div
-              onClick={()=>{navigate("/messages")}}
+                onClick={() => {
+                  navigate("/messages");
+                }}
                 className={`${
-                  location.pathname == "/messages"? "border-b-2 text-black" : "text-gray-400"
+                  location.pathname == "/messages"
+                    ? "border-b-2 text-black"
+                    : "text-gray-500"
                 } px-4 py-1 flex flex-col items-center gap-1`}
               >
                 <LuMessageSquareText size={20} /> Mesasges
@@ -62,9 +81,13 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
               {/* Notifications */}
               <div
-              onClick={()=>{navigate("/notifications")}}
+                onClick={() => {
+                  navigate("/notifications");
+                }}
                 className={`${
-                  location.pathname == "/notifications" ? "border-b-2 text-black" : "text-gray-400"
+                  location.pathname == "/notifications"
+                    ? "border-b-2 text-black"
+                    : "text-gray-500"
                 } px-4 py-1 flex flex-col items-center gap-1`}
               >
                 <GoBellFill size={20} /> Notifications
@@ -72,9 +95,13 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
               {/* Profile */}
               <div
-              onClick={()=>{navigate("/profile")}}
+                onClick={() => {
+                  navigate("/profile");
+                }}
                 className={`${
-                  location.pathname == "/profile" ? "border-b-2 text-black" : "text-gray-400"
+                  location.pathname == "/profile"
+                    ? "border-b-2 text-black"
+                    : "text-gray-500"
                 } px-4 py-1 flex flex-col items-center gap-1`}
               >
                 <IoPerson size={20} /> Profile
