@@ -58,7 +58,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       <nav className="fixed top-0 left-0 w-full z-50 bg-white border border-gray-200">
         <div className="container mx-auto px-4 md:px-6 lg:px-8">
           <div className="flex justify-between items-center">
-            <div className="md:text-4xl lg:text-2xl font-medium ">Memoir</div>
+            <div className="text-xl md:text-4xl lg:text-2xl font-medium ">Memoir</div>
 
             <div className="hidden lg:flex lg:space-x-4 xl:space-x-8 text-sm cursor-pointer">
               {/* Home  */}
@@ -168,7 +168,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               onClick={() => setIsMenuOpen(true)}
               className="lg:hidden"
             >
-              <IoMenu size={24} />
+              <IoMenu size={36} />
             </div>
 
           </div>
