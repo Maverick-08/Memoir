@@ -68,7 +68,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 }}
                 className={`${
                   location.pathname == "/dashboard"
-                    ? "border-b-2 text-black"
+                    ? "border-b-2 border-black text-black"
                     : "text-gray-500"
                 } px-4 py-1 flex flex-col items-center gap-1`}
               >
@@ -86,7 +86,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 }}
                 className={`${
                   location.pathname == "/allInterviews"
-                    ? "border-b-2 text-black"
+                    ? "border-b-2 border-black text-black"
                     : "text-gray-500"
                 } px-4 py-1 flex flex-col items-center gap-1`}
               >
@@ -100,7 +100,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 }}
                 className={`${
                   location.pathname == "/addExperience"
-                    ? "border-b-2 text-black"
+                    ? "border-b-2 border-black text-black"
                     : "text-gray-500"
                 } px-4 py-1 flex flex-col items-center gap-1`}
               >
@@ -114,7 +114,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 }}
                 className={`${
                   location.pathname == "/personalInterviews"
-                    ? "border-b-2 text-black"
+                    ? "border-b-2 border-black text-black"
                     : "text-gray-500"
                 } px-4 py-1 flex flex-col items-center gap-1`}
               >
@@ -128,7 +128,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 }}
                 className={`${
                   location.pathname == "/messages"
-                    ? "border-b-2 text-black"
+                    ? "border-b-2 border-black text-black"
                     : "text-gray-500"
                 } px-4 py-1 flex flex-col items-center gap-1`}
               >
@@ -142,7 +142,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 }}
                 className={`${
                   location.pathname == "/notifications"
-                    ? "border-b-2 text-black"
+                    ? "border-b-2 border-black text-black"
                     : "text-gray-500"
                 } px-4 py-1 flex flex-col items-center gap-1`}
               >
@@ -156,7 +156,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 }}
                 className={`${
                   location.pathname == "/profile"
-                    ? "border-b-2 text-black"
+                    ? "border-b-2 border-black text-black"
                     : "text-gray-500"
                 } px-4 py-1 flex flex-col items-center gap-1`}
               >

@@ -23,7 +23,7 @@ export function SheetDemo({
         <SheetHeader>
           <SheetTitle className="text-center text-4xl">Memoir</SheetTitle>
         </SheetHeader>
-        <div className="pt-12 pl-6 flex flex-col justify-center gap-12 ">
+        <div className="pt-4 pl-6 flex flex-col justify-center gap-8 ">
             {links.map((link) => {
                 return(
                     <div onClick={()=>{navigate(link.navigate)}} className="flex items-center space-x-4">
