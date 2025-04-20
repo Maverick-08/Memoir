@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoHome } from "react-icons/io5";
 import { IoPeople } from "react-icons/io5";
 import { LuNotebookPen } from "react-icons/lu";
@@ -6,19 +6,61 @@ import { LuMessageSquareText } from "react-icons/lu";
 import { GoBellFill } from "react-icons/go";
 import { IoPerson } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
+import { IoMenu } from "react-icons/io5";
+import { IoSettingsSharp } from "react-icons/io5";
+import {SheetDemo} from "@/components/SideDrawer";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const links = [
+    {
+      icon: <IoHome className="h-6 w-6" />,
+      title:"Home",
+      navigate:"/dashboard"
+    },
+    {
+      icon: <IoPeople className="h-6 w-6"/>,
+      title:"Interviews",
+      navigate:"/allInterviews"
+    },
+    {
+      icon: <LuNotebookPen className="h-6 w-6"/>,
+      title:"Share Experience",
+      navigate:"/addExperience"
+    },
+    {
+      icon: <IoSettingsSharp className="h-6 w-6"/>,
+      title:"Manage",
+      navigate:"/personalInterviews"
+    },
+    {
+      icon: <LuMessageSquareText className="h-6 w-6"/>,
+      title:"Messages",
+      navigate:"/messages"
+    },
+    {
+      icon: <GoBellFill className="h-6 w-6"/>,
+      title:"Notifications",
+      navigate:"/notifications"
+    },
+    {
+      icon: <IoPerson className="h-6 w-6"/>,
+      title:"Profile",
+      navigate:"/profile"
+    },
+  ]
 
   console.log(location.pathname);
   return (
     <div>
-      <nav className="top-0 left-0 font-inter">
-        <div className="container mx-auto py-1">
-          <div className="flex justify-between items-center px-16 shadow">
-            <div className="text-4xl font-medium">Memoir</div>
-            <div className="flex space-x-12 text-sm cursor-pointer">
+      <nav className="fixed top-0 left-0 w-full z-50 bg-white border border-gray-200">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8">
+          <div className="flex justify-between items-center">
+            <div className="md:text-4xl lg:text-2xl font-medium ">Memoir</div>
+
+            <div className="hidden lg:flex lg:space-x-4 xl:space-x-8 text-sm cursor-pointer">
               {/* Home  */}
               <div
                 onClick={() => {
@@ -54,6 +96,20 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               {/* Share Interviews */}
               <div
                 onClick={() => {
+                  navigate("/addExperience");
+                }}
+                className={`${
+                  location.pathname == "/addExperience"
+                    ? "border-b-2 text-black"
+                    : "text-gray-500"
+                } px-4 py-1 flex flex-col items-center gap-1`}
+              >
+                <LuNotebookPen size={20} /> Share Experience
+              </div>
+
+              {/* Personal Interviews */}
+              <div
+                onClick={() => {
                   navigate("/personalInterviews");
                 }}
                 className={`${
@@ -62,7 +118,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                     : "text-gray-500"
                 } px-4 py-1 flex flex-col items-center gap-1`}
               >
-                <LuNotebookPen size={20} /> Share Experience
+                <IoSettingsSharp size={20} /> Manage
               </div>
 
               {/* Messages */}
@@ -107,9 +163,18 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 <IoPerson size={20} /> Profile
               </div>
             </div>
+
+            <div
+              onClick={() => setIsMenuOpen(true)}
+              className="lg:hidden"
+            >
+              <IoMenu size={24} />
+            </div>
+
           </div>
         </div>
       </nav>
+      {isMenuOpen && <div className="lg:hidden"><SheetDemo sheetOpen={isMenuOpen} setSheetOpen={setIsMenuOpen} links={links}/></div>}
       {children}
     </div>
   );
