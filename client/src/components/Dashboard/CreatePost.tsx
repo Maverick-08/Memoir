@@ -15,7 +15,7 @@ const CreatePost = () => {
           <input
             type="text"
             placeholder="Write a post"
-            className="basis-full pl-2 sm:pl-4 py-2 focus:outline-none border focus:border-sky-400 bg-transparent rounded-2xl border-gray-200 text-lg"
+            className="flex-1 pl-4 sm:pl-4 py-2 focus:outline-none border focus:border-sky-400 bg-transparent rounded-2xl border-gray-200 text-lg"
           />
         </div>
         <div className="mt-4 flex items-center justify-center gap-16 sm:gap-24 ">
