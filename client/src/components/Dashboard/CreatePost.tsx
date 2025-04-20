@@ -15,10 +15,10 @@ const CreatePost = () => {
           <input
             type="text"
             placeholder="Write a post"
-            className="basis-full pl-4 py-2 focus:outline-none border focus:border-sky-400 bg-transparent rounded-2xl border-gray-200 text-lg"
+            className="basis-full pl-2 sm:pl-4 py-2 focus:outline-none border focus:border-sky-400 bg-transparent rounded-2xl border-gray-200 text-lg"
           />
         </div>
-        <div className="mt-4 flex items-center justify-center gap-24 ">
+        <div className="mt-4 flex items-center justify-center gap-16 sm:gap-24 ">
           <div className="flex items-center gap-2 cursor-pointer">
             <FaRegImage className="h-6 w-6 sm:h-8 sm:w-8 text-sky-400" />{" "}
             <span className="text-gray-500 font-semibold">Photo</span>
