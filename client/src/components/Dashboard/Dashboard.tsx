@@ -1,23 +1,23 @@
-import { useMemo, useState } from "react";
-import { useSnackbar, VariantType } from "notistack";
-import { useRecoilValue } from "recoil";
-import { userDetailsAtom } from "../../../store/atoms";
+// import { useMemo } from "react";
+// // import { useSnackbar, VariantType } from "notistack";
+// import { useRecoilValue } from "recoil";
+// import { userDetailsAtom } from "../../../store/atoms";
 
 const Dashboard = () => {
-  const userDetails = useRecoilValue(userDetailsAtom);
-  const greeting = useMemo(() => {
-    const date = new Date();
-    const utcHour = date.getUTCHours(); // Get the hour in UTC
-    const utcMinute = date.getUTCMinutes(); // Get the minute in UTC
+  // const userDetails = useRecoilValue(userDetailsAtom);
+  // const greeting = useMemo(() => {
+  //   const date = new Date();
+  //   const utcHour = date.getUTCHours(); // Get the hour in UTC
+  //   const utcMinute = date.getUTCMinutes(); // Get the minute in UTC
 
-    // Add 5 hours and 30 minutes for IST
-    const currentHour = (utcHour + 5 + Math.floor((utcMinute + 30) / 60)) % 24;
+  //   // Add 5 hours and 30 minutes for IST
+  //   const currentHour = (utcHour + 5 + Math.floor((utcMinute + 30) / 60)) % 24;
 
-    if (currentHour < 12) return "Good Morning,";
-    else if (currentHour >= 12 && currentHour < 17) return "Good Afternoon,";
-    else if (currentHour >= 17 && currentHour < 22) return "Good Evening,";
-    return "It's a bit late don't you think ?";
-  }, []);
+  //   if (currentHour < 12) return "Good Morning,";
+  //   else if (currentHour >= 12 && currentHour < 17) return "Good Afternoon,";
+  //   else if (currentHour >= 17 && currentHour < 22) return "Good Evening,";
+  //   return "It's a bit late don't you think ?";
+  // }, []);
 
   return (
     <div className="min-h-screen pt-24">
