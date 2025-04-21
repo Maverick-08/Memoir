@@ -31,39 +31,27 @@ app.use((0, cookie_parser_1.default)());
 //     next();
 // });
 app.use((0, cors_1.default)({
-    origin: (origin, callback) => {
-        const allowedOrigins = [
-            "http://localhost:5173",
-            "https://memoir-ochre.vercel.app",
-            "http://13.233.104.37"
-        ];
-        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-            callback(null, true); // Allow the requested origin
-        }
-        else {
-            callback(new Error('Not allowed by CORS')); // Reject the request
-        }
-    },
+    origin: ["http://localhost:5173", "https://memoir.dev-projects.site"],
     credentials: true
 }));
 // For checking whether server is running
-app.use("/", health_checkpoint_1.default);
+app.use("/api", health_checkpoint_1.default);
 // Register new user
-app.use("/register", register_1.default);
+app.use("/api/register", register_1.default);
 // Authenticate user
-app.use("/auth", auth_1.default);
+app.use("/api/auth", auth_1.default);
 // User Reviews
-app.use("/reviews", review_1.default);
+app.use("/api/reviews", review_1.default);
 // Protected routes
 app.use(verifyToken_1.verifyToken);
 // Token Checkpoint
-app.use("/token", token_checkpoint_1.default);
+app.use("/api/token", token_checkpoint_1.default);
 // User updates
-app.use("/update", updates_1.default);
+app.use("/api/update", updates_1.default);
 // User interview experience
-app.use("/experience", interviewExperience_1.default);
+app.use("/api/experience", interviewExperience_1.default);
 // User sign out
-app.use("/signout", logout_1.default);
+app.use("/api/signout", logout_1.default);
 app.listen(app_config_1.PORT, () => {
     console.log(`Server running on ${app_config_1.PORT}`);
 });
