@@ -6,13 +6,14 @@ import Register from "./components/auth/Register";
 import { SnackbarProvider } from "notistack";
 import Dashboard from "./components/Dashboard/Dashboard";
 import PersonalInterviews from "./components/interview/PersonalInterviews";
-import AddExperience from "./components/interview/AddExperience";
+// import AddExperience from "./components/interview/AddExperience";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "./layouts/DashboardLayout";
 import UserMessages from "./messages/UserMessage";
 import Notifications from "./Notifications/Notifications";
 import Profile from "./profile/Profile";
 import InterviewExperiences from "./components/interview/InterviewExperiences";
+import ShareExperience from "./components/interview/ShareExperience";
 
 const router = createBrowserRouter([
   {
@@ -66,17 +67,7 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <DashboardLayout>
-          <AddExperience />
-        </DashboardLayout>
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/addExperience",
-    element: (
-      <ProtectedRoute>
-        <DashboardLayout>
-          <AddExperience />
+          <ShareExperience />
         </DashboardLayout>
       </ProtectedRoute>
     ),
