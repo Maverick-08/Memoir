@@ -13,163 +13,48 @@ import {
   roundQuestionsAtomFamily,
   userDetailsAtom,
 } from "../../../store/atoms";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { allInterviewRoundsDetails } from "../../../store/selector";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../config";
+import AddCompanyInformation from "./AddCompanyInformation";
+import { IoVideocamOutline } from "react-icons/io5";
 
 const AddExperience = () => {
-  const [nextStateActivated, setNextStateActivated] = useState(false);
-
-  if (!nextStateActivated) {
-    return <CompanyDetails nextStateActive={setNextStateActivated} />;
-  }
-
-  return <RoundDetails />;
-};
-
-const CompanyDetails = ({
-  nextStateActive,
-}: {
-  nextStateActive: (x: boolean) => void;
-}) => {
-  const [companyName, setCompanyName] = useState("");
-  const [experienceType, setExperienceType] = useState("2M Intern");
-  const [compensation, setCompensation] = useState("");
-  const [interviewStatus, setInterviewStatus] = useState(
-    "In Progress" as "In Progress" | "Selected" | "Rejected"
-  );
-  const [interviewExperienceForUpdation, setInterviewExperienceForUpdation] =
-    useRecoilState(isInterviewExperienceForUpdationAtom);
-
-  useEffect(() => {
-    if (interviewExperienceForUpdation?.update) {
-      setCompanyName(interviewExperienceForUpdation.companyName);
-      setExperienceType(interviewExperienceForUpdation.experienceType);
-      setInterviewStatus(
-        interviewExperienceForUpdation.interviewStatus as
-          | "In Progress"
-          | "Selected"
-          | "Rejected"
-      );
-      setCompensation(String(interviewExperienceForUpdation.compensation));
-    }
-  }, []);
-
-  const setExperienceDetails = () => {
-    const experienceDetails = {
-      companyName,
-      experienceType,
-      interviewStatus,
-      compensation,
-    };
-
-    if (interviewExperienceForUpdation?.update) {
-      localStorage.setItem(
-        "experienceDetails",
-        JSON.stringify({
-          ...interviewExperienceForUpdation,
-          companyName,
-          experienceType,
-          interviewStatus,
-          compensation: Number(compensation),
-        })
-      );
-
-      setInterviewExperienceForUpdation({
-        ...interviewExperienceForUpdation,
-        companyName,
-        experienceType,
-        interviewStatus,
-        compensation: Number(compensation),
-      });
-    } else {
-      localStorage.setItem(
-        "experienceDetails",
-        JSON.stringify({ ...experienceDetails, update: false })
-      );
-    }
-  };
+  const [isNextSectionActive, setIsNextSectionActive] = useState(false);
 
   return (
-    <div className="pt-16 flex justify-center">
-      <div className="w-[40%] shadow-lg">
-        <div className="p-8">
-          <div className="flex flex-col gap-4 mb-8">
-            <p className="font-medium">Company Name</p>
-            <input
-              type="text"
-              value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
-              className="ml-4 focus:outline-none w-[90%] px-2 py-1 bg-slate-100/70 rounded-md border border-slate-200 focus:border-sky-500 focus:bg-sky-100"
-            />
-          </div>
-          <div className="flex flex-col gap-4 mb-8">
-            <p className="font-medium">Employment Type</p>
-            <select
-              value={experienceType}
-              onChange={(e) => setExperienceType(e.target.value)}
-              className="ml-4 focus:outline-none w-[90%] px-2 py-1 bg-slate-100/70 rounded-md border border-slate-200"
-            >
-              <option value="Intern">Intern</option>
-              <option value="2M Intern">2M Intern</option>
-              <option value="6M Intern">6M Intern</option>
-              <option value="FTE">FTE</option>
-              <option value="2M + FTE">2M + FTE</option>
-              <option value="6M + FTE">6M + FTE</option>
-              <option value="Open Source">Open Source</option>
-            </select>
-          </div>
-          <div className="flex flex-col gap-4 mb-8">
-            <p className="font-medium">Compensation(in Lpa)</p>
-            <input
-              type="number"
-              value={compensation}
-              onChange={(e) => {
-                setCompensation(e.target.value);
-              }}
-              className="ml-4 focus:outline-none w-[90%] px-2 py-1 bg-slate-100/70 rounded-md border border-slate-200 focus:border-sky-500 focus:bg-sky-100"
-            />
-          </div>
-          <div className="flex flex-col gap-4 mb-8">
-            <p className="font-medium">Employment Status</p>
-            <select
-              value={interviewStatus}
-              onChange={(e) =>
-                setInterviewStatus(
-                  e.target.value as "In Progress" | "Selected" | "Rejected"
-                )
-              }
-              className="ml-4 focus:outline-none w-[90%] px-2 py-1 bg-slate-100/70 rounded-md border border-slate-200"
-            >
-              <option value="Selected">Selected</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Rejected">Rejected</option>
-            </select>
-          </div>
-          <div
-            className="mt-12 flex justify-center"
-            onClick={() => {
-              nextStateActive(true);
-              setExperienceDetails();
-            }}
-          >
-            <div className="w-[60%] py-1 text-lg text-center text-gray-200 hover:text-white bg-black rounded-md cursor-pointer">
-              Next
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gray-100">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8">
+        {isNextSectionActive ? (
+          <RoundDetails activatePreviousSection={setIsNextSectionActive} />
+        ) : (
+          <AddCompanyInformation activateNextSection={setIsNextSectionActive} />
+        )}
       </div>
     </div>
   );
 };
 
-const RoundDetails = () => {
+const RoundDetails = ({
+  activatePreviousSection,
+}: {
+  activatePreviousSection: (x: boolean) => void;
+}) => {
   const [roundIds, setRoundIds] = useRecoilState(roundIdsAtom);
   const allRoundsDetails = useRecoilValue(allInterviewRoundsDetails);
-  const [interviewExperienceForUpdation,setInterviewExperienceForUpdation] = useRecoilState(
-    isInterviewExperienceForUpdationAtom
-  );
+  const [interviewExperienceForUpdation, setInterviewExperienceForUpdation] =
+    useRecoilState(isInterviewExperienceForUpdationAtom);
+  const [stateCheck, setStateCheck] = useState(false);
   const userDetails = useRecoilValue(userDetailsAtom);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -204,43 +89,42 @@ const RoundDetails = () => {
 
   const handleSubmit = async () => {
     try {
-      if(roundIds.length == 0){
-        handleClickVariant("info","Please add an Round")()
+      if (
+        roundIds.length == 0 ||
+        (roundIds.length == 1 && !allRoundsDetails[0].note)
+      ) {
+        setStateCheck(true);
         return;
       }
-      if(roundIds.length == 1){
-        if(!allRoundsDetails[0].note){
-          handleClickVariant("info","Please add a Note")();
-          return;
-        }
-      }
+
       handleClickVariant("info", "Submitting Details")();
-        const companyDetails = JSON.parse(localStorage.getItem("experienceDetails")!)
-        const payload = {
-          name: userDetails?.name,
-          email: userDetails?.email,
-          registrationNumber: userDetails?.registrationNumber,
-          companyName: companyDetails.companyName,
-          compensation: Number(companyDetails.compensation),
-          experienceType: companyDetails.experienceType,
-          interviewStatus: companyDetails.interviewStatus,
-          roundDetails: allRoundsDetails,
-        };
+      const companyDetails = JSON.parse(
+        localStorage.getItem("experienceDetails")!
+      );
+      const payload = {
+        name: userDetails?.name,
+        email: userDetails?.email,
+        registrationNumber: userDetails?.registrationNumber,
+        companyName: companyDetails.companyName,
+        compensation: Number(companyDetails.compensation),
+        experienceType: companyDetails.experienceType,
+        interviewStatus: companyDetails.interviewStatus,
+        roundDetails: allRoundsDetails,
+      };
 
-        await axios.post(`${BASE_URL}/experience`, payload, {
-          withCredentials: true,
-        });
+      await axios.post(`${BASE_URL}/experience`, payload, {
+        withCredentials: true,
+      });
 
-        localStorage.removeItem("experienceDetails");
+      localStorage.removeItem("experienceDetails");
 
-        handleClickVariant("success", "Experience Submitted Successfully !")();
-        navigate("/allInterviews");
-      
+      handleClickVariant("success", "Experience Submitted Successfully !")();
+      navigate("/allInterviews");
     } catch (err) {
-      if(axios.isAxiosError(err) && err.response){
+      if (axios.isAxiosError(err) && err.response) {
         handleClickVariant("error", err.response.data.msg)();
-      }else{
-        handleClickVariant("error", 'something went wrong')();
+      } else {
+        handleClickVariant("error", "something went wrong")();
       }
     }
   };
@@ -249,11 +133,10 @@ const RoundDetails = () => {
     try {
       handleClickVariant("info", "Submitting Details")();
 
-      if (!interviewExperienceForUpdation){
-        handleClickVariant("error","Interview Details Missing")();
-        navigate("/personalInterviews")
-      }
-      else {
+      if (!interviewExperienceForUpdation) {
+        handleClickVariant("error", "Interview Details Missing")();
+        navigate("/personalInterviews");
+      } else {
         const payload = {
           name: userDetails?.name,
           email: userDetails?.email,
@@ -265,7 +148,6 @@ const RoundDetails = () => {
           interviewStatus: interviewExperienceForUpdation.interviewStatus,
           roundDetails: allRoundsDetails,
         };
-        
 
         await axios.post(`${BASE_URL}/experience/update`, payload, {
           withCredentials: true,
@@ -275,48 +157,48 @@ const RoundDetails = () => {
 
         localStorage.removeItem("experienceDetails");
         setInterviewExperienceForUpdation(null);
-        navigate("/allInterviews")
+        navigate("/allInterviews");
       }
     } catch (err) {
-      if(axios.isAxiosError(err) && err.response){
+      if (axios.isAxiosError(err) && err.response) {
         handleClickVariant("error", err.response.data.msg)();
-      }
-      else{
-        handleClickVariant("error", 'something went wrong')();
+      } else {
+        handleClickVariant("error", "something went wrong")();
       }
     }
   };
 
   return (
-    <div className="flex justify-center pt-16">
-      <div className="shadow-lg border-gray-400 w-[40%] flex flex-col justify-between">
-        <div className="p-8 w-full ">
-          <div>
-            {roundIds.length == 0 ? (
-              <div className="border border-gray-300 py-4 px-4">
-                <p>Add a Round</p>
-              </div>
-            ) : (
-              roundIds.map((Id, index) => {
-                return (
-                  <RoundAccordian
-                    key={Id}
-                    roundId={Id}
-                    roundNumber={index + 1}
-                    deleteRound={deleteRound}
-                    totalRounds={roundIds.length}
-                  />
-                );
-              })
-            )}
-          </div>
+    <div className="pt-16 md:pt-24">
+      <div className="w-[95%] sm:w-[80%] lg:w-[55%] mx-auto shadow bg-white rounded-lg border border-gray-100 px-4 sm:px-8 py-4">
+        <TitleComponent />
+
+        <div className="mt-12">
+          {roundIds.length == 0 ? (
+            <div className="border border-gray-300 py-4 px-4">
+              <p>Add a Round</p>
+            </div>
+          ) : (
+            roundIds.map((Id, index) => {
+              return (
+                <RoundAccordian
+                  key={Id}
+                  roundId={Id}
+                  roundNumber={index + 1}
+                  deleteRound={deleteRound}
+                  totalRounds={roundIds.length}
+                />
+              );
+            })
+          )}
         </div>
+
         <div className="mt-12 flex flex-col gap-8">
           <div
             onClick={() => {
               addNewRound();
             }}
-            className="ml-8 w-fit flex items-center gap-2 border border-gray-200 py-2 px-4 rounded-md cursor-pointer hover:bg-gray-100 "
+            className="w-fit flex items-center gap-2 border border-gray-200 py-2 px-4 rounded-md cursor-pointer hover:bg-gray-100 "
           >
             <span>
               <IoMdAddCircleOutline size={22} />
@@ -324,7 +206,13 @@ const RoundDetails = () => {
             <span className="font-medium ">Add Round</span>
           </div>
 
-          <div className="flex justify-center mb-4">
+          <div className="mt-8 flex justify-center items-center gap-8 sm:gap-8 lg:gap-12 xl:gap-24">
+            <div
+              onClick={() => activatePreviousSection(true)}
+              className="text-sky-500 text-sm sm:text-lg border border-[#0ea5e9] hover:transform hover:scale-[1.05] transition-all duration-200 ease-in px-2 sm:px-2 lg:px-6 xl:px-8 py-1 rounded-md cursor-pointer"
+            >
+              Previous Section
+            </div>
             <div
               onClick={() => {
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -332,11 +220,45 @@ const RoundDetails = () => {
                   ? handleUpdate()
                   : handleSubmit();
               }}
-              className="w-[50%] text-center bg-black text-gray-300 hover:text-white text-xl py-2 rounded-md cursor-pointer"
+              className="text-white text-sm sm:text-lg bg-gradient-to-r from-[#0284c7] to-[#0ea5e9] hover:transform hover:scale-[1.05] transition-all duration-200 px-6 sm:px-6 lg:px-12 xl:px-16 py-1 rounded-md cursor-pointer"
             >
               {interviewExperienceForUpdation?.update ? "Update" : "Submit"}
             </div>
+            <AlertDialog open={stateCheck} onOpenChange={setStateCheck}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Incomplete Information !</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Please include questions and a note because your experience
+                    contains only single round.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel
+                    className="cursor-pointer"
+                    onClick={() => setStateCheck(false)}
+                  >
+                    Close
+                  </AlertDialogCancel>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const TitleComponent = () => {
+  return (
+    <div className="flex flex-col mt-2 sm:mt-0 sm:flex-row justify-between items-center">
+      <p className="text-lg md:text-xl xl:text-2xl font-normal">Share Experience</p>
+      <div className="flex items-center text-xs text-sky-500 cursor-pointer">
+        <span className="font-semibold">Feels jarring ?</span>
+        <div className="flex items-center gap-0.5">
+          <span>&nbsp;Submit a recorded video</span>
+          <IoVideocamOutline className="h-6 w-6" />
         </div>
       </div>
     </div>
@@ -415,7 +337,7 @@ const RoundAccordian = ({
         className={`mt-8 flex flex-col border border-gray-300 py-4 px-4 cursor-pointer`}
       >
         <div className="w-full flex justify-between">
-          <span className="font-medium text-xl">
+          <span className="font-medium text-lg">
             Round <span>{roundNumber} </span>
           </span>
 

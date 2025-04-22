@@ -15,17 +15,72 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { isInterviewExperienceForUpdationAtom } from "../../../store/atoms";
 
 const AddCompanyInformation = ({
   activateNextSection,
 }: {
   activateNextSection: (x: boolean) => void;
 }) => {
+    const [companyName, setCompanyName] = useState("");
   const [roleType, setRoleType] = useState("Select");
-  const [compensation, setCompensation] = useState("6+");
+  const [compensation, setCompensation] = useState("");
   const [applicationStatus, setApplicationStatus] = useState("Status");
   const [stateCheck, setStateCheck] = useState(false);
+
+  const [interviewExperienceForUpdation, setInterviewExperienceForUpdation] =
+      useRecoilState(isInterviewExperienceForUpdationAtom);
+  
+    useEffect(() => {
+      if (interviewExperienceForUpdation?.update) {
+        setCompanyName(interviewExperienceForUpdation.companyName);
+        setRoleType(interviewExperienceForUpdation.experienceType);
+        setApplicationStatus(
+          interviewExperienceForUpdation.interviewStatus as
+            | "Pending"
+            | "Selected"
+            | "Rejected"
+        );
+        setCompensation(String(interviewExperienceForUpdation.compensation));
+      }
+    }, [interviewExperienceForUpdation?.companyName, interviewExperienceForUpdation?.compensation, interviewExperienceForUpdation?.experienceType, interviewExperienceForUpdation?.interviewStatus, interviewExperienceForUpdation?.update]);
+
+    const setExperienceDetails = () => {
+        const experienceDetails = {
+          companyName,
+          roleType,
+          applicationStatus,
+          compensation,
+        };
+    
+        if (interviewExperienceForUpdation?.update) {
+          localStorage.setItem(
+            "experienceDetails",
+            JSON.stringify({
+              ...interviewExperienceForUpdation,
+              companyName,
+              roleType,
+              applicationStatus,
+              compensation: Number(compensation),
+            })
+          );
+    
+          setInterviewExperienceForUpdation({
+            ...interviewExperienceForUpdation,
+            companyName,
+            experienceType:roleType,
+            interviewStatus:applicationStatus,
+            compensation: Number(compensation),
+          });
+        } else {
+          localStorage.setItem(
+            "experienceDetails",
+            JSON.stringify({ ...experienceDetails, update: false })
+          );
+        }
+    };
 
   const roleTypeHandler = (value: string) => {
     setRoleType(value);
@@ -40,9 +95,10 @@ const AddCompanyInformation = ({
   };
 
   const handleStateChecks = () => {
-    if (roleType === "Select" || applicationStatus === "Status") {
+    if (roleType === "Select" || applicationStatus === "Status" || companyName === "" || Number(compensation) <=0) {
       setStateCheck(true);
     } else {
+        setExperienceDetails();
       activateNextSection(true);
     }
   };
@@ -57,6 +113,7 @@ const AddCompanyInformation = ({
             <p className="text-sm sm:text-lg">Enter Company Name</p>
             <input
               type="text"
+              onChange={(e)=>setCompanyName(e.target.value)}
               placeholder="Type Here...."
               className="text-sm sm:text-lg focus:outline-none border border-gray-200 
               focus:placeholder:text-gray-600 focus:text-gray-500 rounded-md py-1.5 pl-4"
@@ -117,52 +174,14 @@ const AddCompanyInformation = ({
             <p className="text-sm sm:text-lg">
               Compensation <span className="text-sm">(In Lpa)</span>
             </p>
-            <DropdownMenu>
-              <DropdownMenuTrigger className="text-sm sm:text-lg w-full flex border border-gray-200 rounded-md focus:outline-none text-gray-400 focus:text-gray-600  py-1.5 pl-4 cursor-pointer">
-                {compensation}
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent className="h-44">
-                <DropdownMenuLabel>Pay Scale</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onSelect={() => compensationHandler("8+")}
-                >
-                  8 +
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onSelect={() => compensationHandler("10+")}
-                >
-                  10 +
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onSelect={() => compensationHandler("15+")}
-                >
-                  15 +
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onSelect={() => compensationHandler("20+")}
-                >
-                  20 +
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onSelect={() => compensationHandler("30+")}
-                >
-                  30 +
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onSelect={() => compensationHandler("50+")}
-                >
-                  50 +
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <input
+              type="number"
+              value={compensation}
+              onChange={(e) => {
+                compensationHandler(e.target.value);
+              }}
+              className="text-sm sm:text-lg w-full border border-gray-200 rounded-md focus:outline-none text-gray-400 focus:text-gray-600  py-1.5 pl-4 cursor-pointer"
+            />
           </div>
 
           <div className="flex flex-col gap-4">
