@@ -1,3 +1,9 @@
+export interface DataType {
+  fname:string;
+  lname:string;
+  messages:{date:string;textData:{sentBy:string;time:string;text:string}[]}[]
+}
+
 export const data = [
     {
       fname: "Aryan",
@@ -25,7 +31,7 @@ export const data = [
           date: "Apr 22, 2025",
           textData: [
             { sentBy: "Me", time: "10:15am", text: "How was the session yesterday?" },
-            { sentBy: "Him", time: "10:16am", text: "It was great! Let’s do it again." },
+            { sentBy: "Him", time: "10:16am", text: "It was great! Let’s do it again. I hope I am not intruding ? this is just a test message" },
             { sentBy: "Me", time: "10:17am", text: "Same time today?" },
             { sentBy: "Him", time: "10:18am", text: "Yup!" },
           ],
@@ -37,6 +43,7 @@ export const data = [
             { sentBy: "Him", time: "10:16am", text: "It was great! Let’s do it again." },
             { sentBy: "Me", time: "10:17am", text: "Same time today?" },
             { sentBy: "Him", time: "10:18am", text: "Yup!" },
+            { sentBy: "Me", time: "10:19am", text: "It was great! Let’s do it again. I hope I am not intruding ? this is just a test message" }
           ],
         },
       ],
@@ -88,7 +95,7 @@ export const data = [
       ],
     },
     {
-      fname: "Siddharth",
+      fname: "Siddharth Venumala",
       lname: "Joshi",
       messages: [
         {
