@@ -95,16 +95,16 @@ const MessageComponent = () => {
               {messageData.textData.map((textData, idx) => (
                 <div
                   key={idx}
-                  className={`flex px-2 ${
+                  className={`flex px-2 my-6 ${
                     textData.sentBy === "Me" ? "justify-end" : "justify-start"
                   }`}
                 >
                   <div
                     className={`${
                       textData.sentBy === "Me"
-                        ? "bg-gray-200/90"
+                        ? "bg-gray-200/95"
                         : "bg-gray-100"
-                    }  text-sm px-3 py-2 rounded-md max-w-[48%]`}
+                    }  text-sm px-3 py-2 rounded-md max-w-[70%]`}
                   >
                     <p>{textData.text}</p>
                     <p className="text-[10px] text-right mt-1 text-gray-400">
