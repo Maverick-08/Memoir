@@ -208,7 +208,9 @@ const RoundDetails = ({
 
           <div className="mt-8 flex justify-center items-center gap-8 sm:gap-8 lg:gap-12 xl:gap-24">
             <div
-              onClick={() => activatePreviousSection(true)}
+              onClick={() => {
+                activatePreviousSection(false);
+              }}
               className="text-sky-500 text-sm sm:text-lg border border-[#0ea5e9] hover:transform hover:scale-[1.05] transition-all duration-200 ease-in px-2 sm:px-2 lg:px-6 xl:px-8 py-1 rounded-md cursor-pointer"
             >
               Previous Section
