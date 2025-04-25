@@ -1,4 +1,5 @@
 import { IoAnalyticsSharp } from "react-icons/io5";
+import UserProfileCard from "./UserProfileCard";
 
 const Profile = () => {
   return (
@@ -12,7 +13,9 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="col-span-8"></div>
+          <div className="col-start-4 col-end-11">
+            <UserProfileCard />
+          </div>
         </div>
       </div>
     </div>
