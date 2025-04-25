@@ -1,6 +1,7 @@
 import { IoAnalyticsSharp } from "react-icons/io5";
 import UserProfileCard from "./UserProfileCard";
 import UserExperienceCard from "./UserExperienceCard";
+import UserPostsCard from "./UserPostsCard";
 
 const Profile = () => {
   return (
@@ -18,6 +19,7 @@ const Profile = () => {
             <div className="flex flex-col gap-12">
               <UserProfileCard />
               <UserExperienceCard />
+              <UserPostsCard />
             </div>
           </div>
         </div>
