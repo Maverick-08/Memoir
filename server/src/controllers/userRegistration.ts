@@ -7,14 +7,12 @@ const prisma = new PrismaClient();
 
 interface Record {
   email: string;
-  registrationNumber: string;
   password: string;
-  name: string;
-  degree: string;
+  firstName: string;
+  lastName: string;
+  course: string;
   branch: string;
   yearOfPassingOut: number;
-  linkedIn?: string;
-  xHandle?: string;
 }
 
 interface payloadValidatorResponse {
@@ -71,12 +69,11 @@ export const userRegistrationHandler = async (req: Request, res: Response) => {
 };
 
 const validatePayload = (payload: Record): payloadValidatorResponse => {
-  if (!payload.name) return { status: false, msg: "Name field is missing" };
+  if (!payload.firstName) return { status: false, msg: "Name field is missing" };
+  else if (!payload.lastName) return { status: false, msg: "Last Name field is missing" };
   else if (!payload.email)
     return { status: false, msg: "Email field is missing" };
-  else if (!payload.registrationNumber)
-    return { status: false, msg: "Registration Number is missing" };
-  else if (!payload.degree || !payload.branch || !payload.yearOfPassingOut)
+  else if (!payload.course || !payload.branch || !payload.yearOfPassingOut)
     return { status: false, msg: "Course Details is missing" };
   else if (!payload.password)
     return { status: false, msg: "Password field is missing" };
