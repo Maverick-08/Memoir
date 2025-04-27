@@ -18,10 +18,11 @@ model User {
   firstName String
   lastName String
   email    String  @unique
-  password String
+  password String?
   course String
   branch String
   yearOfPassingOut Int
+  verified Boolean @default(false)
   codeforces String?
   leetcode String?
   gfg String?
@@ -31,9 +32,8 @@ model User {
   profileUrl String?
   backgroundImageUrl String?
   createdAt DateTime @default(now())
-  otp OTP?
   stats UserStat?
-  post Post[]
+  post Post[] 
   savedPosts SavedPost[]
   interviewExperience InterviewExperience[]
   workExperience WorkExperience[]
@@ -43,7 +43,6 @@ model OTP {
   id String @id @default(cuid())
   userId String @unique
   otp Int
-  user User @relation(fields: [userId], references: [id])
 }
 
 model UserStat{
@@ -64,7 +63,7 @@ model Post {
   saveCount Int @default(0)
   reportCount Int @default(0)
   createdAt DateTime
-  user User @relation(fields: [authorId],references: [id])
+  user User @relation(fields: [authorId],references: [id], onDelete: Cascade)
   tag Tags[]
 }
 
@@ -72,7 +71,7 @@ model Tags{
   id String @id @default(cuid())
   postId String
   tagName String
-  post Post @relation(fields: [postId], references: [id])
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 model SavedPost{
@@ -90,6 +89,7 @@ model InterviewExperience {
   branchTag String
   companyName String
   compensation Float
+  interviewDate DateTime
   offerType String
   interviewStatus String
   roundDetails RoundDetails[]
@@ -104,7 +104,7 @@ model RoundDetails {
   roundType String
   note     String?
   questions Question[]
-  interviewExperience InterviewExperience @relation(fields: [interviewExperienceId], references: [id])
+  interviewExperience InterviewExperience @relation(fields: [interviewExperienceId], references: [id], onDelete: Cascade)
 }
 
 model Question {
@@ -112,7 +112,7 @@ model Question {
   title    String
   description String
   link     String?
-  roundDetails RoundDetails @relation(fields: [roundDetailsId], references: [id])
+  roundDetails RoundDetails @relation(fields: [roundDetailsId], references: [id],onDelete: Cascade)
   roundDetailsId String
 }
 
@@ -124,7 +124,7 @@ model AppliedOpenings {
   offerType String
   interviewStatus String
   note String?
-  followUpData DateTime
+  followUpDate DateTime?
   createdAt DateTime @default(now())
 }
 
@@ -144,7 +144,7 @@ model Message{
   senderId String
   content String
   timestamp DateTime @default(now())
-  conversation Conversation @relation(fields: [conversationId], references: [id])
+  conversation Conversation @relation(fields: [conversationId], references: [id],onDelete: Cascade)
 }
 
 // Notifications
@@ -163,7 +163,7 @@ model WorkExperience{
   startDate DateTime
   endDate DateTime?
   position String
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Reviews{

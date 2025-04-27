@@ -16,14 +16,15 @@ const prisma = new client_1.PrismaClient();
 const addReviews = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const payload = req.body;
-        if (!payload.email || !payload.name || !payload.message) {
+        if (!payload.name || !payload.message) {
             res.status(status_code_1.StatusCode.BadRequest).json({ msg: "Invalid Payload" });
             return;
         }
         yield prisma.reviews.create({
             data: {
                 name: payload.name,
-                email: payload.email,
+                userType: payload.userType,
+                reviewCategory: payload.reviewCategory,
                 message: payload.message
             }
         });

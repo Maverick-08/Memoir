@@ -12,141 +12,100 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OTPHandler = void 0;
+exports.sendOTP = exports.verifyOtp = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const status_code_1 = require("../config/status-code");
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-const OTPHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const payload = req.query;
-    // console.log(payload);
+const verifyOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (payload.otp) {
-            verifyOtp(req, res, {
-                email: payload.email,
-                otp: Number(payload.otp),
+        const payload = req.body;
+        const response = yield prisma.oTP.findFirst({
+            where: {
+                userId: payload.userId
+            }
+        });
+        if (response && response.otp == payload.otp) {
+            yield prisma.user.update({
+                where: {
+                    id: payload.userId
+                },
+                data: {
+                    verified: true
+                }
             });
+            res.status(status_code_1.StatusCode.RequestSuccessfull).json({ msg: "User Verified" });
+            return;
         }
         else {
-            sendOTP(req, res, payload.email);
+            res.status(status_code_1.StatusCode.BadRequest).json({ msg: "Invalid OTP" });
+            return;
         }
     }
     catch (err) {
-        console.log("Error @otpHandler : \n" + err);
+        console.log("Error @verifyOtp : \n" + err);
         res.status(status_code_1.StatusCode.ServerError).json({ msg: "Server error" });
     }
 });
-exports.OTPHandler = OTPHandler;
-const sendOTP = (req, res, receiverEmail) => __awaiter(void 0, void 0, void 0, function* () {
+exports.verifyOtp = verifyOtp;
+const sendOTP = (userId, receiverEmail) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // 1. Create an OTP
+        const otp = Math.floor(Math.random() * 9000) + 1000;
+        // 2. Check if user id exist
+        const userIdExist = yield prisma.oTP.findFirst({
+            where: {
+                userId
+            }
+        });
+        // 2.1 If it exists then update the new otp
+        if (userIdExist) {
+            yield prisma.oTP.update({
+                where: {
+                    userId
+                },
+                data: {
+                    otp
+                }
+            });
+        }
+        // 2.2 otherwise create new otp
+        else {
+            yield prisma.oTP.create({
+                data: {
+                    userId,
+                    otp
+                }
+            });
+        }
+        // 3. Create a transporter object
         const transporter = nodemailer_1.default.createTransport({
             host: "smtp.gmail.com",
             port: 587,
             secure: false,
             auth: {
-                user: "organizationmemoir@gmail.com",
-                pass: "nujq uhmi wefu ando",
+                user: process.env.EmailId,
+                pass: process.env.EmailPasscode,
             },
         });
-        const otp = Math.floor(Math.random() * 9000) + 1000;
-        const userExist = yield prisma.user.findFirst({
-            where: {
-                email: receiverEmail
-            }
-        });
-        if (userExist) {
-            res.status(status_code_1.StatusCode.BadRequest).json({ msg: "User is already registered !" });
-            return;
-        }
-        const userData = yield prisma.oTP.findFirst({
-            where: {
-                email: receiverEmail,
-            },
-        });
-        if ((userData === null || userData === void 0 ? void 0 : userData.email) && userData.otp.length > 1) {
-            yield prisma.oTP.update({
-                where: {
-                    email: userData.email
-                },
-                data: {
-                    otp: [...userData.otp, otp]
-                }
-            });
-        }
-        else if (receiverEmail) {
-            yield prisma.oTP.create({
-                data: {
-                    email: receiverEmail,
-                    otp: [otp],
-                },
-            });
-        }
-        if (receiverEmail) {
-            const mailOptions = {
-                from: "organizationmemoir@gmail.com",
-                to: receiverEmail,
-                subject: "OTP for Account Registration",
-                html: `
-                <h2>Thank you for choosing Memoir!</h2>
-                <p>Your OTP for account registration is: <strong>${otp}</strong></p>
-                <p>Please enter this OTP to complete your registration.</p>
-              `,
-            };
-            yield transporter.sendMail(mailOptions);
-            res.sendStatus(status_code_1.StatusCode.RequestSuccessfull);
-        }
-        else {
-            res.sendStatus(status_code_1.StatusCode.Unauthorized);
-        }
+        // 4. Create mail options
+        const mailOptions = {
+            from: "organizationmemoir@gmail.com",
+            to: receiverEmail,
+            subject: "OTP for Account Registration",
+            html: `
+              <h2>Thank you for choosing Memoir!</h2>
+              <p>Your OTP for account registration is: <strong>${otp}</strong></p>
+              <p>Please enter this OTP to complete your registration.</p>
+            `,
+        };
+        // 5. Send Mail
+        yield transporter.sendMail(mailOptions);
         return;
     }
     catch (err) {
         console.log("Error @otpHandler : \n" + err);
-        res.status(status_code_1.StatusCode.ServerError).json({ msg: "Server error" });
         return;
     }
 });
-const verifyOtp = (req, res, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const userData = yield prisma.oTP.findFirst({
-            where: {
-                email: payload.email,
-            },
-        });
-        if (!userData) {
-            res
-                .status(status_code_1.StatusCode.BadRequest)
-                .json({ msg: "User has not completed registration yet" });
-            return;
-        }
-        if (userData.otp.includes(payload.otp)) {
-            yield prisma.oTP.update({
-                where: {
-                    email: payload.email
-                },
-                data: {
-                    isVerified: true
-                }
-            });
-            res.sendStatus(status_code_1.StatusCode.RequestSuccessfull);
-        }
-        else {
-            res.status(status_code_1.StatusCode.BadRequest).json({ msg: "Invalid OTP" });
-        }
-        return;
-    }
-    catch (err) {
-        console.log("Error @verifyOtp : \n" + err);
-        res.status(status_code_1.StatusCode.ServerError).json({ msg: "Server error" });
-        return;
-    }
-});
-/*
- ->    req.query
- {email:"",otp:}
-
- ->  userData
- null
-userData : [object Object]
-
-*/ 
+exports.sendOTP = sendOTP;

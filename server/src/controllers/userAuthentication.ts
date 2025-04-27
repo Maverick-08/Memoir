@@ -52,14 +52,25 @@ export const userAuthenticationHandler = async (
       res.status(StatusCode.Unauthorized).json({ msg: "User does not exist" });
       return;
     }
-
+    
+    if(userExist && !userExist.verified){
+      res.status(StatusCode.Unauthorized).json({ msg: "User is not verified" });
+      return;
+    }
+  
     const responseData = {
       email: userExist.email,
-      name: userExist.name,
-      registrationNumber:userExist.registrationNumber,
-      degree: userExist.degree,
+      firstName: userExist.firstName,
+      lastName:userExist.lastName,
+      course: userExist.course,
       branch: userExist.branch,
       yearOfPassingOut: userExist.yearOfPassingOut,
+      profileUrl: userExist.profileUrl,
+      backgroundPhotoUrl:userExist.backgroundImageUrl,
+      codeforces:userExist.codeforces,
+      leetcode:userExist.leetcode,
+      gfg:userExist.gfg,
+      github:userExist.github,
       linkedIn: userExist.linkedIn,
       xHandle: userExist.xHandle,
     };

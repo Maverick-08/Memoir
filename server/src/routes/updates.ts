@@ -1,10 +1,10 @@
-import { Router } from "express";
-import { getUserUpdates, postUserUpdates } from "../controllers/userUpdate";
+// import { Router } from "express";
+// import { getUserUpdates, postUserUpdates } from "../controllers/userUpdate";
 
-const router = Router();
+// const router = Router();
 
-router.route("/")
-    .get(getUserUpdates)
-    .post(postUserUpdates)
+// router.route("/")
+//     .get(getUserUpdates)
+//     .post(postUserUpdates)
 
-export default router
+// export default router

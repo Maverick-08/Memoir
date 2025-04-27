@@ -8,11 +8,12 @@ export const addReviews = async (req:Request,res:Response) => {
     try{
         const payload:{
             name:string;
-            email:string;
+            userType:string;
+            reviewCategory:string;
             message:string;
         } = req.body;
 
-        if(!payload.email || !payload.name || !payload.message){
+        if(!payload.name || !payload.message){
             res.status(StatusCode.BadRequest).json({msg:"Invalid Payload"});
             return;
         }
@@ -20,7 +21,8 @@ export const addReviews = async (req:Request,res:Response) => {
         await prisma.reviews.create({
             data:{
                 name:payload.name,
-                email:payload.email,
+                userType:payload.userType,
+                reviewCategory:payload.reviewCategory,
                 message:payload.message
             }
         })

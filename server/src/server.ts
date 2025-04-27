@@ -8,7 +8,7 @@ import HealthCheckPoint from "./routes/health-checkpoint";
 import Register from "./routes/register";
 import Authenticate from "./routes/auth";
 import Signout from "./routes/logout";
-import Updates from "./routes/updates";
+// import Updates from "./routes/updates";
 import InterviewExperience from "./routes/interviewExperience";
 import TokenCheckPoint from "./routes/token-checkpoint";
 import Review from "./routes/review";

@@ -1,13 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { StatusCode } from "../config/status-code";
+import { sendOTP } from "./otpController";
 import { hash } from "bcrypt";
 
 const prisma = new PrismaClient();
 
 interface Record {
   email: string;
-  password: string;
+
   firstName: string;
   lastName: string;
   course: string;
@@ -43,18 +44,17 @@ export const userRegistrationHandler = async (req: Request, res: Response) => {
     }
 
     // 4. If user does not exist then create the record
-    // Hash the password
-    const hashedPassword = await hash(payload.password, 10);
-
     const record: Record = {
       ...payload,
-      password: hashedPassword,
     };
 
     // 5. Enter the record into the database
-    await prisma.user.create({
+    const response = await prisma.user.create({
       data: record,
     });
+
+    // 6. Send an otp for verification
+    await sendOTP(response.id,response.email)
 
     res
       .status(StatusCode.ResourceCreated)
@@ -68,6 +68,35 @@ export const userRegistrationHandler = async (req: Request, res: Response) => {
   }
 };
 
+export const createPassword = async (req:Request, res:Response) => {
+  try{
+    const payload:{userId:string;password:string} = req.body;
+
+    if(!payload.password){
+      res.status(StatusCode.BadRequest).json({msg:"Password is missing"});
+      return;
+    }
+
+    const hashedPassword = await hash(payload.password,10);
+
+    await prisma.user.update({
+      where:{
+        id:payload.userId
+      },
+      data:{
+        password:hashedPassword
+      }
+    })
+
+    res.status(StatusCode.ResourceCreated).json({msg:"Password Created"})
+    return;
+  }
+  catch(err){
+    console.log("Error : @userPassword \n"+err);
+    res.status(StatusCode.ServerError).json({msg:"Failed to create the password"})
+  }
+}
+
 const validatePayload = (payload: Record): payloadValidatorResponse => {
   if (!payload.firstName) return { status: false, msg: "Name field is missing" };
   else if (!payload.lastName) return { status: false, msg: "Last Name field is missing" };
@@ -75,8 +104,6 @@ const validatePayload = (payload: Record): payloadValidatorResponse => {
     return { status: false, msg: "Email field is missing" };
   else if (!payload.course || !payload.branch || !payload.yearOfPassingOut)
     return { status: false, msg: "Course Details is missing" };
-  else if (!payload.password)
-    return { status: false, msg: "Password field is missing" };
   return { status: true, msg: "" };
 };
 
