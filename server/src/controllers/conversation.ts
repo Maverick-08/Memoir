@@ -10,6 +10,7 @@ interface Payload{
     pinned: boolean
 }
 
+// Create a conversation Id of sender and receiver
 export const createConversationHandler = async (req:Request,res:Response) => {
     try{
         const payload:Payload = req.body;
@@ -33,7 +34,7 @@ export const createConversationHandler = async (req:Request,res:Response) => {
     }
 }
 
-
+// Extract messages from a conversation based on it's Id
 export const messageHandler = async (req:Request,res:Response) => {
     try{
         const payload = req.query as unknown as {conversationId:string,page:number};
@@ -55,7 +56,7 @@ export const messageHandler = async (req:Request,res:Response) => {
 
     }
     catch(err){
-        console.log("Error : @createConversationHandler \n" + err);
+        console.log("Error : @messageHandler \n" + err);
         res.status(StatusCode.ServerError).json({ msg: "Internal Server Error" });
         return;
     }
