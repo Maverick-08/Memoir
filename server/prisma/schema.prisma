@@ -14,50 +14,87 @@ datasource db {
 }
 
 model User {
-  email    String   @id @unique
-  registrationNumber String @unique
+  id String @id @default(cuid())
+  firstName String
+  lastName String
+  email    String  @unique
   password String
-  name     String
-  degree   String
-  branch   String
+  course String
+  branch String
   yearOfPassingOut Int
+  codeforces String?
+  leetcode String?
+  gfg String?
+  github String?
   linkedIn String?
   xHandle  String?
+  profileUrl String?
+  backgroundImageUrl String?
   createdAt DateTime @default(now())
+  otp OTP?
+  stats UserStat?
   post Post[]
+  savedPosts SavedPost[]
+  interviewExperience InterviewExperience[]
+  workExperience WorkExperience[]
 }
 
 model OTP {
-  email String @id @unique
-  isVerified Boolean @default(false)
-  otp Int[]
+  id String @id @default(cuid())
+  userId String @unique
+  otp Int
+  user User @relation(fields: [userId], references: [id])
+}
+
+model UserStat{
+  id String @id @default(cuid())
+  userId String @unique
+  profileViews Int @default(0)
+  postImpressionCount Int @default(0)
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Post {
   id String  @id @default(cuid())
-  email String
-  name String
-  degree String
-  branch String
-  yearOfPassingOut Int 
-  title String
-  message String?
+  authorId String
+  content String
+  imageUrl String?
+  videoUrl String?
+  impressionCount Int @default(0)
+  saveCount Int @default(0)
+  reportCount Int @default(0)
   createdAt DateTime
-  user User @relation(fields: [email],references: [email])
+  user User @relation(fields: [authorId],references: [id])
+  tag Tags[]
 }
 
+model Tags{
+  id String @id @default(cuid())
+  postId String
+  tagName String
+  post Post @relation(fields: [postId], references: [id])
+}
 
+model SavedPost{
+  id String @id @default(cuid())
+  userId String
+  postId String @unique
+  user User @relation(fields: [userId], references: [id])
+}
+
+// Interview Experiences
 model InterviewExperience {
   id       String   @id @default(cuid())
-  name     String
-  email String
-  registrationNumber String
+  creatorId String
+  creatorName String
+  branchTag String
   companyName String
   compensation Float
-  experienceType String
+  offerType String
   interviewStatus String
   roundDetails RoundDetails[]
   createdAt DateTime @default(now())
+  user User @relation(fields: [creatorId], references: [id])
 }
 
 model RoundDetails {
@@ -79,6 +116,18 @@ model Question {
   roundDetailsId String
 }
 
+// Applied Openings
+model AppliedOpenings {
+  id String @id @default(cuid())
+  creatorId String
+  companyName String
+  offerType String
+  interviewStatus String
+  note String?
+  followUpData DateTime
+  createdAt DateTime @default(now())
+}
+
 // Data Models for Messaging
 model Conversation{
   id String @id @default(cuid())
@@ -98,19 +147,29 @@ model Message{
   conversation Conversation @relation(fields: [conversationId], references: [id])
 }
 
-model PersonalInterviews {
+// Notifications
+model Notifications{
   id String @id @default(cuid())
+  creatorName String
+  receiverId String?
+  content String
   createdAt DateTime @default(now())
-  email String 
+}
+
+model WorkExperience{
+  id String @id @default(cuid())
+  userId String
   companyName String
-  experienceType String
-  interviewStatus String
-  interviewExperienceId String?
+  startDate DateTime
+  endDate DateTime?
+  position String
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Reviews{
   id String  @id @default(cuid())
-  email String
   name String
+  userType String
+  reviewCategory String
   message String
 }
