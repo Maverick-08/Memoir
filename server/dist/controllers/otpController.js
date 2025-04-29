@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendOTP = exports.verifyOtp = void 0;
+exports.resendOTP = exports.sendOTP = exports.verifyOtp = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const status_code_1 = require("../config/status-code");
 const client_1 = require("@prisma/client");
@@ -51,7 +51,7 @@ exports.verifyOtp = verifyOtp;
 const sendOTP = (userId, receiverEmail) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // 1. Create an OTP
-        const otp = Math.floor(Math.random() * 9000) + 1000;
+        const otp = Math.floor(Math.random() * 900000) + 100000;
         // 2. Check if user id exist
         const userIdExist = yield prisma.oTP.findFirst({
             where: {
@@ -109,3 +109,20 @@ const sendOTP = (userId, receiverEmail) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.sendOTP = sendOTP;
+const resendOTP = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const payload = req.query;
+        if (!payload.email || !payload.userId) {
+            res.status(status_code_1.StatusCode.BadRequest).json({ msg: "Invalid Payload" });
+            return;
+        }
+        yield (0, exports.sendOTP)(payload.userId, payload.email);
+        res.status(status_code_1.StatusCode.RequestSuccessfull).json({ msg: `OTP sent on ${payload.email.slice(0, 6) + "*******" + payload.email.slice(-payload.email.length, -payload.email.length + 3)} successfully !` });
+        return;
+    }
+    catch (err) {
+        console.log("Error @verifyOTP : \n" + err);
+        return;
+    }
+});
+exports.resendOTP = resendOTP;

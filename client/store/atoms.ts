@@ -1,15 +1,19 @@
 import { atom, atomFamily, selector } from "recoil";
 
 interface UserDetails {
-  name: string;
-  email: string;
-  password: string;
-  registrationNumber: string;
-  degree: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email:string;
+  course: string;
   branch: string;
   yearOfPassingOut: number;
-  linkedIn: string;
-  xHandle: string;
+  linkedIn: string | null;
+  github: string | null;
+  codeforces: string | null;
+  leetcode: string | null;
+  gfg: string | null;
+  xHandle: string | null;
 }
 
 export const userDetailsAtom = atom<UserDetails | null>({
@@ -23,6 +27,7 @@ export const userDetailsAtom = atom<UserDetails | null>({
           setSelf(userData as UserDetails);
         }
       } catch (err) {
+        console.log("@userDetailsAtom : "+err)
         setSelf(null);
       }
     },
@@ -113,7 +118,7 @@ export const isInterviewExperienceForUpdationAtom =
         try {
           return JSON.parse(localStorage.getItem("experienceDetails")!);
         } catch (err) {
-          console.log("Missing Interview Details");
+          console.log("Missing Interview Details "+err);
           return null;
         }
       },

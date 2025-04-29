@@ -1,5 +1,6 @@
-export const BASE_URL = 'https://memoir.dev-projects.site/api'; 
-//http://localhost:3000/api
+export const BASE_URL = 'http://localhost:3000/api'; 
+// http://localhost:3000/api
+// https://memoir.dev-projects.site/api
 
 export interface InterviewData {
   companyName: string;

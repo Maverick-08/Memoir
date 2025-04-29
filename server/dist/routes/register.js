@@ -9,5 +9,6 @@ router.route("/")
 router.route("/password")
     .post(userRegistration_1.createPassword);
 router.route("/otp")
+    .get(otpController_1.resendOTP)
     .post(otpController_1.verifyOtp);
 exports.default = router;

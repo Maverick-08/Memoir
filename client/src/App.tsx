@@ -13,6 +13,7 @@ import UserMessages from "./messages/UserMessage";
 import Notifications from "./Notifications/Notifications";
 import Profile from "./profile/Profile";
 import InterviewExperiences from "./components/interview/InterviewExperiences";
+import { Toaster } from "@/components/ui/sonner"
 
 const router = createBrowserRouter([
   {
@@ -111,6 +112,7 @@ function App() {
       autoHideDuration={2000}
     >
       <RouterProvider router={router} />
+      <Toaster />
     </SnackbarProvider>
   );
 }

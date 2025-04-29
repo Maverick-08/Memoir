@@ -43,7 +43,7 @@ const userRegistrationHandler = (req, res) => __awaiter(void 0, void 0, void 0, 
         yield (0, otpController_1.sendOTP)(response.id, response.email);
         res
             .status(status_code_1.StatusCode.ResourceCreated)
-            .json({ msg: "Your account has been created !" });
+            .json({ userId: response.id, firstName: response.firstName, lastName: response.lastName, email: response.email, course: response.course, branch: response.branch, yearOfPassingOut: response.yearOfPassingOut, linkedIn: response.linkedIn, codeforces: response.codeforces, leetcode: response.leetcode, gfg: response.gfg, github: response.github, xHandle: response.xHandle });
         return;
     }
     catch (err) {

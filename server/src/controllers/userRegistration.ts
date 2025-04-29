@@ -58,7 +58,7 @@ export const userRegistrationHandler = async (req: Request, res: Response) => {
 
     res
       .status(StatusCode.ResourceCreated)
-      .json({ msg: "Your account has been created !" });
+      .json({userId:response.id,firstName:response.firstName,lastName:response.lastName,email:response.email,course:response.course,branch:response.branch,yearOfPassingOut:response.yearOfPassingOut,linkedIn:response.linkedIn,codeforces:response.codeforces,leetcode:response.leetcode,gfg:response.gfg,github:response.github,xHandle:response.xHandle});
 
     return;
   } catch (err) {

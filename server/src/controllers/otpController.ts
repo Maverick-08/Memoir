@@ -41,7 +41,7 @@ export const verifyOtp = async (req:Request, res:Response) => {
 export const sendOTP = async (userId:string, receiverEmail:string) => {
   try {
     // 1. Create an OTP
-    const otp = Math.floor(Math.random() * 9000) + 1000;
+    const otp = Math.floor(Math.random() * 900000) + 100000;
 
     // 2. Check if user id exist
     const userIdExist = await prisma.oTP.findFirst({
@@ -105,4 +105,25 @@ export const sendOTP = async (userId:string, receiverEmail:string) => {
     return;
   }
 };
+
+export const resendOTP = async (req:Request, res:Response) => {
+  try{
+      const payload = req.query as unknown as {userId:string,email:string}
+      
+      if(!payload.email || !payload.userId){
+        res.status(StatusCode.BadRequest).json({msg:"Invalid Payload"});
+        return;
+      }
+
+      await sendOTP(payload.userId,payload.email);
+
+      res.status(StatusCode.RequestSuccessfull).json({msg:`OTP sent on ${payload.email.slice(0,6)+"*******"+payload.email.slice(-payload.email.length,-payload.email.length+3)} successfully !`});
+      
+      return;
+  }
+  catch(err){
+    console.log("Error @verifyOTP : \n" + err);
+    return;
+  }
+}
 
