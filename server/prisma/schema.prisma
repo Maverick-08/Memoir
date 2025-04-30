@@ -57,14 +57,20 @@ model Post {
   id String  @id @default(cuid())
   authorId String
   content String
-  imageUrl String?
-  videoUrl String?
   impressionCount Int @default(0)
   saveCount Int @default(0)
   reportCount Int @default(0)
   createdAt DateTime
   user User @relation(fields: [authorId],references: [id], onDelete: Cascade)
   tag Tags[]
+  postResource PostImageResources[]
+}
+
+model PostImageResources{
+  id String  @id @default(cuid())
+  postId String
+  imageUrl String
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 model Tags{
