@@ -22,17 +22,17 @@ const verifyOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const payload = req.body;
         const response = yield prisma.oTP.findFirst({
             where: {
-                userId: payload.userId
-            }
+                userId: payload.userId,
+            },
         });
         if (response && response.otp == payload.otp) {
             yield prisma.user.update({
                 where: {
-                    id: payload.userId
+                    id: payload.userId,
                 },
                 data: {
-                    verified: true
-                }
+                    verified: true,
+                },
             });
             res.status(status_code_1.StatusCode.RequestSuccessfull).json({ msg: "User Verified" });
             return;
@@ -55,18 +55,18 @@ const sendOTP = (userId, receiverEmail) => __awaiter(void 0, void 0, void 0, fun
         // 2. Check if user id exist
         const userIdExist = yield prisma.oTP.findFirst({
             where: {
-                userId
-            }
+                userId,
+            },
         });
         // 2.1 If it exists then update the new otp
         if (userIdExist) {
             yield prisma.oTP.update({
                 where: {
-                    userId
+                    userId,
                 },
                 data: {
-                    otp
-                }
+                    otp,
+                },
             });
         }
         // 2.2 otherwise create new otp
@@ -74,12 +74,13 @@ const sendOTP = (userId, receiverEmail) => __awaiter(void 0, void 0, void 0, fun
             yield prisma.oTP.create({
                 data: {
                     userId,
-                    otp
-                }
+                    otp,
+                },
             });
         }
         // 3. Create a transporter object
         const transporter = nodemailer_1.default.createTransport({
+            name: 'gmail.com',
             host: "smtp.gmail.com",
             port: 587,
             secure: false,
@@ -87,17 +88,14 @@ const sendOTP = (userId, receiverEmail) => __awaiter(void 0, void 0, void 0, fun
                 user: process.env.EmailId,
                 pass: process.env.EmailPasscode,
             },
+            pool: true,
         });
         // 4. Create mail options
         const mailOptions = {
             from: "organizationmemoir@gmail.com",
             to: receiverEmail,
-            subject: "OTP for Account Registration",
-            html: `
-              <h2>Thank you for choosing Memoir!</h2>
-              <p>Your OTP for account registration is: <strong>${otp}</strong></p>
-              <p>Please enter this OTP to complete your registration.</p>
-            `,
+            subject: `OTP Verification `,
+            html: `<p>Thank You for choosing Memoir !</p><p>Your OTP is: <b>${otp}</b></p><p>Sent at: ${new Date().toLocaleString()}</p>`,
         };
         // 5. Send Mail
         yield transporter.sendMail(mailOptions);
@@ -117,7 +115,13 @@ const resendOTP = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return;
         }
         yield (0, exports.sendOTP)(payload.userId, payload.email);
-        res.status(status_code_1.StatusCode.RequestSuccessfull).json({ msg: `OTP sent on ${payload.email.slice(0, 6) + "*******" + payload.email.slice(-payload.email.length, -payload.email.length + 3)} successfully !` });
+        res
+            .status(status_code_1.StatusCode.RequestSuccessfull)
+            .json({
+            msg: `OTP sent on ${payload.email.slice(0, 6) +
+                "*******" +
+                payload.email.slice(-payload.email.length, -payload.email.length + 3)} successfully !`,
+        });
         return;
     }
     catch (err) {
