@@ -8,8 +8,6 @@ import { GoPeople } from "react-icons/go";
 import { MdOutlineSpeakerNotes } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
 import { Link } from "react-scroll";
-import { useRecoilValue } from "recoil";
-import { userDetailsAtom } from "../../../store/atoms";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
@@ -51,7 +49,7 @@ const Navbar = () => {
 
 const SideDrawer = function TemporaryDrawer() {
   const [open, setOpen] = React.useState(false);
-  const userDetails = useRecoilValue(userDetailsAtom);
+  const isUserLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn")!) ? JSON.parse(localStorage.getItem("isLoggedIn")!).status as boolean : false;
   const navigate = useNavigate();
 
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -102,14 +100,14 @@ const SideDrawer = function TemporaryDrawer() {
           ))}
           <div className="flex justify-center mt-16 ">
             <button onClick={()=>{
-              if(!userDetails?.email){
+              if(isUserLoggedIn){
                 navigate("/auth")
               }
               else{
                 navigate("/dashboard")
               }
             }} className="text-xl cursor-pointer bg-[#272E3F] text-white px-6 py-2 rounded-md">
-              {userDetails?.email ? "Check Dashboard" : "Login Now"}
+              {isUserLoggedIn ? "Check Dashboard" : "Login Now"}
             </button>
           </div>
         </div>

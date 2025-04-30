@@ -3,12 +3,10 @@ import Confetti from "../../assets/Animation - 1740826000488.json";
 import { FaAnglesDown } from "react-icons/fa6";
 import { Link } from "react-scroll";
 import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { userDetailsAtom } from "../../../store/atoms";
 
 const HeroSection = () => {
   const navigate = useNavigate();
-  const userDetails = useRecoilValue(userDetailsAtom);
+  const isUserLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn")!) ? JSON.parse(localStorage.getItem("isLoggedIn")!).status as boolean : null;
 
   return (
     <div
@@ -33,7 +31,7 @@ const HeroSection = () => {
         </p>
         <button
           onClick={() => {
-            if (!userDetails?.email) {
+            if (!isUserLoggedIn) {
               navigate("/auth");
             } else {
               navigate("/dashboard");
@@ -41,7 +39,7 @@ const HeroSection = () => {
           }}
           className="text-lg sm:text-md mt-16 cursor-pointer bg-[#272E3F] text-white px-8 py-2 sm:px-6 sm:py-2 rounded-md"
         >
-          {userDetails?.email ? "Check Dashboard" : "Login Now"}
+          {isUserLoggedIn ? "Check Dashboard" : "Login Now"}
         </button>
       </div>
 

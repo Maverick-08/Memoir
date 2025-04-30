@@ -36,9 +36,10 @@ const SignIn = () => {
           title:"Login Successful"
         })
         localStorage.setItem("userDetails",JSON.stringify(response.data));
+        localStorage.setItem("isLoggedIn",JSON.stringify({status:'true'}))
         setUserDetails(response.data)
         setUserAuthState(true);
-        navigate("/dashboard")
+        setTimeout(()=>navigate("/dashboard"),2000);
       
     } catch (err) {
       if(axios.isAxiosError(err) && err.response?.data.msg){
