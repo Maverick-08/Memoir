@@ -14,6 +14,8 @@ interface UserDetails {
   leetcode: string | null;
   gfg: string | null;
   xHandle: string | null;
+  profileUrl: string | null;
+  backgroundPhotoUrl: string | null;
 }
 
 export const userDetailsAtom = atom<UserDetails | null>({

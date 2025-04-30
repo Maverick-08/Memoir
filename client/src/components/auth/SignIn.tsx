@@ -1,31 +1,27 @@
 import { MdArrowBackIos } from "react-icons/md";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { VariantType, useSnackbar } from "notistack";
 import axios from "axios";
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { userAuthStateAtom, userDetailsAtom } from "../../../store/atoms";
 import { BASE_URL } from "../../config";
+import { showToast } from "../toast/CustomToast";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
+  const [isLoading,setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const setUserAuthState = useSetRecoilState(userAuthStateAtom);
   const setUserDetails = useSetRecoilState(userDetailsAtom);
 
 
-  const handleClickVariant = (variant: VariantType, msg: string) => () => {
-    // variant could be success, error, warning, info, or default
-    enqueueSnackbar(msg, { variant });
-  };
-
 
   const handleLogin = async () => {
+    if(isLoading) return;
+    setIsLoading(true);
     try {
-      await new Promise(r => setTimeout(r,1000))
       const response = await axios.post(
         `${BASE_URL}/auth`,
         {
@@ -36,21 +32,23 @@ const SignIn = () => {
           withCredentials: true,
         }
       );
-      if (response.status === 200) {
-        handleClickVariant("success", "Login Successful")();
+        showToast.success({
+          title:"Login Successful"
+        })
         localStorage.setItem("userDetails",JSON.stringify(response.data));
         setUserDetails(response.data)
         setUserAuthState(true);
         navigate("/dashboard")
-      }
+      
     } catch (err) {
-      if(axios.isAxiosError(err) && err.response){
-        handleClickVariant("error", err.response.data)();
-      }
-      else{
-        handleClickVariant("error", 'something went wrong')();
+      if(axios.isAxiosError(err) && err.response?.data.msg){
+        showToast.error({
+          title:"Error",
+          message:err.response.data.msg
+        })
       }
     }
+    setIsLoading(false);
   };
 
   return (
@@ -107,14 +105,18 @@ const SignIn = () => {
                 className="ml-4 sm:ml-8 mt-4 py-1 px-4 border-2 border-gray-200 bg-gray-50 rounded-md w-64 md:w-96 focus:outline-none focus:bg-sky-50 focus:border-sky-200"
               />
             </div>
-            <div className="flex justify-end w-[90%] text-sm cursor-pointer">
+            <div className="flex text-gray-500 justify-end w-[90%] text-sm cursor-pointer">
               <span>Forgot Password ?</span>
             </div>
             <div className="mt-8">
               <div
-                className="w-[80%] py-1 text-xl rounded-lg mx-auto bg-black text-white flex items-center justify-center gap-2 cursor-pointer"
+                className="w-[80%] py-1 text-xl rounded-lg mx-auto bg-gradient-to-r from-[#0284c7] to-[#0ea5e9] text-white  flex items-center justify-center gap-2 cursor-pointer"
                 onClick={() => {
-                  handleClickVariant("info", "Verifying Credentials")();
+                  // handleClickVariant("info", "Verifying Credentials")();
+                  showToast.info({
+                    title:"Verifiying Credentials",
+                    message:"Gimme a moment..."
+                  })
                   handleLogin();
                 }}
               >
@@ -124,10 +126,10 @@ const SignIn = () => {
                 </span>
               </div>
             </div>
-            <div className="mt-4 mb-8 text-md sm:text-sm  flex justify-center text-gray-500">
+            <div className="select-none mt-4 mb-8 text-md sm:text-sm  flex justify-center text-gray-500">
               Don't have an account yet ?{" "}
               <span
-                className="text-black cursor-pointer"
+                className="text-[#0ea5e9] cursor-pointer"
                 onClick={() => navigate("/register")}
               >
                 &nbsp;Register
