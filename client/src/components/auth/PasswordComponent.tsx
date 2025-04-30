@@ -33,6 +33,8 @@ const PasswordComponent = () => {
           message:"Login with your credentials"
         })
 
+        localStorage.removeItem("registrationDetails")
+
         setTimeout(()=> navigate("/"),3000);
     }
     catch(err){

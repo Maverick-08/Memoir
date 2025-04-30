@@ -3,7 +3,7 @@ import CourseDetailsComponent from "./CourseDetailsComponent";
 import axios from "axios";
 import { BASE_URL } from "@/config";
 import { showToast } from "../toast/CustomToast";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { userDetailsAtom } from "../../../store/atoms";
 
 const UserRegistration = ({
@@ -17,7 +17,7 @@ const UserRegistration = ({
   const [branch, setBranch] = useState("");
   const [yearOfPassingOut, setYearOfPassingOut] = useState("");
   const [email, setEmail] = useState("");
-  const setUserDetails = useSetRecoilState(userDetailsAtom);
+  const [userDetails,setUserDetails] = useRecoilState(userDetailsAtom);
 
   const registrationStatus = JSON.parse(
     localStorage.getItem("registrationStatus")!
@@ -25,7 +25,8 @@ const UserRegistration = ({
     ? (JSON.parse(localStorage.getItem("registrationStatus")!).level as
         | "Register"
         | "OTP Sent"
-        | "OTP Verified")
+        | "OTP Verified"
+        | "Registered")
     : "Register";
 
   useEffect(() => {
@@ -49,6 +50,16 @@ const UserRegistration = ({
   }, []);
 
   const handleSubmit = async () => {
+    // 0. If the user is registered and is trying to register again with the same information
+    if(userDetails?.email == email){
+      showToast.warning({
+        title:"Registered User",
+        message:"Email is already registered"
+      })
+      return;
+    }
+     
+    // If the email used is different then validate
     const validationResponse = validations({
       firstName,
       lastName,
@@ -191,10 +202,10 @@ const UserRegistration = ({
           {registrationStatus == "Register"
             ? "Get OTP"
             : registrationStatus == "OTP Sent"
-            ? "Enter OTP"
+            ? "Complete Verification"
             : registrationStatus == "OTP Verified"
-            ? "Create Passowrd"
-            : ""}
+            ? "Create Password"
+            : "New Registration"}
         </span>
       </div>
     </div>

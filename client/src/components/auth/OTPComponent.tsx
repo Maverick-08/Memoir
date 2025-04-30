@@ -81,11 +81,12 @@ const OTPInput = ({setComponentActive}:{setComponentActive:(x: "Register" | "OTP
     
     setIsLoading(true);
     try{
-      await axios.get(`${BASE_URL}/register/otp?email=${userDetails?.email}.com&userId=${userDetails?.userId}`)
+      const response = await axios.get(`${BASE_URL}/register/otp?email=${userDetails?.email}.com&userId=${userDetails?.userId}`)
       showToast.success({
         title:"Information",
-        message:"New otp has been sent on your registered mail address."
+        message: response.data.msg || "New otp has been sent on your registered mail address."
       })
+      
     }
     catch(err){
       if(axios.isAxiosError(err)){
