@@ -4,6 +4,8 @@ import { FaHeart } from "react-icons/fa";
 import { FaBookmark } from "react-icons/fa6";
 import { FaFlag } from "react-icons/fa6";
 import { IoMdArrowDropdown } from "react-icons/io";
+import ImageComponent from "./ImageComponent";
+import UserTitleComponent from "./UserTitleComponent";
 
 const Feed = () => {
   return (
@@ -13,18 +15,8 @@ const Feed = () => {
 
         {/*  ->  Posts top image and text component  */}
         <div className="flex items-center gap-4 px-6">
-          <img
-            src={profilePhoto}
-            alt="Profile Photo"
-            className="shrink-0 rounded-full h-16 w-16 bg-sky-200"
-          ></img>
-          <div className="flex flex-col">
-            <p className="font-semibold">
-              Vivek Ojha <span className="text-sm">(MCA-2026)</span>
-            </p>
-            <p className="text-sm text-gray-600">Student</p>
-            <p className="text-xs text-gray-400">12h</p>
-          </div>
+          <ImageComponent />
+          <UserTitleComponent isPost={true}/>
         </div>
 
         {/*  ->  Post description  */}

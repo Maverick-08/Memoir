@@ -75,15 +75,15 @@ export const userAuthenticationHandler = async (
       xHandle: userExist.xHandle,
     };
 
-    // IMPORTANT : Uncomment once mail service is setup
+  
     // 4. Check if the user is verified
-    // if(!userExist.isVerified){
-    //     res.status(StatusCode.Unauthorized).json({msg:"User is not verified"})
-    //     return
-    // }
+    if(!userExist.verified){
+        res.status(StatusCode.Unauthorized).json({msg:"User is not verified"})
+        return
+    }
 
     // 5. Generate the authentication cookie
-    const __authCookie__ = jwt.sign(responseData, TOKEN_KEY, {
+    const __authCookie__ = jwt.sign({userId:userExist.id,email:userExist.email}, TOKEN_KEY, {
       expiresIn: "30d",
     });
 

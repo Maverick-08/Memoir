@@ -13,6 +13,7 @@ import InterviewExperience from "./routes/interviewExperience";
 import TokenCheckPoint from "./routes/token-checkpoint";
 import Review from "./routes/review";
 import Message from "./routes/messages";
+import CreatePost from "./routes/createPost"
 
 const app = express();
 
@@ -61,6 +62,9 @@ app.use("/api/token", TokenCheckPoint);
 
 // // User updates
 // app.use("/api/update", Updates);
+
+// Uploads
+app.use("/api/post",CreatePost)
 
 // User Message
 app.use("/api/message",Message)

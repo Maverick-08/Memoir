@@ -18,6 +18,7 @@ const interviewExperience_1 = __importDefault(require("./routes/interviewExperie
 const token_checkpoint_1 = __importDefault(require("./routes/token-checkpoint"));
 const review_1 = __importDefault(require("./routes/review"));
 const messages_1 = __importDefault(require("./routes/messages"));
+const createPost_1 = __importDefault(require("./routes/createPost"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
@@ -53,6 +54,8 @@ app.use(verifyToken_1.verifyToken);
 app.use("/api/token", token_checkpoint_1.default);
 // // User updates
 // app.use("/api/update", Updates);
+// Uploads
+app.use("/api/post", createPost_1.default);
 // User Message
 app.use("/api/message", messages_1.default);
 // User interview experience

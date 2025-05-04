@@ -13,6 +13,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     const checkAuthState = async () => {
       try {
         await axios.get(`${BASE_URL}/token`, { withCredentials: true });
+        // setUserAuthState(true);
       } catch (err) {
         if (axios.isAxiosError(err)) {
           // localStorage.setItem("userDetails", JSON.stringify({}));

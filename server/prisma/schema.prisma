@@ -60,7 +60,7 @@ model Post {
   impressionCount Int @default(0)
   saveCount Int @default(0)
   reportCount Int @default(0)
-  createdAt DateTime
+  createdAt DateTime @default(now())
   user User @relation(fields: [authorId],references: [id], onDelete: Cascade)
   tag Tags[]
   postResource PostImageResources[]

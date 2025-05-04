@@ -1,19 +1,25 @@
 import { FaRegImage } from "react-icons/fa";
 import { IoLogoYoutube } from "react-icons/io5";
-import profilePhoto from "../../assets/Vivek.jpg";
+import { useState } from "react";
+import PostOverlay from "./PostOverlay";
+import { useRecoilValue } from "recoil";
+import { userDetailsAtom } from "../../../store/atoms";
+import ImageComponent from "./ImageComponent";
 
 const CreatePost = () => {
+  const [isPostOverlayOpen, setIsPostOverlayOpen] = useState(false);
+  const userDetails = useRecoilValue(userDetailsAtom);
+
   return (
     <div>
       <div className="shadow bg-white py-4 px-2 rounded-md border border-gray-100">
         <div className="flex items-center gap-2 sm:gap-6">
-          <img
-            src={profilePhoto}
-            alt="Profile Photo"
-            className="shrink-0 rounded-full h-12 w-12 sm:h-16 sm:w-16"
-          ></img>
+          <ImageComponent />
+
           <input
             type="text"
+            name="post"
+            onClick={() => setIsPostOverlayOpen(true)}
             placeholder="Write a post"
             className="flex-1 pl-4 sm:pl-4 py-2 focus:outline-none border focus:border-sky-400 bg-transparent rounded-2xl border-gray-200 text-lg"
           />
@@ -29,6 +35,10 @@ const CreatePost = () => {
           </div>
         </div>
       </div>
+      <PostOverlay
+        isOverlayOpen={isPostOverlayOpen}
+        setIsOverlayOpen={setIsPostOverlayOpen}
+      />
     </div>
   );
 };

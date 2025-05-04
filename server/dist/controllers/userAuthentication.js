@@ -65,14 +65,13 @@ const userAuthenticationHandler = (req, res) => __awaiter(void 0, void 0, void 0
             linkedIn: userExist.linkedIn,
             xHandle: userExist.xHandle,
         };
-        // IMPORTANT : Uncomment once mail service is setup
         // 4. Check if the user is verified
-        // if(!userExist.isVerified){
-        //     res.status(StatusCode.Unauthorized).json({msg:"User is not verified"})
-        //     return
-        // }
+        if (!userExist.verified) {
+            res.status(status_code_1.StatusCode.Unauthorized).json({ msg: "User is not verified" });
+            return;
+        }
         // 5. Generate the authentication cookie
-        const __authCookie__ = jsonwebtoken_1.default.sign(responseData, TOKEN_KEY, {
+        const __authCookie__ = jsonwebtoken_1.default.sign({ userId: userExist.id, email: userExist.email }, TOKEN_KEY, {
             expiresIn: "30d",
         });
         // 6. Set the cookie in the response header

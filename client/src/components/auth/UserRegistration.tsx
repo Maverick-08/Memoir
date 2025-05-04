@@ -196,7 +196,7 @@ const UserRegistration = ({
 
       <div className="mt-8 flex justify-center">
         <span
-          onClick={handleSubmit}
+          onClick={()=>registrationStatus == "Register"? handleSubmit() : registrationStatus == "OTP Sent" ? setComponentActive("OTP Sent") : setComponentActive("OTP Verified")}
           className="select-none px-8 py-1 rounded-md text-lg cursor-pointer text-white bg-gradient-to-r from-[#0284c7] to-[#0ea5e9]"
         >
           {registrationStatus == "Register"

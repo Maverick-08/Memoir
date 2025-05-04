@@ -83,14 +83,14 @@ const SignIn = () => {
               </p>
             </div>
             <div className="px-8 mt-4 mb-4">
-              <p className="text-lg sm:font-medium">College Mail Id</p>
+              <p className="text-lg sm:font-medium">Registered Mail</p>
               <input
                 type="email"
                 name="email"
                 autoComplete="true"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
-                placeholder="PG26@stu.manit.ac.in"
+                placeholder="Email address"
                 className="ml-4 sm:ml-8 mt-4 py-1 px-4 border-2 border-gray-200 bg-gray-50 rounded-md w-64 md:w-96 focus:outline-none focus:bg-sky-50 focus:border-sky-200"
               />
             </div>
