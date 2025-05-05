@@ -13,12 +13,13 @@ const health_checkpoint_1 = __importDefault(require("./routes/health-checkpoint"
 const register_1 = __importDefault(require("./routes/register"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const logout_1 = __importDefault(require("./routes/logout"));
-// import Updates from "./routes/updates";
+const feed_1 = __importDefault(require("./routes/feed"));
 const interviewExperience_1 = __importDefault(require("./routes/interviewExperience"));
 const token_checkpoint_1 = __importDefault(require("./routes/token-checkpoint"));
 const review_1 = __importDefault(require("./routes/review"));
 const messages_1 = __importDefault(require("./routes/messages"));
 const createPost_1 = __importDefault(require("./routes/createPost"));
+const user_1 = __importDefault(require("./routes/user"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
@@ -52,10 +53,12 @@ app.use("/api/reviews", review_1.default);
 app.use(verifyToken_1.verifyToken);
 // Token Checkpoint
 app.use("/api/token", token_checkpoint_1.default);
-// // User updates
-// app.use("/api/update", Updates);
+// // User Feed
+app.use("/api/feed", feed_1.default);
 // Uploads
 app.use("/api/post", createPost_1.default);
+// User
+app.use("/api/user", user_1.default);
 // User Message
 app.use("/api/message", messages_1.default);
 // User interview experience

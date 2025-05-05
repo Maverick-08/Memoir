@@ -23,3 +23,34 @@ export interface Questions {
   description: string;
   link?: string;
 }
+
+export interface Feed {
+  id:string;
+  authorId:string;
+  firstName:string;
+  lastName:string;
+  branch:string;
+  yearOfPassingOut:number;
+  content:string;
+  impressionCount:number;
+  saveCount:number;
+  reportCount: number;
+  didUserLiked: boolean;
+  didUserSaved: boolean;
+  createdAt: Date;
+  postResource: PostResource[],
+  tag: Tag[]
+}
+
+export interface PostResource{
+  id:string;
+  postId:string;
+  imageUrl:string;
+}
+
+export interface Tag{
+  id:string;
+  postId:string;
+  tagName:string;
+}
+

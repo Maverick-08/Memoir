@@ -17,12 +17,12 @@ const getAllInterviewExperience = (req, res) => __awaiter(void 0, void 0, void 0
     try {
         // Fetch all interview experiences with round details and questions in a single query
         const limit = 10;
-        const payload = req.query;
+        let payload = req.query;
         const allInterviewExperiences = yield prisma.interviewExperience.findMany({
             orderBy: {
                 createdAt: 'desc'
             },
-            skip: (payload.page - 1) * limit,
+            skip: ((payload === null || payload === void 0 ? void 0 : payload.page) ? payload.page : 1 - 1) * limit,
             take: limit,
             include: {
                 roundDetails: {

@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 config();
 const prisma = new PrismaClient();
 
-export const handleImageUpload = async (req: Request, res: Response) => {
+export const postCreationhandler = async (req: Request, res: Response) => {
   try {
     const fileInfo = req.files as Express.MulterS3.File[];;
     const postContent:string = req.body.content;

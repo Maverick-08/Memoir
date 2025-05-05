@@ -16,6 +16,7 @@ interface UserDetails {
   xHandle: string | null;
   profileUrl: string | null;
   backgroundPhotoUrl: string | null;
+  profileViews: number
 }
 
 export const userDetailsAtom = atom<UserDetails | null>({

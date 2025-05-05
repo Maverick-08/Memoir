@@ -8,6 +8,8 @@ import axios from "axios";
 import { BASE_URL } from "@/config";
 import { showToast } from "../toast/CustomToast";
 import "../../index.css";
+import { useRecoilValue } from "recoil";
+import { userDetailsAtom } from "../../../store/atoms";
 
 const PostOverlay = ({
   isOverlayOpen,
@@ -20,6 +22,7 @@ const PostOverlay = ({
   const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [posting, setPosting] = useState(false);
+  const userDetails = useRecoilValue(userDetailsAtom);
 
   useEffect(() => {
     const postContent = JSON.parse(localStorage.getItem("postContent")!)
@@ -102,7 +105,6 @@ const PostOverlay = ({
         setIsOverlayOpen(false);
       }, 1500);
     } catch (err) {
-      
       if (axios.isAxiosError(err)) {
         showToast.error({
           title: "Failed",
@@ -119,8 +121,17 @@ const PostOverlay = ({
         <DialogContent className="h-fit">
           <DialogHeader>
             <div className="flex items-center gap-4">
-              <ImageComponent />
-              <UserTitleComponent isPost={false} />
+              <ImageComponent
+                firstName={userDetails?.firstName as string}
+                lastName={userDetails?.lastName as string}
+              />
+              <UserTitleComponent
+                firstName={userDetails?.firstName as string}
+                lastName={userDetails?.lastName as string}
+                branch={userDetails?.branch as string}
+                yearOfPassingOut={userDetails?.yearOfPassingOut as number}
+                createdAt={undefined}
+              />
             </div>
 
             {/* Post content - text area  */}
@@ -194,18 +205,18 @@ const PostOverlay = ({
                 ))}
             </div>
             <div className="flex sm:hidden items-center justify-end">
-                <button
-                  disabled={!(content.length !== 0 || selectedFiles !== null)}
-                  onClick={handleUpload}
-                  className={`select-none px-8 py-1 text-lg rounded-md cursor-pointer ${
-                    (content.length != 0 || selectedFiles != null) && !posting
-                      ? "text-white"
-                      : "text-gray-300"
-                  } bg-gradient-to-r from-[#0284c7] to-[#0ea5e9]`}
-                >
-                  Post
-                </button>
-              </div>
+              <button
+                disabled={!(content.length !== 0 || selectedFiles !== null)}
+                onClick={handleUpload}
+                className={`select-none px-8 py-1 text-lg rounded-md cursor-pointer ${
+                  (content.length != 0 || selectedFiles != null) && !posting
+                    ? "text-white"
+                    : "text-gray-300"
+                } bg-gradient-to-r from-[#0284c7] to-[#0ea5e9]`}
+              >
+                Post
+              </button>
+            </div>
           </DialogHeader>
         </DialogContent>
       </Dialog>

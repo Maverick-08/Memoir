@@ -31,8 +31,8 @@ model User {
   xHandle  String?
   profileUrl String?
   backgroundImageUrl String?
+  profileViews Int @default(0)
   createdAt DateTime @default(now())
-  stats UserStat?
   post Post[] 
   savedPosts SavedPost[]
   interviewExperience InterviewExperience[]
@@ -43,14 +43,6 @@ model OTP {
   id String @id @default(cuid())
   userId String @unique
   otp Int
-}
-
-model UserStat{
-  id String @id @default(cuid())
-  userId String @unique
-  profileViews Int @default(0)
-  postImpressionCount Int @default(0)
-  user User @relation(fields: [userId], references: [id])
 }
 
 model Post {
@@ -64,6 +56,16 @@ model Post {
   user User @relation(fields: [authorId],references: [id], onDelete: Cascade)
   tag Tags[]
   postResource PostImageResources[]
+  postImpression PostImpression[]
+  savedPost SavedPost[]
+}
+
+model PostImpression{
+  id String @id @default(cuid())
+  postId String 
+  userId String
+  post Post @relation(fields: [postId], references: [id],onDelete: Cascade)
+  @@unique([postId,userId])
 }
 
 model PostImageResources{
@@ -83,8 +85,10 @@ model Tags{
 model SavedPost{
   id String @id @default(cuid())
   userId String
-  postId String @unique
+  postId String
   user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId],references: [id],onDelete: Cascade)
+  @@unique([userId,postId])
 }
 
 // Interview Experiences

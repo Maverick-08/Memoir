@@ -8,12 +8,13 @@ import HealthCheckPoint from "./routes/health-checkpoint";
 import Register from "./routes/register";
 import Authenticate from "./routes/auth";
 import Signout from "./routes/logout";
-// import Updates from "./routes/updates";
+import Feed from "./routes/feed";
 import InterviewExperience from "./routes/interviewExperience";
 import TokenCheckPoint from "./routes/token-checkpoint";
 import Review from "./routes/review";
 import Message from "./routes/messages";
-import CreatePost from "./routes/createPost"
+import Post from "./routes/createPost";
+import User from "./routes/user";
 
 const app = express();
 
@@ -60,11 +61,14 @@ app.use(verifyToken);
 // Token Checkpoint
 app.use("/api/token", TokenCheckPoint);
 
-// // User updates
-// app.use("/api/update", Updates);
+// // User Feed
+app.use("/api/feed", Feed);
 
 // Uploads
-app.use("/api/post",CreatePost)
+app.use("/api/post",Post)
+
+// User
+app.use("/api/user",User);
 
 // User Message
 app.use("/api/message",Message)

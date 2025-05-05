@@ -9,13 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleImageUpload = void 0;
+exports.postCreationhandler = void 0;
 const status_code_1 = require("../config/status-code");
 const dotenv_1 = require("dotenv");
 const client_1 = require("@prisma/client");
 (0, dotenv_1.config)();
 const prisma = new client_1.PrismaClient();
-const handleImageUpload = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const postCreationhandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const fileInfo = req.files;
         ;
@@ -57,7 +57,7 @@ const handleImageUpload = (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.status(status_code_1.StatusCode.ServerError).json({ msg: "Your post could not be created" });
     }
 });
-exports.handleImageUpload = handleImageUpload;
+exports.postCreationhandler = postCreationhandler;
 const getPostTags = (content) => {
     const postTags = [];
     const words = content.split(" ");

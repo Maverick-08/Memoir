@@ -56,13 +56,14 @@ export const getAllInterviewExperience = async (
   try {
     // Fetch all interview experiences with round details and questions in a single query
     const limit = 10;
-    const payload = req.query as unknown as {page:number};
+    let payload = req.query as unknown as {page:number};
+
 
     const allInterviewExperiences = await prisma.interviewExperience.findMany({
       orderBy:{
         createdAt: 'desc'
       },
-      skip: (payload.page - 1) *limit,
+      skip: (payload?.page ? payload.page : 1 - 1) *limit,
       take: limit,
       include: {
         roundDetails: {
