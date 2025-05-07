@@ -59,7 +59,7 @@ export const userAuthenticationHandler = async (
     }
   
     const responseData = {
-      id:userExist.id,
+      userId:userExist.id,
       email: userExist.email,
       firstName: userExist.firstName,
       lastName:userExist.lastName,
