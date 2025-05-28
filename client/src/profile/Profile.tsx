@@ -1,18 +1,60 @@
-import { IoAnalyticsSharp } from "react-icons/io5";
 import UserProfileCard from "./UserProfileCard";
 import UserExperienceCard from "./UserExperienceCard";
 import UserPostsCard from "./UserPostsCard";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { BASE_URL } from "@/config";
+import "../index.css";
+import UserAnalytics from "./Analytics";
 
 const Profile = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [userExist, setUserExist] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const location = window.location.href;
+    const userId = location.slice(location.indexOf("profile/") + 8);
+    console.log("Profile.tsx : "+userId);
+
+    const fetch = async () => {
+      const response = await axios.get(`${BASE_URL}/user/${userId}`, {
+        withCredentials: true,
+      });
+
+      if (response.status != 200) {
+        setUserExist(false);
+      } else {
+        setUserExist(true);
+      }
+    };
+    setIsLoading(false);
+
+    fetch();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="pt-24 flex justify-center">
+        <span className="loading"></span>
+      </div>
+    );
+  }
+
+  if (!isLoading && !userExist) {
+    return (
+      <div>
+        <p>User does not exist</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen pt-24 bg-gray-100">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="grid grid-cols-12">
           <div className="col-span-2">
-            <div className="flex flex-col gap-16">
-              <SavedArticles />
-              <Events />
-            </div>
+            <UserAnalytics />
           </div>
 
           <div className="col-start-4 col-end-11">
@@ -28,38 +70,6 @@ const Profile = () => {
   );
 };
 
-const SavedArticles = () => {
-  return (
-    <div className="border-l-4 rounded-md border-sky-500 shadow bg-white">
-      <div className="px-4 py-4 flex justify-between">
-        <p>Saved Articles</p>
-        <p className="text-sky-500">10</p>
-      </div>
-    </div>
-  );
-};
 
-const Events = () => {
-  return (
-    <div className="border-t-4 rounded-md border-teal-500 shadow bg-white">
-      <div className="px-4 py-4">
-        <div className="flex items-center gap-2">
-          <IoAnalyticsSharp className="h-6 w-6" />
-          <p className="text-lg">Analytics</p>
-        </div>
-        <div className="mt-4 flex flex-col gap-2 select-none">
-          <div className="flex justify-between cursor-default">
-            <p className="text-gray-500 hover:text-black">Profile Views</p>
-            <p className="text-sky-500">54</p>
-          </div>
-          <div className="flex justify-between cursor-default">
-            <p className="text-gray-500 hover:text-black">Post Impressions</p>
-            <p className="text-sky-500">440</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export default Profile;

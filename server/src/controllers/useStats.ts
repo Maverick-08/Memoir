@@ -27,7 +27,14 @@ export const userStatsHandler = async (req:Request,res:Response) => {
             }
         });
 
-        res.status(StatusCode.RequestSuccessfull).json({saveCount,impressionCount});
+        // User profile view count
+        const userData = await prisma.user.findFirst({
+            where:{
+                id:userDetails.userId
+            },
+        });
+
+        res.status(StatusCode.RequestSuccessfull).json({saveCount,impressionCount,profileViewCount:userData?.profileViews});
         return;
         
     }

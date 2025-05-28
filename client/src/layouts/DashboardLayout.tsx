@@ -9,11 +9,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { IoMenu } from "react-icons/io5";
 import { IoSettingsSharp } from "react-icons/io5";
 import {SheetDemo} from "@/components/SideDrawer";
+import { useRecoilValue } from "recoil";
+import { userDetailsAtom } from "../../store/atoms";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const userDetails = useRecoilValue(userDetailsAtom)
   const links = [
     {
       icon: <IoHome className="h-6 w-6" />,
@@ -52,7 +55,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     },
   ]
 
-  console.log(location.pathname);
   return (
     <div>
       <nav className="fixed top-0 left-0 w-full z-50 bg-white border border-gray-200">
@@ -152,7 +154,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               {/* Profile */}
               <div
                 onClick={() => {
-                  navigate("/profile");
+                  console.log(userDetails?.userId)
+                  navigate(`/profile/${userDetails?.userId}`);
                 }}
                 className={`${
                   location.pathname == "/profile"
