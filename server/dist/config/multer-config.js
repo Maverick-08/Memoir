@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadPostImage = void 0;
+exports.uploadProfileAndBackgroundImage = exports.uploadPostImage = void 0;
 const multer_1 = __importDefault(require("multer"));
 const multer_s3_1 = __importDefault(require("multer-s3"));
 const AWS_config_1 = require("./AWS-config");
@@ -17,3 +17,19 @@ exports.uploadPostImage = (0, multer_1.default)({
         },
     }),
 });
+const storage = multer_1.default.diskStorage({
+    destination: (req, file, cb) => {
+        if (file.fieldname == "profileImage") {
+            cb(null, "./uploads/profile");
+        }
+        else {
+            cb(null, "./uploads/background");
+        }
+    },
+    filename: (req, file, cb) => {
+        const userDetails = req["userDetails"];
+        const fileName = userDetails.userId + "-" + file.originalname;
+        cb(null, fileName);
+    },
+});
+exports.uploadProfileAndBackgroundImage = (0, multer_1.default)({ storage });

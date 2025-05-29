@@ -1,4 +1,4 @@
-
+import Feed from "../components/Dashboard/Feed"
 
 const UserPostsCard = () => {
   return (
@@ -8,7 +8,8 @@ const UserPostsCard = () => {
         <div className="w-full border border-black"></div>
       </div>
       <div className="my-4 px-8 py-8 rounded-lg bg-white">
-        <p className="text-gray-500">Share your thoughts, create a post...</p>
+        {/* <p className="text-gray-500">Share your thoughts, create a post...</p> */}
+        <Feed />
       </div>
     </div>
   );

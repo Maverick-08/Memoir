@@ -81,7 +81,7 @@ const Feed = () => {
                   {feed.postResource.length > 0 ? (
                     <img
                       src={feed.postResource[0].imageUrl}
-                      className="rounded-md"
+                      className="rounded-md w-[1200px] h-[627px]"
                     ></img>
                   ) : (
                     <></>

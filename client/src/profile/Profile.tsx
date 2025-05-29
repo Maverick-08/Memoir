@@ -8,42 +8,45 @@ import "../index.css";
 import UserAnalytics from "./Analytics";
 
 const Profile = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [userExist, setUserExist] = useState<boolean>(false);
+  const [profileId,setProfileId] = useState<string|null>(null);
 
   useEffect(() => {
-    setIsLoading(true);
     const location = window.location.href;
     const userId = location.slice(location.indexOf("profile/") + 8);
-    console.log("Profile.tsx : "+userId);
+    setProfileId(userId);
 
     const fetch = async () => {
-      const response = await axios.get(`${BASE_URL}/user/${userId}`, {
-        withCredentials: true,
-      });
-
-      if (response.status != 200) {
-        setUserExist(false);
-      } else {
+      await new Promise((r) => setTimeout(r, 2000));
+      try {
+        await axios.get(`${BASE_URL}/user/${userId}`, {
+          withCredentials: true,
+        });
         setUserExist(true);
+      } catch (err) {
+        console.error(err);
       }
+      setIsLoading(false);
     };
-    setIsLoading(false);
 
     fetch();
+
   }, []);
 
   if (isLoading) {
     return (
-      <div className="pt-24 flex justify-center">
-        <span className="loading"></span>
+      <div className="pt-24">
+        <div className="flex justify-center">
+          <span className="loader"></span>
+        </div>
       </div>
     );
   }
 
   if (!isLoading && !userExist) {
     return (
-      <div>
+      <div className="pt-24">
         <p>User does not exist</p>
       </div>
     );
@@ -59,7 +62,7 @@ const Profile = () => {
 
           <div className="col-start-4 col-end-11">
             <div className="flex flex-col gap-12">
-              <UserProfileCard />
+              <UserProfileCard profileId={profileId} />
               <UserExperienceCard />
               <UserPostsCard />
             </div>
@@ -69,7 +72,5 @@ const Profile = () => {
     </div>
   );
 };
-
-
 
 export default Profile;

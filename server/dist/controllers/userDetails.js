@@ -53,7 +53,7 @@ const userDetailsHandler = (req, res) => __awaiter(void 0, void 0, void 0, funct
         return;
     }
     catch (err) {
-        console.log("Error @userDetailsandler : " + "\n" + err);
+        console.log("Error @userDetailsHandler : " + "\n" + err);
         res.json(status_code_1.StatusCode.ServerError).json({ msg: "Server Error" });
         return;
     }

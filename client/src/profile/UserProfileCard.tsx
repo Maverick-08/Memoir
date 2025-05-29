@@ -8,7 +8,8 @@ import { SiGeeksforgeeks } from "react-icons/si";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "@/config";
-import { showToast } from "@/components/toast/CustomToast";
+import ProfileEditModal from "./ProfileEditModal";
+// import { showToast } from "@/components/toast/CustomToast";
 
 interface User {
   firstName: string;
@@ -27,15 +28,14 @@ interface User {
   showEditOption: boolean;
 }
 
-const UserProfileCard = () => {
+const UserProfileCard = ({profileId}:{profileId:string|null}) => {
   const [userDetails, setUserDetails] = useState<User | null>(null);
+  const [isEditModalOpen,setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
-    const location = window.location.href;
-    const userId = location.slice(location.indexOf("profile/") + 8);
 
     const fetch = async () => {
-      const response = await axios.get(`${BASE_URL}/user/profile/${userId}`, {
+      const response = await axios.get(`${BASE_URL}/user/profile/${profileId}`, {
         withCredentials: true,
       });
 
@@ -43,7 +43,7 @@ const UserProfileCard = () => {
     };
 
     fetch();
-  }, []);
+  }, [profileId]);
 
   return (
     <div className="relative rounded-xl bg-white h-96">
@@ -82,7 +82,7 @@ const UserProfileCard = () => {
         <div className="flex flex-col h-full">
           {/* Top Box  */}
           <div className="px-8 py-4 flex justify-end ">
-            <span className="bg-black text-white p-2 rounded-full cursor-pointer">
+            <span onClick={()=>setIsEditModalOpen(prev=>!prev)} className="bg-black text-white p-2 rounded-full cursor-pointer">
               <MdModeEdit className="h-6 w-6" />
             </span>
           </div>
@@ -155,6 +155,7 @@ const UserProfileCard = () => {
                     <span className="">Handle</span>
                   </div>
                 </div>
+                {isEditModalOpen && <ProfileEditModal isModalOpen={isEditModalOpen} setIsModalOpen={setIsEditModalOpen} profileId={profileId}/>}
               </div>
             </div>
           </div>

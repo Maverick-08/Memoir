@@ -47,7 +47,7 @@ export const userDetailsHandler = async (req: Request, res: Response) => {
       });
     return;
   } catch (err) {
-    console.log("Error @userDetailsandler : " + "\n" + err);
+    console.log("Error @userDetailsHandler : " + "\n" + err);
     res.json(StatusCode.ServerError).json({ msg: "Server Error" });
     return;
   }
